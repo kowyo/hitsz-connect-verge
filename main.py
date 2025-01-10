@@ -2,7 +2,7 @@ import keyring
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QLabel, QLineEdit, QCheckBox, QPushButton, QTextEdit, QVBoxLayout, QHBoxLayout, QWidget, QSystemTrayIcon, QMenu
 )
-from qfluentwidgets import (PushButton, CheckBox, LineEdit, TextEdit, PasswordLineEdit, BodyLabel)
+from qfluentwidgets import (PushButton, CheckBox, LineEdit, TextEdit, PasswordLineEdit, BodyLabel, TogglePushButton, PrimaryPushButton, DotInfoBadge, IconInfoBadge, FluentIcon)
 from PySide6.QtGui import QIcon
 from PySide6.QtCore import QThread, Signal
 import subprocess
@@ -114,7 +114,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("HITSZ Connect Verge")
-        self.setFixedSize(300, 680)
+        self.setFixedSize(300, 450)
         self.service_name = "hitsz-connect-verge"
         self.username_key = "username"    
         self.password_key = "password"    
@@ -140,12 +140,12 @@ class MainWindow(QMainWindow):
         layout = QVBoxLayout()
         
         # Account and Password
-        layout.addWidget(BodyLabel("账号："))
+        layout.addWidget(BodyLabel("账号"))
         self.username_input = LineEdit(self)  # Add self as parent
         layout.addWidget(self.username_input)
 
         # layout.PasswordLineEdit()
-        layout.addWidget(BodyLabel("密码："))
+        layout.addWidget(BodyLabel("密码"))
         self.password_input = PasswordLineEdit(self)  # Add self as parent
         layout.addWidget(self.password_input)
         # self.password_input.setEchoMode(QLineEdit.Password)  # Still use QLineEdit enum
@@ -155,50 +155,58 @@ class MainWindow(QMainWindow):
         # self.show_password_cb.stateChanged.connect(self.toggle_password_visibility)
         # layout.addWidget(self.show_password_cb)
 
+        layout.addSpacing(5)
         self.remember_cb = CheckBox("记住密码")
         layout.addWidget(self.remember_cb)
-        
+        layout.addSpacing(5)
+
         # Server and DNS
-        layout.addWidget(BodyLabel("SSL VPN 服务端地址："))
+        # layout.addWidget(BodyLabel("SSL VPN 服务端地址"))
         self.server_input = LineEdit(self)  # Add self as parent
         self.server_input.setText("vpn.hitsz.edu.cn")  # Use setText after creation
-        layout.addWidget(self.server_input)
+        self.server_input.hide()
+        # layout.addWidget(self.server_input)
 
-        layout.addWidget(BodyLabel("DNS 服务器地址："))
-        self.dns_input = LineEdit(self)  # Add self as parent
-        self.dns_input.setText("10.248.98.30")  # Use setText after creation
-        layout.addWidget(self.dns_input)
+        self.dns_input = LineEdit(self)
+        self.dns_input.setText("10.248.98.30") 
+        self.dns_input.hide()
         
         # Proxy Control
         self.proxy_cb = CheckBox("自动配置代理")
         self.proxy_cb.setChecked(True)
-        layout.addWidget(self.proxy_cb)
+        # layout.addWidget(self.proxy_cb)
+
+        layout.addSpacing(5)
+        # Status and Output
+        status_layout = QHBoxLayout()
+        status_layout.addWidget(BodyLabel("运行信息"))
+        status_layout.addStretch()  # Add stretch to push status label to the right
+        self.status_icon = IconInfoBadge(FluentIcon.CANCEL_MEDIUM)
+        status_layout.addWidget(self.status_icon)
+        self.status_label = BodyLabel("状态: 未连接")
+        status_layout.addWidget(self.status_label)
+        layout.addLayout(status_layout)
+        self.output_text = TextEdit()
+        self.output_text.setReadOnly(True)
+        layout.addWidget(self.output_text)
 
         # Buttons
         button_layout = QHBoxLayout()
-        self.connect_button = PushButton("连接")
-        self.connect_button.clicked.connect(self.start_connection)
+        self.connect_button = TogglePushButton("连接")
+        self.connect_button.toggled.connect(lambda: self.start_connection() if self.connect_button.isChecked() else self.stop_connection())
         self.connect_button.clicked.connect(self.save_credentials)
         button_layout.addWidget(self.connect_button)
 
-        self.disconnect_button = PushButton("断开")
-        self.disconnect_button.clicked.connect(self.stop_connection)
-        button_layout.addWidget(self.disconnect_button)
+        # self.disconnect_button = PushButton("断开")
+        # self.disconnect_button.clicked.connect(self.stop_connection)
+        # button_layout.addWidget(self.disconnect_button)
 
+        button_layout.addStretch()
         self.exit_button = PushButton("退出")
         self.exit_button.clicked.connect(self.stop_connection) 
         self.exit_button.clicked.connect(self.close)
         button_layout.addWidget(self.exit_button)
         layout.addLayout(button_layout)
-
-        # Status and Output
-        self.status_label = BodyLabel("状态: 已停止")
-        layout.addWidget(self.status_label)
-
-        layout.addWidget(BodyLabel("运行信息："))
-        self.output_text = TextEdit()
-        self.output_text.setReadOnly(True)
-        layout.addWidget(self.output_text)
 
         # Set main widget
         container = QWidget()
@@ -267,7 +275,8 @@ class MainWindow(QMainWindow):
 
     def start_connection(self):
         if self.worker and self.worker.isRunning():
-            self.status_label.setText("状态: 正在运行")
+            self.status_label.setText("状态: 已连接")
+            self.status_icon.setIcon(FluentIcon.ACCEPT_MEDIUM)
             return
 
         username = self.username_input.text()
@@ -300,7 +309,8 @@ class MainWindow(QMainWindow):
         self.worker.finished.connect(self.on_connection_finished)
         self.worker.start()
 
-        self.status_label.setText("状态: 正在运行")
+        self.status_label.setText("状态: 已连接")
+        self.status_icon.setIcon(FluentIcon.ACCEPT_MEDIUM)
 
     def stop_connection(self):
         if self.worker:
@@ -308,14 +318,16 @@ class MainWindow(QMainWindow):
             self.worker.wait()
             self.worker = None
 
-        self.status_label.setText("状态: 已停止")
+        self.status_label.setText("状态: 未连接")
+        self.status_icon.setIcon(FluentIcon.CANCEL_MEDIUM)
 
     def append_output(self, text):
         self.output_text.append(text)
 
     def on_connection_finished(self):
         self.worker = None
-        self.status_label.setText("状态: 已停止")
+        self.status_label.setText("状态: 未连接")
+        self.status_icon.setIcon(FluentIcon.CANCEL_MEDIUM)
 
     @staticmethod
     def get_resource_path(relative_path):
