@@ -2,9 +2,13 @@ name: build
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - '*'
     tags:
       - "v*"
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
