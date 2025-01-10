@@ -1,3 +1,4 @@
 pyside6
 keyring
 pyinstaller
+PyQt-Fluent-Widgets

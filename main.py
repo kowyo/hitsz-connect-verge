@@ -2,6 +2,7 @@ import keyring
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QLabel, QLineEdit, QCheckBox, QPushButton, QTextEdit, QVBoxLayout, QHBoxLayout, QWidget, QSystemTrayIcon, QMenu
 )
+from qfluentwidgets import (PushButton, CheckBox, LineEdit, TextEdit, PasswordLineEdit, BodyLabel)
 from PySide6.QtGui import QIcon
 from PySide6.QtCore import QThread, Signal
 import subprocess
@@ -37,9 +38,11 @@ def set_macos_proxy(enable, server=None, port=None):
             continue
             
         if enable and server and port:
+            # Enable proxy for the service
             subprocess.run(['networksetup', '-setwebproxy', service, server, str(port)])
             subprocess.run(['networksetup', '-setsecurewebproxy', service, server, str(port)])
         else:
+            # Disable proxy for the serviceS
             subprocess.run(['networksetup', '-setwebproxystate', service, 'off'])
             subprocess.run(['networksetup', '-setsecurewebproxystate', service, 'off'])
 
@@ -111,7 +114,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("HITSZ Connect Verge")
-        self.setFixedSize(300, 500)
+        self.setFixedSize(300, 680)
         self.service_name = "hitsz-connect-verge"
         self.username_key = "username"    
         self.password_key = "password"    
@@ -137,59 +140,63 @@ class MainWindow(QMainWindow):
         layout = QVBoxLayout()
         
         # Account and Password
-        layout.addWidget(QLabel("账号："))
-        self.username_input = QLineEdit()
+        layout.addWidget(BodyLabel("账号："))
+        self.username_input = LineEdit(self)  # Add self as parent
         layout.addWidget(self.username_input)
 
-        layout.addWidget(QLabel("密码："))
-        self.password_input = QLineEdit()
-        self.password_input.setEchoMode(QLineEdit.Password)
+        # layout.PasswordLineEdit()
+        layout.addWidget(BodyLabel("密码："))
+        self.password_input = PasswordLineEdit(self)  # Add self as parent
         layout.addWidget(self.password_input)
+        # self.password_input.setEchoMode(QLineEdit.Password)  # Still use QLineEdit enum
+        # layout.addWidget(self.password_input)
 
-        self.show_password_cb = QCheckBox("显示密码")
-        self.show_password_cb.stateChanged.connect(self.toggle_password_visibility)
-        layout.addWidget(self.show_password_cb)
+        # self.show_password_cb = CheckBox("显示密码")
+        # self.show_password_cb.stateChanged.connect(self.toggle_password_visibility)
+        # layout.addWidget(self.show_password_cb)
 
-        self.remember_cb = QCheckBox("记住密码")
+        self.remember_cb = CheckBox("记住密码")
         layout.addWidget(self.remember_cb)
         
         # Server and DNS
-        layout.addWidget(QLabel("SSL VPN 服务端地址："))
-        self.server_input = QLineEdit("vpn.hitsz.edu.cn")
+        layout.addWidget(BodyLabel("SSL VPN 服务端地址："))
+        self.server_input = LineEdit(self)  # Add self as parent
+        self.server_input.setText("vpn.hitsz.edu.cn")  # Use setText after creation
         layout.addWidget(self.server_input)
 
-        layout.addWidget(QLabel("DNS 服务器地址："))
-        self.dns_input = QLineEdit("10.248.98.30")
+        layout.addWidget(BodyLabel("DNS 服务器地址："))
+        self.dns_input = LineEdit(self)  # Add self as parent
+        self.dns_input.setText("10.248.98.30")  # Use setText after creation
         layout.addWidget(self.dns_input)
         
         # Proxy Control
-        self.proxy_cb = QCheckBox("自动配置代理")
+        self.proxy_cb = CheckBox("自动配置代理")
         self.proxy_cb.setChecked(True)
         layout.addWidget(self.proxy_cb)
 
         # Buttons
         button_layout = QHBoxLayout()
-        self.connect_button = QPushButton("连接")
+        self.connect_button = PushButton("连接")
         self.connect_button.clicked.connect(self.start_connection)
         self.connect_button.clicked.connect(self.save_credentials)
         button_layout.addWidget(self.connect_button)
 
-        self.disconnect_button = QPushButton("断开")
+        self.disconnect_button = PushButton("断开")
         self.disconnect_button.clicked.connect(self.stop_connection)
         button_layout.addWidget(self.disconnect_button)
 
-        self.exit_button = QPushButton("退出")
+        self.exit_button = PushButton("退出")
         self.exit_button.clicked.connect(self.stop_connection) 
         self.exit_button.clicked.connect(self.close)
         button_layout.addWidget(self.exit_button)
         layout.addLayout(button_layout)
 
         # Status and Output
-        self.status_label = QLabel("状态: 已停止")
+        self.status_label = BodyLabel("状态: 已停止")
         layout.addWidget(self.status_label)
 
-        layout.addWidget(QLabel("运行信息："))
-        self.output_text = QTextEdit()
+        layout.addWidget(BodyLabel("运行信息："))
+        self.output_text = TextEdit()
         self.output_text.setReadOnly(True)
         layout.addWidget(self.output_text)
 
@@ -229,9 +236,9 @@ class MainWindow(QMainWindow):
 
     def toggle_password_visibility(self):
         if self.show_password_cb.isChecked():
-            self.password_input.setEchoMode(QLineEdit.Normal)
+            self.password_input.setEchoMode(QLineEdit.Normal)  # Still use QLineEdit enum
         else:
-            self.password_input.setEchoMode(QLineEdit.Password)
+            self.password_input.setEchoMode(QLineEdit.Password)  # Still use QLineEdit enum
 
     def load_credentials(self):
         """Load stored credentials from keyring."""
