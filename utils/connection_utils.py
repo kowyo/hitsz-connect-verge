@@ -3,6 +3,7 @@ import sys
 import platform
 import shlex
 from .set_proxy import CommandWorker
+from qfluentwidgets import FluentIcon
 
 def handle_output(window, text):
     """Handle output text from the worker"""
@@ -13,7 +14,7 @@ def handle_connection_finished(window):
     window.worker = None
     window.status_label.setText("状态: 未连接")
     if hasattr(window, 'status_icon'):
-        window.status_icon.setIcon(window.FluentIcon.CANCEL_MEDIUM)
+        window.status_icon.setIcon(FluentIcon.CANCEL_MEDIUM)
     if hasattr(window, 'connect_button'):
         window.connect_button.setChecked(False)
 
@@ -22,7 +23,7 @@ def start_connection(window):
     if window.worker and window.worker.isRunning():
         window.status_label.setText("状态: 正在运行")
         if hasattr(window, 'status_icon'):
-            window.status_icon.setIcon(window.FluentIcon.ACCEPT_MEDIUM)
+            window.status_icon.setIcon(FluentIcon.ACCEPT_MEDIUM)
         return
 
     username = window.username_input.text()
@@ -55,7 +56,7 @@ def start_connection(window):
 
     window.status_label.setText("状态: 正在运行")
     if hasattr(window, 'status_icon'):
-        window.status_icon.setIcon(window.FluentIcon.ACCEPT_MEDIUM)
+        window.status_icon.setIcon(FluentIcon.ACCEPT_MEDIUM)
 
 def stop_connection(window):
     """Stop VPN connection"""
@@ -66,4 +67,4 @@ def stop_connection(window):
 
     window.status_label.setText("状态: 未连接")
     if hasattr(window, 'status_icon'):
-        window.status_icon.setIcon(window.FluentIcon.CANCEL_MEDIUM)
+        window.status_icon.setIcon(FluentIcon.CANCEL_MEDIUM)
