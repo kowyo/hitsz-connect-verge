@@ -17,7 +17,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("HITSZ Connect Verge")
-        self.setFixedSize(300, 450)
+        self.setMinimumSize(300, 450)
         self.service_name = "hitsz-connect-verge"
         self.username_key = "username"    
         self.password_key = "password"    
