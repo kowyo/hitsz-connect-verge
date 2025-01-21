@@ -10,7 +10,7 @@ def setup_menubar(window, version):
     # Settings Menu
     settings_menu = menubar.addMenu("设置")
     window.advanced_action = settings_menu.addAction("高级设置")
-    window.advanced_action.triggered.connect(window.toggle_advanced_settings)
+    # window.advanced_action.triggered.connect(window.toggle_advanced_settings)
     
     # Help Menu
     about_menu = menubar.addMenu("帮助")

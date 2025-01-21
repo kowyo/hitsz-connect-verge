@@ -8,3 +8,9 @@ def get_resource_path(relative_path):
     else:
         base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     return os.path.join(base_path, relative_path)
+
+def get_version():
+    """Get version from .app-version file with fallback"""
+    version_file = get_resource_path('.app-version')
+    with open(version_file, 'r') as f:
+        return f.read().strip()

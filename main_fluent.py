@@ -8,11 +8,10 @@ import platform
 from utils.tray_utils import handle_close_event, quit_app, init_tray_icon
 from utils.credential_utils import load_credentials, save_credentials
 from utils.connection_utils import start_connection, stop_connection
-from utils.common import get_resource_path
+from utils.common import get_resource_path, get_version
 from utils.menu_utils import setup_menubar
 
-with open('.app-version', 'r') as f:
-    VERSION = f.read().strip()
+VERSION = get_version()
 
 class MainWindow(QMainWindow):
     def __init__(self):
