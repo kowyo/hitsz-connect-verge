@@ -2,7 +2,8 @@ from PySide6.QtWidgets import (
     QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QWidget
 )
 from qfluentwidgets import (PushButton, CheckBox, LineEdit, TextEdit, PasswordLineEdit, 
-                          BodyLabel, TogglePushButton, IconInfoBadge, FluentIcon, setTheme, Theme)
+                          BodyLabel, TogglePushButton, IconInfoBadge, FluentIcon, setTheme, Theme,
+                          SystemThemeListener)
 from PySide6.QtGui import QIcon
 import platform
 from utils.tray_utils import handle_close_event, quit_app, init_tray_icon
@@ -15,9 +16,15 @@ from qfluentwidgets import SystemThemeListener
 
 VERSION = get_version()
 
+class CustomThemeListener(SystemThemeListener):
+    def _onThemeChanged(self, theme: str):
+        new_theme = Theme.DARK if theme.lower() == "dark" else Theme.LIGHT
+        setTheme(new_theme)
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.themeListener = CustomThemeListener(self)
         self.setWindowTitle("HITSZ Connect Verge")
         self.setMinimumSize(300, 450)
         self.service_name = "hitsz-connect-verge"
@@ -39,6 +46,8 @@ class MainWindow(QMainWindow):
         # Setup rest of UI
         self.setup_ui()
         self.load_credentials()
+        setTheme(Theme.AUTO)
+        self.themeListener.start()
 
     def setup_ui(self):
         # Create a container for the main content
@@ -101,7 +110,6 @@ class MainWindow(QMainWindow):
 
         button_layout.addStretch()
         self.exit_button = PushButton("退出")
-        self.exit_button.clicked.connect(self.stop_connection) 
         self.exit_button.clicked.connect(self.quit_app)
         button_layout.addWidget(self.exit_button)
         layout.addLayout(button_layout)
@@ -113,6 +121,8 @@ class MainWindow(QMainWindow):
         handle_close_event(self, event, self.tray_icon)
 
     def quit_app(self):
+        self.themeListener.terminate()
+        self.themeListener.deleteLater()
         quit_app(self, self.tray_icon)
 
     def load_credentials(self):
