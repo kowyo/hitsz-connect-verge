@@ -32,6 +32,7 @@ You can install HITSZ Connect Verge in two ways: downloading pre-built binaries 
 >
 > 1. Username and password are the same as the ones you use to log in to the [Unified Identity Authentic Platform](https://ids.hit.edu.cn)
 > 2. If the download speed is slow, you can try using [gh-proxy](https://gh-proxy.com) to download.
+> 3. Linux version only supports building from source as of now.
 
 ### Method 1: Downloading pre-built binaries
 
@@ -117,22 +118,29 @@ If you want to use Clash at the same time (e.g. watching Youtube and visiting <h
 For example, if you are using [Clash Verge Rev](https://github.com/clash-verge-rev/clash-verge-rev), you can go to 'Profiles' -> Right click on the profile you are using -> 'Edit File' -> Add the following configuration:
 
 ```yaml
+# note: do not append this to the end of the file directly, append it separately to the corresponding position
 proxies:
+    # your existing proxies...
     - { name: 'HITSZ Connect Verge', type: socks5, server: 127.0.0.1, port: 1080, udp: true }
+
 proxy-groups:
+    # your existing proxy-groups...
     - { name: 校园网, type: select, proxies: ['DIRECT', 'HITSZ Connect Verge']}
+
 proxies:
+    # your existing rules...
     - 'DOMAIN,vpn.hitsz.edu.cn,DIRECT'
     - 'DOMAIN-SUFFIX,hitsz.edu.cn,校园网'
     - 'IP-CIDR,10.0.0.0/8,校园网,no-resolve'
+    # - 'IP-CIDR,<other_ip>,校园网,no-resolve'
 ```
 
 > [!NOTE]
 >
 > 1. It is recommended to enable `TUN Mode`
-> 2. You need to turn off the `Always use Default Bypass` option in the `System Proxy` settings
+> 2. You need to turn off the `Always use Default Bypass` option in the `System Proxy` settings, and add `localhost` to the `Proxy Bypass` field.
 
-For further information, please refer to [this article](https://oldkingok.cc/share/8bFQXBjOkXt8) on <https://oldkingOK.cc>.
+For further information, please refer to [this article](https://oldkingok.cc/share/8bFQXBjOkXt8).
 
 ### Remote Desktop
 

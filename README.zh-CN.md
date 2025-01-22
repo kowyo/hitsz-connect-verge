@@ -32,6 +32,7 @@ HITSZ Connect Verge 是 [ZJU Connect](https://github.com/Mythologyli/zju-connect
 >
 > 1. 用户名与密码与[统一身份认证平台](https://ids.hit.edu.cn)的登录凭证相同
 > 2. 若下载速度较慢，可尝试使用[gh-proxy](https://gh-proxy.com)进行加速
+> 3. Linux版本目前仅支持从源码构建
 
 ### 方式一：下载预编译版本
 
@@ -116,22 +117,30 @@ HITSZ Connect Verge提供开箱即用体验，您可从[发布页面](https://gi
 例如，如果您使用 [Clash Verge Rev](https://github.com/clash-verge-rev/clash-verge-rev)，您可以前往“配置文件” -> 右键单击您正在使用的配置文件 -> “编辑文件” -> 添加以下配置：
 
 ```yaml
+# 注：请勿将此直接附加到文件末尾，而是分别将其附加到每个配置块的末尾
 proxies:
+    # 您现有的代理...
     - { name: 'HITSZ Connect Verge', type: socks5, server: 127.0.0.1, port: 1080, udp: true }
+
 proxy-groups:
-    - { name: 校园网, type: select, proxies: ['DIRECT', 'HITSZ Connect Verge']}
+    # 您现有的代理组...
+    - { name: 校园网, type: select, proxies: ['DIRECT', 'HITSZ Connect Verge'] }
+
 proxies:
+    # 您现有的规则...
     - 'DOMAIN,vpn.hitsz.edu.cn,DIRECT'
     - 'DOMAIN-SUFFIX,hitsz.edu.cn,校园网'
     - 'IP-CIDR,10.0.0.0/8,校园网,no-resolve'
+    # - 'IP-CIDR,<其他_ip>,校园网,no-resolve'
+
 ```
 
 > [!NOTE]
 >
 > 1. 建议启用 `TUN 模式`
-> 2. 需要关闭内网绕过代理
+> 2. 需要关闭内网绕过代理, 并添加 `localhost` 到`代理绕过设置`区域
 
-更多信息请参考 <https://oldkingOK.cc> 上的[这篇文章](https://oldkingok.cc/share/8bFQXBjOkXt8)。
+更多信息请参考[这篇文章](https://oldkingok.cc/share/8bFQXBjOkXt8)。
 
 ### 远程桌面连接
 
@@ -152,8 +161,6 @@ ssh -o ProxyCommand="nc -X 5 -x 127.0.0.1:1080 %h %p" <用户名>@<服务器地�
 |   Windows   |   macOS    |   Linux    |
 | ---- | ---- | ---- |
 |  <img width="412" alt="windows" src="assets/windows.png" />   | <img width="412" alt="mac" src="assets/mac.png" />  | <img width="412" alt="linux" src="assets/linux.png" />  |
-
-当前Linux版本仅支持从源码构建。
 
 ## 贡献
 
