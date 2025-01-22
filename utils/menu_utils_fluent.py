@@ -99,6 +99,7 @@ def check_for_updates(parent, current_version):
                 return
         else:
             MessageBox("检查更新", "当前已是最新版本。", parent=parent).exec()
+            return
             
     except requests.RequestException:
         MessageBox("检查更新", "检查更新失败，请检查网络连接。", parent=parent).exec()
