@@ -2,7 +2,7 @@ from PySide6.QtWidgets import (
     QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QWidget
 )
 from qfluentwidgets import (PushButton, CheckBox, LineEdit, TextEdit, PasswordLineEdit, 
-                          BodyLabel, TogglePushButton, IconInfoBadge, FluentIcon)
+                          BodyLabel, TogglePushButton, IconInfoBadge, FluentIcon, setTheme, Theme)
 from PySide6.QtGui import QIcon
 import platform
 from utils.tray_utils import handle_close_event, quit_app, init_tray_icon
@@ -10,6 +10,8 @@ from utils.credential_utils import load_credentials, save_credentials
 from utils.connection_utils import start_connection, stop_connection
 from utils.common import get_resource_path, get_version
 from utils.menu_utils_fluent import setup_menubar
+
+from qfluentwidgets import SystemThemeListener
 
 VERSION = get_version()
 
@@ -40,6 +42,7 @@ class MainWindow(QMainWindow):
 
     def setup_ui(self):
         # Create a container for the main content
+        setTheme(Theme.AUTO)
         content_widget = QWidget()
         layout = QVBoxLayout(content_widget)
         
