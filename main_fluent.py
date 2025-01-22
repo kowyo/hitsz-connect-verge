@@ -11,7 +11,6 @@ from utils.credential_utils import load_credentials, save_credentials
 from utils.connection_utils import start_connection, stop_connection
 from utils.common import get_resource_path, get_version
 from utils.menu_utils_fluent import setup_menubar
-from qfluentwidgets import SystemThemeListener
 
 VERSION = get_version()
 
