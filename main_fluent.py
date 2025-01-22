@@ -16,15 +16,10 @@ from qfluentwidgets import SystemThemeListener
 
 VERSION = get_version()
 
-class CustomThemeListener(SystemThemeListener):
-    def _onThemeChanged(self, theme: str):
-        new_theme = Theme.DARK if theme.lower() == "dark" else Theme.LIGHT
-        setTheme(new_theme)
-
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.themeListener = CustomThemeListener(self)
+        self.themeListener = SystemThemeListener(self)
         self.setWindowTitle("HITSZ Connect Verge")
         self.setMinimumSize(300, 450)
         self.service_name = "hitsz-connect-verge"
@@ -48,10 +43,10 @@ class MainWindow(QMainWindow):
         self.load_credentials()
         setTheme(Theme.AUTO)
         self.themeListener.start()
+        self.themeListener.systemThemeChanged.connect(lambda: setTheme(Theme.AUTO))
 
     def setup_ui(self):
         # Create a container for the main content
-        setTheme(Theme.AUTO)
         content_widget = QWidget()
         layout = QVBoxLayout(content_widget)
         
