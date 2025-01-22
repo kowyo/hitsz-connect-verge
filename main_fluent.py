@@ -9,7 +9,7 @@ from utils.tray_utils import handle_close_event, quit_app, init_tray_icon
 from utils.credential_utils import load_credentials, save_credentials
 from utils.connection_utils import start_connection, stop_connection
 from utils.common import get_resource_path, get_version
-from utils.menu_utils import setup_menubar
+from utils.menu_utils_fluent import setup_menubar
 
 VERSION = get_version()
 
@@ -23,15 +23,25 @@ class MainWindow(QMainWindow):
         self.password_key = "password"    
         
         self.tray_icon = init_tray_icon(self)
-        
         self.worker = None
-        setup_menubar(self, VERSION)
+        
+        # Create central widget and main layout first
+        self.central_widget = QWidget()
+        self.setCentralWidget(self.central_widget)
+        self.main_layout = QVBoxLayout(self.central_widget)
+        
+        # Setup command bar and add it to layout
+        self.command_bar = setup_menubar(self, VERSION)
+        self.main_layout.addWidget(self.command_bar)
+        
+        # Setup rest of UI
         self.setup_ui()
         self.load_credentials()
 
     def setup_ui(self):
-        # Layouts
-        layout = QVBoxLayout()
+        # Create a container for the main content
+        content_widget = QWidget()
+        layout = QVBoxLayout(content_widget)
         
         # Account and Password
         layout.addWidget(BodyLabel("用户名"))
@@ -93,10 +103,8 @@ class MainWindow(QMainWindow):
         button_layout.addWidget(self.exit_button)
         layout.addLayout(button_layout)
 
-        # Set main widget
-        container = QWidget()
-        container.setLayout(layout)
-        self.setCentralWidget(container)
+        # Add content widget to main layout
+        self.main_layout.addWidget(content_widget)
 
     def closeEvent(self, event):
         handle_close_event(self, event, self.tray_icon)
@@ -115,11 +123,6 @@ class MainWindow(QMainWindow):
 
     def stop_connection(self):
         stop_connection(self)
-
-    def toggle_advanced_settings(self, checked):
-        QMainWindow.resize(self, 300, 450 if checked else 300)
-        self.server_input.setVisible(checked)
-        self.dns_input.setVisible(checked)
 
 # Run the application
 if __name__ == "__main__":
