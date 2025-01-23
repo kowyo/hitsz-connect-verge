@@ -11,6 +11,7 @@ from utils.credential_utils import load_credentials, save_credentials
 from utils.connection_utils import start_connection, stop_connection
 from utils.common import get_resource_path, get_version
 from utils.menu_utils_fluent import setup_menubar
+from utils.config_utils import load_config
 
 VERSION = get_version()
 
@@ -39,6 +40,7 @@ class MainWindow(QMainWindow):
         # Setup rest of UI
         self.setup_ui()
         self.load_credentials()
+        self.load_advanced_settings()
         setTheme(Theme.AUTO)
         self.themeListener.start()
         self.themeListener.systemThemeChanged.connect(lambda: setTheme(Theme.AUTO))
@@ -61,23 +63,6 @@ class MainWindow(QMainWindow):
         layout.addSpacing(5)
         self.remember_cb = CheckBox("记住密码")
         layout.addWidget(self.remember_cb)
-        layout.addSpacing(5)
-
-        # Server and DNS
-        # layout.addWidget(BodyLabel("SSL VPN 服务端地址"))
-        self.server_input = LineEdit(self)
-        self.server_input.setText("vpn.hitsz.edu.cn")
-        self.server_input.hide()
-        # layout.addWidget(self.server_input)
-
-        self.dns_input = LineEdit(self)
-        self.dns_input.setText("10.248.98.30") 
-        self.dns_input.hide()
-        
-        # Proxy Control
-        self.proxy_cb = CheckBox("自动配置代理")
-        self.proxy_cb.setChecked(True)
-        # layout.addWidget(self.proxy_cb)
 
         layout.addSpacing(5)
         # Status and Output
@@ -129,6 +114,13 @@ class MainWindow(QMainWindow):
 
     def stop_connection(self):
         stop_connection(self)
+
+    def load_advanced_settings(self):
+        """Load advanced settings from config file"""
+        config = load_config()
+        self.server_address = config['server']
+        self.dns_server = config['dns']
+        self.use_proxy = config['proxy']
 
 # Run the application
 if __name__ == "__main__":

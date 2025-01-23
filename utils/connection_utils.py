@@ -56,7 +56,7 @@ def start_connection(window):
         "-username", shlex.quote(username), "-password", shlex.quote(password)
     ]
     
-    window.worker = CommandWorker(command_args, window.use_proxy)  # Changed from widget to value
+    window.worker = CommandWorker(command_args=command_args, proxy_enabled=window.use_proxy)  # Changed from widget to value
     window.worker.output.connect(lambda text: handle_output(window, text))
     window.worker.finished.connect(lambda: handle_connection_finished(window))
     window.worker.start()
