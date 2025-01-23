@@ -1,3 +1,4 @@
+import gc
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QLabel, QLineEdit, QCheckBox, QPushButton, 
     QTextEdit, QVBoxLayout, QHBoxLayout, QWidget
@@ -97,10 +98,25 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(container)
 
     def closeEvent(self, event):
+        self.cleanup()
         handle_close_event(self, event, self.tray_icon)
 
     def quit_app(self):
+        self.cleanup()
         quit_app(self, self.tray_icon)
+
+    def cleanup(self):
+        """Cleanup resources before closing"""
+        if self.worker:
+            self.stop_connection()
+        
+        # Clean up UI elements
+        self.output_text.clear()
+        self.username_input.clear()
+        self.password_input.clear()
+        
+        # Force garbage collection
+        gc.collect()
 
     def load_credentials(self):
         load_credentials(self, self.service_name, self.username_key, self.password_key)

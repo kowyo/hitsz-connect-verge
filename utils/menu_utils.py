@@ -1,4 +1,6 @@
-from PySide6.QtWidgets import QMessageBox, QDialog, QPushButton, QVBoxLayout, QHBoxLayout, QTextEdit
+import gc
+from PySide6.QtWidgets import QMessageBox, QDialog, QPushButton, QVBoxLayout, QHBoxLayout
+from PySide6.QtGui import QGuiApplication  # Add this import
 from .advanced_panel import AdvancedSettingsDialog
 
 def setup_menubar(window, version):
@@ -12,7 +14,7 @@ def setup_menubar(window, version):
     
     # Help Menu
     about_menu = menubar.addMenu("帮助")
-    about_menu.addAction("查看日志").triggered.connect(lambda: show_log(window))
+    about_menu.addAction("复制日志").triggered.connect(lambda: copy_log(window))  # Changed text and function
     about_menu.addAction("检查更新").triggered.connect(lambda: check_for_updates(window, version))
     about_menu.addAction("关于").triggered.connect(lambda: show_about(window, version))
 
@@ -24,34 +26,10 @@ def show_about(window, version):
     <p style="font-size: 10pt;">Author: <a href="https://github.com/kowyo">Kowyo</a></p> '''
     QMessageBox.about(window, "关于 HITSZ Connect Verge", about_text)
 
-def show_log(window):
-    """Show the log window"""
-    dialog = QDialog(window)
-    dialog.setWindowTitle("查看日志")
-    dialog.setMinimumSize(300, 400)
-    
-    layout = QVBoxLayout()
-    
-    log_text = QTextEdit()
-    log_text.setReadOnly(True)
-    log_text.setText(window.output_text.toPlainText())
-    layout.addWidget(log_text)
-    
-    copy_button = QPushButton("复制")
-    copy_button.clicked.connect(
-        lambda: window.QApplication.clipboard().setText(log_text.toPlainText())
-    )
-    
-    close_button = QPushButton("关闭")
-    close_button.clicked.connect(dialog.close)
-
-    button_layout = QHBoxLayout()
-    button_layout.addWidget(copy_button)
-    button_layout.addWidget(close_button)
-    layout.addLayout(button_layout)
-    
-    dialog.setLayout(layout)
-    dialog.show()
+def copy_log(window):
+    """Copy log text to clipboard directly"""
+    QGuiApplication.clipboard().setText(window.output_text.toPlainText())
+    QMessageBox.information(window, "复制日志", "日志已复制到剪贴板")
 
 import requests
 from packaging import version
@@ -77,6 +55,7 @@ def check_for_updates(parent, current_version):
 
         if version.parse(latest_version) > version.parse(current_version):
             dialog = QDialog(parent)
+            dialog.setAttribute(Qt.WA_DeleteOnClose)
             dialog.setWindowTitle("检查更新")
             dialog.setMinimumWidth(300)
 
@@ -108,6 +87,7 @@ def check_for_updates(parent, current_version):
 
             layout.addLayout(button_layout)
             dialog.setLayout(layout)
+            dialog.finished.connect(dialog.deleteLater)
             dialog.exec()
         else:
             QMessageBox.information(parent, "检查更新", "当前已是最新版本！")
@@ -116,8 +96,9 @@ def check_for_updates(parent, current_version):
         QMessageBox.warning(parent, "检查更新", "检查更新失败，请检查网络连接。")
 
 def show_advanced_settings(window):
-    """Show advanced settings dialog"""
+    """Show advanced settings dialog with proper cleanup"""
     dialog = AdvancedSettingsDialog(window)
+    dialog.setAttribute(Qt.WA_DeleteOnClose)
     dialog.set_settings(
         window.server_input.text(),
         window.dns_input.text(),
@@ -129,3 +110,6 @@ def show_advanced_settings(window):
         window.server_input.setText(settings['server'])
         window.dns_input.setText(settings['dns'])
         window.proxy_cb.setChecked(settings['proxy'])
+    
+    dialog.deleteLater()
+    gc.collect()

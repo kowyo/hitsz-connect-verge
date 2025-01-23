@@ -2,6 +2,7 @@ import os
 import sys
 import platform
 import shlex
+import gc
 from .set_proxy import CommandWorker
 from qfluentwidgets import FluentIcon
 
@@ -10,8 +11,14 @@ def handle_output(window, text):
     window.output_text.append(text)
 
 def handle_connection_finished(window):
-    """Handle connection finished event"""
-    window.worker = None
+    """Handle connection finished event with proper cleanup"""
+    if window.worker:
+        window.worker.output.disconnect()
+        window.worker.finished.disconnect()
+        window.worker.deleteLater()
+        window.worker = None
+        gc.collect()  # Help Python's GC
+
     window.status_label.setText("状态: 未连接")
     if hasattr(window, 'status_icon'):
         window.status_icon.setIcon(FluentIcon.CANCEL_MEDIUM)
@@ -59,11 +66,15 @@ def start_connection(window):
         window.status_icon.setIcon(FluentIcon.ACCEPT_MEDIUM)
 
 def stop_connection(window):
-    """Stop VPN connection"""
+    """Stop VPN connection with proper cleanup"""
     if window.worker:
         window.worker.stop()
         window.worker.wait()
+        window.worker.output.disconnect()
+        window.worker.finished.disconnect()
+        window.worker.deleteLater()
         window.worker = None
+        gc.collect()
 
     window.status_label.setText("状态: 未连接")
     if hasattr(window, 'status_icon'):
