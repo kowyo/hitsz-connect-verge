@@ -1,10 +1,9 @@
 import requests
 from packaging import version
 import webbrowser
-from PySide6.QtWidgets import QDialog, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QMessageBox
-from PySide6.QtWidgets import QMessageBox, QDialog, QVBoxLayout, QHBoxLayout
-from PySide6.QtCore import Qt
-from qfluentwidgets import (PushButton, TextEdit, BodyLabel, CommandBar, Action,
+from PySide6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout
+from PySide6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout
+from qfluentwidgets import (PushButton, TextEdit, CommandBar, Action,
                           FluentIcon, TransparentDropDownPushButton, RoundMenu, MessageBox, Dialog)
 
 def setup_menubar(window, version):
