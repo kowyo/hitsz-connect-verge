@@ -1,8 +1,8 @@
 import subprocess
-import platform
+from platform import system
 
 from PySide6.QtCore import QThread, Signal
-if platform.system() == "Windows":
+if system() == "Windows":
     from subprocess import CREATE_NO_WINDOW
 
 # Worker Thread for Running Commands
@@ -17,18 +17,18 @@ class CommandWorker(QThread):
         self.process = None
 
     def run(self):
-        if platform.system() == "Windows" and self.proxy_enabled:
+        if system() == "Windows" and self.proxy_enabled:
             set_windows_proxy(True, server="127.0.0.1", port=1081)
-        elif platform.system() == "Darwin" and self.proxy_enabled:
+        elif system() == "Darwin" and self.proxy_enabled:
             set_macos_proxy(True, server="127.0.0.1", port=1081)
-        elif platform.system() == "Linux" and self.proxy_enabled:
+        elif system() == "Linux" and self.proxy_enabled:
             set_linux_proxy(True, server="127.0.0.1", port=1081)
     
-        if platform.system() == "Windows":
+        if system() == "Windows":
             creation_flags = CREATE_NO_WINDOW
-        elif platform.system() == "Darwin":
+        elif system() == "Darwin":
             creation_flags = 0
-        elif platform.system() == "Linux":
+        elif system() == "Linux":
             creation_flags = 0
 
         self.process = subprocess.Popen(
@@ -43,11 +43,11 @@ class CommandWorker(QThread):
             self.output.emit(line)
         self.process.wait()
         
-        if platform.system() == "Windows" and self.proxy_enabled:
+        if system() == "Windows" and self.proxy_enabled:
             set_windows_proxy(False)
-        elif platform.system() == "Darwin" and self.proxy_enabled:
+        elif system() == "Darwin" and self.proxy_enabled:
             set_macos_proxy(False)
-        elif platform.system() == "Linux" and self.proxy_enabled:
+        elif system() == "Linux" and self.proxy_enabled:
             set_linux_proxy(False)
         
         self.finished.emit()
@@ -59,7 +59,7 @@ class CommandWorker(QThread):
 
 def set_windows_proxy(enable, server=None, port=None):
     """Manage proxy settings for Windows using the Windows Registry."""
-    if platform.system() == "Windows":
+    if system() == "Windows":
         import winreg as reg
         import ctypes
         

@@ -5,7 +5,7 @@ from qfluentwidgets import (PushButton, CheckBox, LineEdit, TextEdit, PasswordLi
                           BodyLabel, TogglePushButton, IconInfoBadge, FluentIcon, setTheme, Theme,
                           SystemThemeListener)
 from PySide6.QtGui import QIcon
-import platform
+from platform import system
 from utils.tray_utils import handle_close_event, quit_app, init_tray_icon
 from utils.credential_utils import load_credentials, save_credentials
 from utils.connection_utils import start_connection, stop_connection
@@ -135,11 +135,11 @@ if __name__ == "__main__":
     app = QApplication([])
     app.setQuitOnLastWindowClosed(False)
     
-    if platform.system() == "Windows":
+    if system() == "Windows":
         icon_path = get_resource_path("assets/icon.ico")
-    elif platform.system() == "Darwin":
+    elif system() == "Darwin":
         icon_path = get_resource_path("assets/icon.icns")
-    elif platform.system() == "Linux":
+    elif system() == "Linux":
         icon_path = get_resource_path("assets/icon.png")
     app_icon = QIcon(icon_path)
     app.setWindowIcon(app_icon)

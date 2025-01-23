@@ -1,6 +1,6 @@
 import os
 import sys
-import platform
+from platform import system
 import shlex
 import gc
 from .set_proxy import CommandWorker
@@ -43,7 +43,7 @@ def start_connection(window):
     else:
         base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         
-    if platform.system() == "Windows":
+    if system() == "Windows":
         command = os.path.join(base_path, "core", "zju-connect.exe")
     else:
         command = os.path.join(base_path, "core", "zju-connect")

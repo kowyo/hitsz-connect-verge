@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QSystemTrayIcon, QMenu, QApplication
 from PySide6.QtGui import QIcon
-import platform
+from platform import system
 from .common import get_resource_path
 
 def create_tray_menu(window, tray_icon):
@@ -41,11 +41,11 @@ def init_tray_icon(window):
     tray_icon = QSystemTrayIcon(window)
     
     # Set icon based on platform
-    if platform.system() == "Windows":
+    if system() == "Windows":
         icon_path = "assets/icon.ico"
-    elif platform.system() == "Darwin":
+    elif system() == "Darwin":
         icon_path = "assets/icon.icns"
-    elif platform.system() == "Linux":
+    elif system() == "Linux":
         icon_path = "assets/icon.png"
     
     tray_icon.setIcon(QIcon(get_resource_path(icon_path)))
