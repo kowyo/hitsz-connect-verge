@@ -8,7 +8,7 @@
 ![Release](https://img.shields.io/github/v/release/kowyo/hitsz-connect-verge)
 ![Downloads](https://img.shields.io/github/downloads/kowyo/hitsz-connect-verge/total)
 ![License](https://img.shields.io/github/license/kowyo/hitsz-connect-verge)
-![License](https://img.shields.io/github/stars/kowyo/hitsz-connect-verge)
+![Stars](https://img.shields.io/github/stars/kowyo/hitsz-connect-verge)
 
 </div>
 
@@ -45,7 +45,7 @@ HITSZ Connect Verge提供开箱即用体验，您可从[发布页面](https://gi
 > sudo xattr -rd com.apple.quarantine hitsz-connect-verge.app
 > ```
 >
-> 部分情况下需前往 macOS `设置`->`隐私与安全`->`通用`->`仍要打开`
+> 部分情况下需前往 macOS `设置`->`隐私与安全性`->`安全性`->`打开`——`仍要打开`
 
 ### 方式二：从源码构建
 

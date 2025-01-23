@@ -8,7 +8,7 @@
 ![Release](https://img.shields.io/github/v/release/kowyo/hitsz-connect-verge)
 ![Downloads](https://img.shields.io/github/downloads/kowyo/hitsz-connect-verge/total)
 ![License](https://img.shields.io/github/license/kowyo/hitsz-connect-verge)
-![License](https://img.shields.io/github/stars/kowyo/hitsz-connect-verge)
+![Stars](https://img.shields.io/github/stars/kowyo/hitsz-connect-verge)
 
 </div>
 
@@ -105,7 +105,7 @@ HITSZ Connect Verge provides out-of-the-box experience. You can download the lat
 ### Basic information
 
 - **Server**: vpn.hitsz.edu.cn
-- **SOCKS5 Proxy**:  1080
+- **SOCKS5 Proxy**: 1080
 - **HTTP Proxy**: 1081
 - **DNS Server**: 10.248.98.30
 
@@ -161,8 +161,6 @@ See [this article](https://kuokuo.io/2019/07/01/ssh-over-http-or-socks/) for mor
 |   Windows   |   Mac   |  Linux   |
 | ---- | ---- | ---- |
 |  <img width="412" alt="windows" src="assets/windows.png" />   | <img width="412" alt="mac" src="assets/mac.png" />  | <img width="412" alt="linux" src="assets/linux.png" />  |
-
-As of now, Linux version only supports building from source.
 
 ## Contributing
 
