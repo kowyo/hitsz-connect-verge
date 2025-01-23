@@ -99,7 +99,6 @@ def check_for_updates(parent, current_version):
 def show_advanced_settings(window):
     """Show advanced settings dialog with proper cleanup"""
     dialog = AdvancedSettingsDialog(window)
-    dialog.setAttribute(Qt.WA_DeleteOnClose)
     dialog.set_settings(
         window.server_address,
         window.dns_server,
@@ -111,5 +110,3 @@ def show_advanced_settings(window):
         window.server_address = settings['server']
         window.dns_server = settings['dns']
         window.use_proxy = settings['proxy']
-    
-    gc.collect()
