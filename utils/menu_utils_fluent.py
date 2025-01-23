@@ -1,10 +1,9 @@
 import requests
 from packaging import version
 import webbrowser
-from PySide6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout
-from PySide6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout
-from qfluentwidgets import (PushButton, TextEdit, CommandBar, Action,
+from qfluentwidgets import (CommandBar, Action,
                           FluentIcon, TransparentDropDownPushButton, RoundMenu, MessageBox, Dialog)
+from PySide6.QtGui import QGuiApplication
 
 def setup_menubar(window, version):
     """Set up the command bar instead of traditional menu bar"""
@@ -24,7 +23,7 @@ def setup_menubar(window, version):
     help_button.setFixedHeight(34)
     help_menu = RoundMenu(parent=window)
     help_menu.addActions([
-        Action(FluentIcon.DICTIONARY, '查看日志', triggered=lambda: show_log(window)),
+        Action(FluentIcon.CLIPPING_TOOL, '复制日志', triggered=lambda: copy_log(window)),
         Action(FluentIcon.UPDATE, '检查更新', triggered=lambda: check_for_updates(window, version)),
         Action(FluentIcon.INFO, '关于', triggered=lambda: show_about(window, version))
     ])
@@ -40,35 +39,10 @@ def show_about(window, version):
     <p>Author: <a href="https://github.com/kowyo">Kowyo</a></p> '''
     Dialog("关于 HITSZ Connect Verge", about_text, parent=window).exec()
 
-def show_log(window):
-    """Show the log window"""
-    dialog = QDialog(window)
-    dialog.setWindowTitle("查看日志")
-    dialog.setMinimumSize(300, 400)
-    
-    layout = QVBoxLayout()
-
-    log_text = TextEdit()
-    log_text.setReadOnly(True)
-    log_text.setText(window.output_text.toPlainText())
-    layout.addWidget(log_text)
-
-    copy_button = PushButton("复制")
-    copy_button.clicked.connect(
-        lambda: window.QApplication.clipboard().setText(log_text.toPlainText())
-    )
-    
-    close_button = PushButton("关闭")
-    close_button.clicked.connect(dialog.close)
-
-    button_layout = QHBoxLayout()
-    button_layout.addWidget(copy_button)
-    
-    button_layout.addWidget(close_button)
-    layout.addLayout(button_layout)
-    
-    dialog.setLayout(layout)
-    dialog.show()
+def copy_log(window):
+    """Copy log text to clipboard directly"""
+    QGuiApplication.clipboard().setText(window.output_text.toPlainText())
+    MessageBox("复制日志", "日志已复制到剪贴板", parent=window).exec()
 
 def check_for_updates(parent, current_version):
     """
