@@ -1,6 +1,6 @@
 import gc
 from PySide6.QtWidgets import QMessageBox, QDialog, QPushButton, QVBoxLayout, QHBoxLayout
-from PySide6.QtGui import QGuiApplication  # Add this import
+from PySide6.QtGui import QGuiApplication
 from .advanced_panel import AdvancedSettingsDialog
 
 def setup_menubar(window, version):

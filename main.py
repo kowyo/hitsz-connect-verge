@@ -1,9 +1,7 @@
-import gc
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QLabel, QLineEdit, QCheckBox, QPushButton, 
     QTextEdit, QVBoxLayout, QHBoxLayout, QWidget
 )
-from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
 from platform import system
 from utils.tray_utils import handle_close_event, quit_app, init_tray_icon
