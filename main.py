@@ -8,7 +8,7 @@ from PySide6.QtGui import QIcon
 import platform
 from utils.tray_utils import handle_close_event, quit_app, init_tray_icon
 from utils.credential_utils import load_credentials, save_credentials
-from utils.connection_utils import start_connection, stop_connection, handle_connection_finished
+from utils.connection_utils import start_connection, stop_connection
 from utils.common import get_resource_path, get_version
 from utils.password_utils import toggle_password_visibility
 from utils.menu_utils import setup_menubar
@@ -98,25 +98,10 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(container)
 
     def closeEvent(self, event):
-        self.cleanup()
         handle_close_event(self, event, self.tray_icon)
 
     def quit_app(self):
-        self.cleanup()
         quit_app(self, self.tray_icon)
-
-    def cleanup(self):
-        """Cleanup resources before closing"""
-        if self.worker:
-            self.stop_connection()
-        
-        # Clean up UI elements
-        self.output_text.clear()
-        self.username_input.clear()
-        self.password_input.clear()
-        
-        # Force garbage collection
-        gc.collect()
 
     def load_credentials(self):
         load_credentials(self, self.service_name, self.username_key, self.password_key)
@@ -129,9 +114,6 @@ class MainWindow(QMainWindow):
 
     def stop_connection(self):
         stop_connection(self)
-
-    def on_connection_finished(self):
-        handle_connection_finished(self)
 
     def load_advanced_settings(self):
         """Load advanced settings from config file"""

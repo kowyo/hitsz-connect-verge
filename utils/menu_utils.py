@@ -26,6 +26,7 @@ def show_about(window, version):
     <p style="font-size: 10pt;">Author: <a href="https://github.com/kowyo">Kowyo</a></p> '''
     QMessageBox.about(window, "关于 HITSZ Connect Verge", about_text)
 
+
 def copy_log(window):
     """Copy log text to clipboard directly"""
     QGuiApplication.clipboard().setText(window.output_text.toPlainText())

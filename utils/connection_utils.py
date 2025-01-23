@@ -17,7 +17,7 @@ def handle_connection_finished(window):
         window.worker.finished.disconnect()
         window.worker.deleteLater()
         window.worker = None
-        gc.collect()  # Help Python's GC
+        gc.collect()
 
     window.status_label.setText("状态: 未连接")
     if hasattr(window, 'status_icon'):
