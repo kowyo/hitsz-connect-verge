@@ -47,14 +47,12 @@ def show_log(window):
     dialog.setMinimumSize(300, 400)
     
     layout = QVBoxLayout()
-    
-    # Use TextEdit from qfluentwidgets
+
     log_text = TextEdit()
     log_text.setReadOnly(True)
     log_text.setText(window.output_text.toPlainText())
     layout.addWidget(log_text)
-    
-    # Use PushButton from qfluentwidgets
+
     copy_button = PushButton("复制")
     copy_button.clicked.connect(
         lambda: window.QApplication.clipboard().setText(log_text.toPlainText())
