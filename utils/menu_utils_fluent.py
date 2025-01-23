@@ -2,20 +2,18 @@ import requests
 from packaging import version
 import webbrowser
 from qfluentwidgets import (CommandBar, Action,
-                          FluentIcon, TransparentDropDownPushButton, RoundMenu, MessageBox, Dialog)
+                          FluentIcon, TransparentPushButton, TransparentDropDownPushButton, RoundMenu, MessageBox, Dialog)
 from PySide6.QtGui import QGuiApplication
+from .advanced_panel_fluent import AdvancedSettingsDialog  # Update this import
 
 def setup_menubar(window, version):
     """Set up the command bar instead of traditional menu bar"""
     command_bar = CommandBar(window)
     
-    # Settings button with dropdown
-    settings_button = TransparentDropDownPushButton('设置', window, FluentIcon.SETTING)
+    # Settings button
+    settings_button = TransparentPushButton('设置', window, FluentIcon.SETTING)
     settings_button.setFixedHeight(34)
-    settings_menu = RoundMenu(parent=window)
-    window.advanced_action = Action(FluentIcon.DEVELOPER_TOOLS, '高级设置')
-    settings_menu.addAction(window.advanced_action)
-    settings_button.setMenu(settings_menu)
+    settings_button.clicked.connect(lambda: show_advanced_settings(window))
     command_bar.addWidget(settings_button)
     
     # Help button with dropdown
@@ -74,3 +72,18 @@ def check_for_updates(parent, current_version):
             
     except requests.RequestException:
         MessageBox("检查更新", "检查更新失败，请检查网络连接。", parent=parent).exec()
+
+def show_advanced_settings(window):
+    """Show advanced settings dialog with proper cleanup"""
+    dialog = AdvancedSettingsDialog(window)
+    dialog.set_settings(
+        window.server_address,
+        window.dns_server,
+        window.use_proxy
+    )
+    
+    if dialog.exec():
+        settings = dialog.get_settings()
+        window.server_address = settings['server']
+        window.dns_server = settings['dns']
+        window.use_proxy = settings['proxy']
