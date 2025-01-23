@@ -11,6 +11,7 @@ from utils.connection_utils import start_connection, stop_connection, handle_con
 from utils.common import get_resource_path, get_version
 from utils.password_utils import toggle_password_visibility
 from utils.menu_utils import setup_menubar
+from utils.config_utils import load_config
 
 VERSION = get_version()
 
@@ -30,6 +31,7 @@ class MainWindow(QMainWindow):
         setup_menubar(self, VERSION)
         self.setup_ui()
         self.load_credentials()
+        self.load_advanced_settings()
 
     def setup_ui(self):
         # Layouts
@@ -54,27 +56,11 @@ class MainWindow(QMainWindow):
         self.remember_cb = QCheckBox("记住密码")
         layout.addWidget(self.remember_cb)
         
-        # Server and DNS (store labels as class members)
-        self.server_label = QLabel("SSL VPN 服务端地址：")
-        layout.addWidget(self.server_label)
-        self.server_label.hide()
-        
+        # Hidden settings (used by advanced panel)
         self.server_input = QLineEdit("vpn.hitsz.edu.cn")
-        layout.addWidget(self.server_input)
-        self.server_input.hide()
-
-        self.dns_label = QLabel("DNS 服务器地址：")
-        layout.addWidget(self.dns_label)
-        self.dns_label.hide()
-        
         self.dns_input = QLineEdit("10.248.98.30")
-        layout.addWidget(self.dns_input)
-        self.dns_input.hide()
-        
-        # Proxy Control
         self.proxy_cb = QCheckBox("自动配置代理")
         self.proxy_cb.setChecked(True)
-        # layout.addWidget(self.proxy_cb)
 
         # Status and Output
         status_layout = QHBoxLayout()
@@ -130,6 +116,13 @@ class MainWindow(QMainWindow):
 
     def on_connection_finished(self):
         handle_connection_finished(self)
+
+    def load_advanced_settings(self):
+        """Load advanced settings from config file"""
+        config = load_config()
+        self.server_input.setText(config['server'])
+        self.dns_input.setText(config['dns'])
+        self.proxy_cb.setChecked(config['proxy'])
 
 # Run the application
 if __name__ == "__main__":

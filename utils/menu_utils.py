@@ -1,4 +1,5 @@
 from PySide6.QtWidgets import QMessageBox, QDialog, QPushButton, QVBoxLayout, QHBoxLayout, QTextEdit
+from .advanced_panel import AdvancedSettingsDialog
 
 def setup_menubar(window, version):
     """Set up the main window menu bar"""
@@ -7,7 +8,7 @@ def setup_menubar(window, version):
     # Settings Menu
     settings_menu = menubar.addMenu("设置")
     window.advanced_action = settings_menu.addAction("高级设置")
-    # window.advanced_action.triggered.connect(window.toggle_advanced_settings)
+    window.advanced_action.triggered.connect(lambda: show_advanced_settings(window))
     
     # Help Menu
     about_menu = menubar.addMenu("帮助")
@@ -113,3 +114,18 @@ def check_for_updates(parent, current_version):
 
     except requests.RequestException:
         QMessageBox.warning(parent, "检查更新", "检查更新失败，请检查网络连接。")
+
+def show_advanced_settings(window):
+    """Show advanced settings dialog"""
+    dialog = AdvancedSettingsDialog(window)
+    dialog.set_settings(
+        window.server_input.text(),
+        window.dns_input.text(),
+        window.proxy_cb.isChecked()
+    )
+    
+    if dialog.exec():
+        settings = dialog.get_settings()
+        window.server_input.setText(settings['server'])
+        window.dns_input.setText(settings['dns'])
+        window.proxy_cb.setChecked(settings['proxy'])
