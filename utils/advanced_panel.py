@@ -47,6 +47,7 @@ class AdvancedSettingsDialog(QDialog):
         }
 
     def set_settings(self, server, dns, proxy):
+        """Set dialog values from main window values"""
         self.server_input.setText(server)
         self.dns_input.setText(dns)
         self.proxy_cb.setChecked(proxy)

@@ -101,16 +101,15 @@ def show_advanced_settings(window):
     dialog = AdvancedSettingsDialog(window)
     dialog.setAttribute(Qt.WA_DeleteOnClose)
     dialog.set_settings(
-        window.server_input.text(),
-        window.dns_input.text(),
-        window.proxy_cb.isChecked()
+        window.server_address,
+        window.dns_server,
+        window.use_proxy
     )
     
     if dialog.exec():
         settings = dialog.get_settings()
-        window.server_input.setText(settings['server'])
-        window.dns_input.setText(settings['dns'])
-        window.proxy_cb.setChecked(settings['proxy'])
+        window.server_address = settings['server']
+        window.dns_server = settings['dns']
+        window.use_proxy = settings['proxy']
     
-    dialog.deleteLater()
     gc.collect()

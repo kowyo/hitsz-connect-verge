@@ -55,12 +55,6 @@ class MainWindow(QMainWindow):
         self.remember_cb = QCheckBox("记住密码")
         layout.addWidget(self.remember_cb)
         
-        # Hidden settings (used by advanced panel)
-        self.server_input = QLineEdit("vpn.hitsz.edu.cn")
-        self.dns_input = QLineEdit("10.248.98.30")
-        self.proxy_cb = QCheckBox("自动配置代理")
-        self.proxy_cb.setChecked(True)
-
         # Status and Output
         status_layout = QHBoxLayout()
         status_layout.addWidget(QLabel("运行信息"))
@@ -116,9 +110,9 @@ class MainWindow(QMainWindow):
     def load_advanced_settings(self):
         """Load advanced settings from config file"""
         config = load_config()
-        self.server_input.setText(config['server'])
-        self.dns_input.setText(config['dns'])
-        self.proxy_cb.setChecked(config['proxy'])
+        self.server_address = config['server']
+        self.dns_server = config['dns']
+        self.use_proxy = config['proxy']
 
 # Run the application
 if __name__ == "__main__":

@@ -35,8 +35,8 @@ def start_connection(window):
 
     username = window.username_input.text()
     password = window.password_input.text()
-    server_address = window.server_input.text()
-    dns_server_address = window.dns_input.text()
+    server_address = window.server_address  # Changed from widget to value
+    dns_server_address = window.dns_server  # Changed from widget to value
 
     if getattr(sys, 'frozen', False):
         base_path = sys._MEIPASS
@@ -56,7 +56,7 @@ def start_connection(window):
         "-username", shlex.quote(username), "-password", shlex.quote(password)
     ]
     
-    window.worker = CommandWorker(command_args, window.proxy_cb.isChecked())
+    window.worker = CommandWorker(command_args, window.use_proxy)  # Changed from widget to value
     window.worker.output.connect(lambda text: handle_output(window, text))
     window.worker.finished.connect(lambda: handle_connection_finished(window))
     window.worker.start()
