@@ -3,7 +3,6 @@ import sys
 from platform import system
 if system() == "Windows":
     import winreg
-    from os import WindowsError
 import plistlib
 
 def set_launch_at_login(enable: bool):
@@ -20,7 +19,7 @@ def set_launch_at_login(enable: bool):
                         winreg.DeleteValue(key, "HITSZ Connect Verge")
                     except FileNotFoundError:
                         pass
-        except WindowsError:
+        except OSError:
             pass
             
     elif system() == "Darwin":

@@ -24,7 +24,7 @@ class AdvancedSettingsDialog(QDialog):
         
         # Proxy Control
         self.proxy_cb = QCheckBox("自动配置代理")
-        self.proxy_cb.setChecked(True)
+        self.proxy_cb.setChecked(self.use_proxy)
         layout.addWidget(self.proxy_cb)
 
         # Startup Control
@@ -34,6 +34,7 @@ class AdvancedSettingsDialog(QDialog):
 
         # Connect on startup
         self.connect_startup = QCheckBox("启动时自动连接")
+        self.connect_startup.setChecked(self.connect_startup)
         layout.addWidget(self.connect_startup)
 
         # Buttons
