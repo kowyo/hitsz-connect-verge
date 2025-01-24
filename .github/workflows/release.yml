@@ -81,19 +81,13 @@ jobs:
       if: runner.os == 'Windows'
       run: |
         Rename-Item -Path core\zju-connect-${{ matrix.os_name }}-${{ matrix.arch }}.exe -NewName zju-connect.exe
-        pyinstaller --clean --noconsole `
+        pyinstaller --clean --noconsole --onefile `
           --add-data "assets;assets" `
           --add-data "utils;utils" `
           --add-data "core\zju-connect.exe;core" `
           --add-data ".app-version;." `
           --icon assets/icon.ico `
           -n hitsz-connect-verge-windows-${{ matrix.arch }} main_fluent.py
-
-    - name: Zip Windows Executable
-      if: runner.os == 'Windows'
-      run: |
-        cd dist
-        Compress-Archive -Path "hitsz-connect-verge-windows-${{ matrix.arch }}" -DestinationPath "hitsz-connect-verge-${{ matrix.os_name }}-${{ matrix.arch }}.zip"
 
     - name: Build Executable (Linux)
       if: runner.os == 'Linux'
@@ -118,7 +112,7 @@ jobs:
       with:
         name: hitsz-connect-verge-${{ matrix.os_name }}-${{ matrix.arch }}
         path: |
-          ${{ runner.os == 'Windows' && format('dist/*.zip') || (runner.os == 'macOS' && format('dist/*.dmg') || 'dist/*.zip') }}
+          ${{ runner.os == 'Windows' && format('dist/hitsz-connect-verge-windows-{0}.exe', matrix.arch) || (runner.os == 'macOS' && format('dist/*.dmg') || 'dist/*.zip') }}
           
 
   release:
