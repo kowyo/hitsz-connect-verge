@@ -1,5 +1,9 @@
-from PySide6.QtWidgets import QMessageBox, QDialog, QPushButton, QVBoxLayout, QHBoxLayout
+from PySide6.QtWidgets import QMessageBox, QDialog, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QMessageBox
 from PySide6.QtGui import QGuiApplication
+import requests
+from packaging import version
+import webbrowser
+from PySide6.QtCore import Qt
 from .advanced_panel import AdvancedSettingsDialog
 
 def setup_menubar(window, version):
@@ -31,12 +35,6 @@ def copy_log(window):
     QGuiApplication.clipboard().setText(window.output_text.toPlainText())
     QMessageBox.information(window, "复制日志", "日志已复制到剪贴板")
 
-import requests
-from packaging import version
-import webbrowser
-from PySide6.QtWidgets import QDialog, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QMessageBox
-from PySide6.QtCore import Qt
-
 def check_for_updates(parent, current_version):
     """
     Check for updates and show appropriate dialog.
@@ -55,7 +53,6 @@ def check_for_updates(parent, current_version):
 
         if version.parse(latest_version) > version.parse(current_version):
             dialog = QDialog(parent)
-            dialog.setAttribute(Qt.WA_DeleteOnClose)
             dialog.setWindowTitle("检查更新")
             dialog.setMinimumWidth(300)
 
