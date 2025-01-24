@@ -87,7 +87,13 @@ jobs:
           --add-data "core\zju-connect.exe;core" `
           --add-data ".app-version;." `
           --icon assets/icon.ico `
-          -n hitsz-connect-verge-${{ matrix.arch }} main_fluent.py
+          -n hitsz-connect-verge-windows-${{ matrix.arch }} main_fluent.py
+
+    - name: Zip Windows Executable
+      if: runner.os == 'Windows'
+      run: |
+        cd dist
+        Compress-Archive -Path "hitsz-connect-verge-windows-${{ matrix.arch }}" -DestinationPath "hitsz-connect-verge-${{ matrix.os_name }}-${{ matrix.arch }}.zip"
 
     - name: Build Executable (Linux)
       if: runner.os == 'Linux'
@@ -112,7 +118,7 @@ jobs:
       with:
         name: hitsz-connect-verge-${{ matrix.os_name }}-${{ matrix.arch }}
         path: |
-          ${{ runner.os == 'Windows' && format('dist/hitsz-connect-verge-{0}.exe', matrix.arch) || (runner.os == 'macOS' && format('dist/*.dmg') || 'dist/*.zip') }}
+          ${{ runner.os == 'Windows' && format('dist/*.zip') || (runner.os == 'macOS' && format('dist/*.dmg') || 'dist/*.zip') }}
           
 
   release:
