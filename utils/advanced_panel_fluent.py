@@ -1,8 +1,8 @@
-from qfluentwidgets import (LineEdit, SwitchButton, SubtitleLabel, BodyLabel,
+from qfluentwidgets import (LineEdit, SwitchButton, BodyLabel,
                           PushButton, FluentIcon)
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout
-from PySide6.QtCore import Qt
 from .config_utils import save_config
+from .startup_utils import set_launch_at_login, get_launch_at_login
 
 class AdvancedSettingsDialog(QDialog):
     def __init__(self, parent=None):
@@ -33,6 +33,12 @@ class AdvancedSettingsDialog(QDialog):
         layout.addWidget(BodyLabel('自动配置代理'))
         self.proxy_switch = SwitchButton(self)
         layout.addWidget(self.proxy_switch)
+
+        # Login option
+        layout.addWidget(BodyLabel('开机启动'))
+        self.startup_switch = SwitchButton(self)
+        self.startup_switch.setChecked(get_launch_at_login())
+        layout.addWidget(self.startup_switch)
         
         # Add stretch to push buttons to bottom
         layout.addStretch()
@@ -46,7 +52,7 @@ class AdvancedSettingsDialog(QDialog):
         save_button.clicked.connect(self.accept)
         
         cancel_button = PushButton('取消', self)
-        cancel_button.setIcon(FluentIcon.CANCEL)
+        cancel_button.setIcon(FluentIcon.CLOSE)
         cancel_button.clicked.connect(self.reject)
         
         button_layout.addWidget(save_button)
@@ -72,4 +78,5 @@ class AdvancedSettingsDialog(QDialog):
         """Save settings before closing"""
         settings = self.get_settings()
         save_config(settings)
+        set_launch_at_login(self.startup_switch.isChecked())
         super().accept()

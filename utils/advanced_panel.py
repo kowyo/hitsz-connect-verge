@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QCheckBox, QPushButton, QHBoxLayout
 from .config_utils import save_config
+from .startup_utils import set_launch_at_login, get_launch_at_login
 
 class AdvancedSettingsDialog(QDialog):
     def __init__(self, parent=None):
@@ -25,6 +26,11 @@ class AdvancedSettingsDialog(QDialog):
         self.proxy_cb = QCheckBox("自动配置代理")
         self.proxy_cb.setChecked(True)
         layout.addWidget(self.proxy_cb)
+
+        # Startup Control
+        self.startup_switch = QCheckBox("开机启动")
+        self.startup_switch.setChecked(get_launch_at_login())
+        layout.addWidget(self.startup_switch)
 
         # Buttons
         button_layout = QHBoxLayout()
@@ -56,4 +62,5 @@ class AdvancedSettingsDialog(QDialog):
         """Save settings before closing"""
         settings = self.get_settings()
         save_config(settings)
+        set_launch_at_login(self.startup_switch.isChecked())
         super().accept()

@@ -62,12 +62,20 @@ jobs:
           --icon assets/icon.icns \
           -n hitsz-connect-verge main.py
 
-    - name: Zip macOS Executable
+    - name: Create DMG (macOS)
       if: runner.os == 'macOS'
       run: |
-        cd dist
-        echo 'Run command `sudo xattr -rd com.apple.quarantine hitsz-connect-verge.app` in your terminal to grant access before you run!' > README.txt
-        zip -r hitsz-connect-verge-${{ matrix.os_name }}-${{ matrix.arch }}.zip hitsz-connect-verge.app README.txt
+        brew install create-dmg
+        create-dmg \
+          --volname "HITSZ Connect Verge" \
+          --background "assets/bg.svg" \
+          --window-pos 400 200 \
+          --window-size 660 400 \
+          --icon-size 100 \
+          --icon "hitsz-connect-verge.app" 160 185 \
+          --app-drop-link 500 185 \
+          "dist/hitsz-connect-verge-${{ matrix.os_name }}-${{ matrix.arch }}.dmg" \
+          "dist/hitsz-connect-verge.app"
 
     - name: Build Executable (Windows)
       if: runner.os == 'Windows'
@@ -104,7 +112,7 @@ jobs:
       with:
         name: hitsz-connect-verge-${{ matrix.os_name }}-${{ matrix.arch }}
         path: |
-          ${{ runner.os == 'Windows' && format('dist/hitsz-connect-verge-{0}.exe', matrix.arch) || 'dist/*.zip' }}
+          ${{ runner.os == 'Windows' && format('dist/hitsz-connect-verge-{0}.exe', matrix.arch) || (runner.os == 'macOS' && format('dist/*.dmg') || 'dist/*.zip') }}
           
 
   release:

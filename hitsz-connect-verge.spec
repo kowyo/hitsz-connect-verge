@@ -5,7 +5,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[('assets', 'assets')],
+    datas=[('assets', 'assets'), ('utils', 'utils'), ('core/zju-connect', 'core'), ('.app-version', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

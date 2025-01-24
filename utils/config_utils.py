@@ -1,5 +1,6 @@
 import json
 import os
+from .startup_utils import get_launch_at_login
 
 CONFIG_FILE = os.path.join(os.path.expanduser("~"), ".hitsz-connect-verge.json")
 
@@ -16,7 +17,8 @@ def load_config():
     default_config = {
         'server': 'vpn.hitsz.edu.cn',
         'dns': '10.248.98.30',
-        'proxy': True
+        'proxy': True,
+        'launch_at_login': get_launch_at_login()
     }
     
     try:

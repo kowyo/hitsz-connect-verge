@@ -21,7 +21,7 @@ def setup_menubar(window, version):
     help_button.setFixedHeight(34)
     help_menu = RoundMenu(parent=window)
     help_menu.addActions([
-        Action(FluentIcon.CLIPPING_TOOL, '复制日志', triggered=lambda: copy_log(window)),
+        Action(FluentIcon.COPY, '复制日志', triggered=lambda: copy_log(window)),
         Action(FluentIcon.UPDATE, '检查更新', triggered=lambda: check_for_updates(window, version)),
         Action(FluentIcon.INFO, '关于', triggered=lambda: show_about(window, version))
     ])
