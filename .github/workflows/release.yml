@@ -54,7 +54,7 @@ jobs:
       if: runner.os == 'macOS'
       run: |
         mv core/zju-connect-${{ matrix.os_name }}-${{ matrix.arch }} core/zju-connect
-        pyinstaller --clean --onefile --noconsole --windowed \
+        pyinstaller --clean --noconsole --windowed \
           --add-data "assets:assets" \
           --add-data "utils:utils" \
           --add-data "core/zju-connect:core" \
@@ -81,7 +81,7 @@ jobs:
       if: runner.os == 'Windows'
       run: |
         Rename-Item -Path core\zju-connect-${{ matrix.os_name }}-${{ matrix.arch }}.exe -NewName zju-connect.exe
-        pyinstaller --clean --onefile --noconsole `
+        pyinstaller --clean --noconsole `
           --add-data "assets;assets" `
           --add-data "utils;utils" `
           --add-data "core\zju-connect.exe;core" `
@@ -93,7 +93,7 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         mv core/zju-connect-${{ matrix.os_name }}-${{ matrix.arch }} core/zju-connect
-        pyinstaller --onefile --noconsole --windowed --clean \
+        pyinstaller --noconsole --windowed --clean \
           --add-data "assets:assets" \
           --add-data "utils:utils" \
           --add-data "core/zju-connect:core" \
