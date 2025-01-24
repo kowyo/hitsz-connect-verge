@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QMessageBox, QDialog, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QMessageBox
+from PySide6.QtWidgets import QMessageBox, QDialog, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QMessageBox, QMainWindow
 from PySide6.QtGui import QGuiApplication
 import requests
 from packaging import version
@@ -6,7 +6,7 @@ import webbrowser
 from PySide6.QtCore import Qt
 from .advanced_panel import AdvancedSettingsDialog
 
-def setup_menubar(window, version):
+def setup_menubar(window: QMainWindow, version):
     """Set up the main window menu bar"""
     menubar = window.menuBar()
     
