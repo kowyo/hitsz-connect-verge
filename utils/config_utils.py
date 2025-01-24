@@ -18,7 +18,8 @@ def load_config():
         'server': 'vpn.hitsz.edu.cn',
         'dns': '10.248.98.30',
         'proxy': True,
-        'launch_at_login': get_launch_at_login()
+        'launch_at_login': get_launch_at_login(),
+        'connect_startup': False
     }
     
     try:

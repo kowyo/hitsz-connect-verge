@@ -32,6 +32,10 @@ class AdvancedSettingsDialog(QDialog):
         self.startup_switch.setChecked(get_launch_at_login())
         layout.addWidget(self.startup_switch)
 
+        # Connect on startup
+        self.connect_startup = QCheckBox("启动时自动连接")
+        layout.addWidget(self.connect_startup)
+
         # Buttons
         button_layout = QHBoxLayout()
         save_button = QPushButton("保存")
@@ -49,14 +53,16 @@ class AdvancedSettingsDialog(QDialog):
         return {
             'server': self.server_input.text(),
             'dns': self.dns_input.text(),
-            'proxy': self.proxy_cb.isChecked()
+            'proxy': self.proxy_cb.isChecked(),
+            'connect_startup': self.connect_startup.isChecked()
         }
 
-    def set_settings(self, server, dns, proxy):
+    def set_settings(self, server, dns, proxy, connect_startup=False):
         """Set dialog values from main window values"""
         self.server_input.setText(server)
         self.dns_input.setText(dns)
         self.proxy_cb.setChecked(proxy)
+        self.connect_startup.setChecked(connect_startup)
 
     def accept(self):
         """Save settings before closing"""

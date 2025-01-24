@@ -31,6 +31,9 @@ class MainWindow(QMainWindow):
         self.setup_ui()
         self.load_credentials()
         self.load_advanced_settings()
+        
+        if self.connect_startup:
+            self.connect_button.setChecked(True)
 
     def setup_ui(self):
         # Layouts
@@ -113,6 +116,7 @@ class MainWindow(QMainWindow):
         self.server_address = config['server']
         self.dns_server = config['dns']
         self.use_proxy = config['proxy']
+        self.connect_startup = config.get('connect_startup', False)
 
 # Run the application
 if __name__ == "__main__":
