@@ -3,6 +3,7 @@ import sys
 from platform import system
 import shlex
 import gc
+import shutil
 from .set_proxy import CommandWorker
 from qfluentwidgets import FluentIcon
 
@@ -44,7 +45,11 @@ def start_connection(window):
         base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         
     if system() == "Windows":
-        command = os.path.join(base_path, "core", "zju-connect.exe")
+        stable_path = os.path.join(os.path.expanduser("~"), "hitsz-connect-verge", "zju-connect.exe")
+        if not os.path.exists(stable_path):
+            os.makedirs(os.path.dirname(stable_path), exist_ok=True)
+            shutil.copy(os.path.join(base_path, "core", "zju-connect.exe"), stable_path)
+        command = stable_path
     else:
         command = os.path.join(base_path, "core", "zju-connect")
         if os.path.exists(command):
