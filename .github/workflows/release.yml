@@ -24,15 +24,19 @@ jobs:
           - os: macos-latest
             os_name: darwin
             arch: amd64
+            target_arch: x86_64
           - os: macos-latest
             os_name: darwin
             arch: arm64
+            target_arch: arm64
           - os: ubuntu-24.04
             os_name: linux
             arch: amd64
+            target_arch: x86_64
           - os: ubuntu-24.04
             os_name: linux
             arch: arm64
+            target_arch: arm64
             
     runs-on: ${{ matrix.os }}
 
@@ -58,6 +62,7 @@ jobs:
         unzip core/zju-connect.zip -d core
         rm core/zju-connect.zip
         pyinstaller --clean --noconsole --windowed \
+          --target-arch ${{ matrix.target_arch }} \
           --add-data "assets:assets" \
           --add-data "utils:utils" \
           --add-data "core/zju-connect:core" \
@@ -103,21 +108,14 @@ jobs:
 
     - name: Build Executable (Linux)
       if: runner.os == 'Linux'
-      run: |
-        ARCH_MAP="${{ matrix.arch }}"
-        if [ "$ARCH_MAP" = "amd64" ]; then
-          ARCH_MAP="x86_64"
-        elif [ "$ARCH_MAP" = "arm64" ]; then
-          ARCH_MAP="arm64"
-        fi
-        
+      run: |        
         mkdir -p core
         curl -L "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-linux-${{ matrix.arch }}.zip" -o core/zju-connect.zip
         unzip core/zju-connect.zip -d core
         rm core/zju-connect.zip
         
         pyinstaller --noconsole --windowed --clean \
-          --target-arch $ARCH_MAP \
+          --target-arch ${{ matrix.target_arch }} \
           --add-data "assets:assets" \
           --add-data "utils:utils" \
           --add-data "core/zju-connect:core" \
