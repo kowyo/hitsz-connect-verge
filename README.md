@@ -160,7 +160,7 @@ See [this article](https://kuokuo.io/2019/07/01/ssh-over-http-or-socks/) for mor
 
 |   Windows   |   Mac   |  Linux   |
 | ---- | ---- | ---- |
-|  <img width="412" alt="windows" src="assets/windows.png" />   | <img width="412" alt="mac" src="assets/mac.png" />  | <img width="412" alt="linux" src="assets/linux.png" />  |
+|  <img width="412" alt="windows" src="resource/windows.png" />   | <img width="412" alt="mac" src="resource/mac.png" />  | <img width="412" alt="linux" src="resource/linux.png" />  |
 
 ## Contributing
 
