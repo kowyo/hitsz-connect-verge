@@ -33,8 +33,9 @@ class MainWindow(QMainWindow):
         
         if self.connect_startup:
             self.connect_button.setChecked(True)
-            if self.silent_mode:
-                QTimer.singleShot(1000, lambda: self.hide())
+        
+        if self.silent_mode:
+            QTimer.singleShot(1000, lambda: self.hide())
 
     def setup_ui(self):
         # Layouts

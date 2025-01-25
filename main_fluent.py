@@ -42,10 +42,12 @@ class MainWindow(QMainWindow):
         self.load_credentials()
         self.load_advanced_settings()
         self.tray_icon = init_tray_icon(self)
+        
         if self.connect_startup:
             self.connect_button.setChecked(True)
-            if self.silent_mode:
-                QTimer.singleShot(1000, lambda: self.hide())
+        
+        if self.silent_mode:
+            QTimer.singleShot(1000, lambda: self.hide())
 
         setTheme(Theme.AUTO)
         self.themeListener.start()
