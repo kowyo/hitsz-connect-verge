@@ -110,7 +110,7 @@ jobs:
         unzip core/zju-connect.zip -d core
         rm core/zju-connect.zip
         
-        pyinstaller --noconsole --windowed --clean \
+        pyinstaller --noconsole --windowed --clean --onefile \
           --target-arch ${{ matrix.target_arch }} \
           --add-data "assets:assets" \
           --add-data "utils:utils" \
