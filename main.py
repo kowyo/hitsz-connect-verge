@@ -3,6 +3,7 @@ from PySide6.QtWidgets import (
     QTextEdit, QVBoxLayout, QHBoxLayout, QWidget
 )
 from PySide6.QtGui import QIcon
+from PySide6.QtCore import QTimer
 from platform import system
 from utils.tray_utils import handle_close_event, quit_app, init_tray_icon
 from utils.credential_utils import load_credentials, save_credentials
@@ -23,17 +24,17 @@ class MainWindow(QMainWindow):
         self.username_key = "username"    
         self.password_key = "password"    
         
-        # Initialize system tray icon
-        self.tray_icon = init_tray_icon(self)
-        
         self.worker = None
         setup_menubar(self, VERSION)
         self.setup_ui()
         self.load_credentials()
         self.load_advanced_settings()
+        self.tray_icon = init_tray_icon(self)
         
         if self.connect_startup:
             self.connect_button.setChecked(True)
+            if self.silent_mode:
+                QTimer.singleShot(1000, lambda: self.hide())
 
     def setup_ui(self):
         # Layouts
@@ -115,8 +116,9 @@ class MainWindow(QMainWindow):
         config = load_config()
         self.server_address = config['server']
         self.dns_server = config['dns']
-        self.use_proxy = config['proxy']
-        self.connect_startup = config.get('connect_startup', False)
+        self.proxy = config['proxy']
+        self.connect_startup = config['connect_startup']
+        self.silent_mode = config['silent_mode']
 
 # Run the application
 if __name__ == "__main__":

@@ -5,6 +5,7 @@ from qfluentwidgets import (PushButton, CheckBox, LineEdit, TextEdit, PasswordLi
                           BodyLabel, TogglePushButton, IconInfoBadge, FluentIcon, setTheme, Theme,
                           SystemThemeListener)
 from PySide6.QtGui import QIcon
+from PySide6.QtCore import QTimer
 from platform import system
 from utils.tray_utils import handle_close_event, quit_app, init_tray_icon
 from utils.credential_utils import load_credentials, save_credentials
@@ -25,7 +26,6 @@ class MainWindow(QMainWindow):
         self.username_key = "username"    
         self.password_key = "password"    
         
-        self.tray_icon = init_tray_icon(self)
         self.worker = None
         
         # Create central widget and main layout first
@@ -36,13 +36,16 @@ class MainWindow(QMainWindow):
         # Setup command bar and add it to layout
         self.command_bar = setup_menubar(self, VERSION)
         self.main_layout.addWidget(self.command_bar)
-        
+
         # Setup rest of UI
         self.setup_ui()
         self.load_credentials()
         self.load_advanced_settings()
+        self.tray_icon = init_tray_icon(self)
         if self.connect_startup:
             self.connect_button.setChecked(True)
+            if self.silent_mode:
+                QTimer.singleShot(1000, lambda: self.hide())
 
         setTheme(Theme.AUTO)
         self.themeListener.start()
@@ -123,8 +126,9 @@ class MainWindow(QMainWindow):
         config = load_config()
         self.server_address = config['server']
         self.dns_server = config['dns']
-        self.use_proxy = config['proxy']
+        self.proxy = config['proxy']
         self.connect_startup = config.get('connect_startup', False)
+        self.silent_mode = config.get('silent_mode', False)
 
 # Run the application
 if __name__ == "__main__":

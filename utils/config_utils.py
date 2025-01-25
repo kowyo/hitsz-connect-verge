@@ -19,7 +19,8 @@ def load_config():
         'dns': '10.248.98.30',
         'proxy': True,
         'launch_at_login': get_launch_at_login(),
-        'connect_startup': False
+        'connect_startup': False,
+        'silent_mode': False
     }
     
     try:

@@ -2,6 +2,7 @@ from PySide6.QtWidgets import QSystemTrayIcon, QMenu, QApplication
 from PySide6.QtGui import QIcon
 from platform import system
 from .common import get_resource_path
+import gc
 
 def create_tray_menu(window, tray_icon):
     """Create and set up the system tray menu"""
@@ -35,7 +36,9 @@ def handle_close_event(window, event, tray_icon):
 def quit_app(window, tray_icon):
     """Quit the application"""
     window.stop_connection()
-    tray_icon.hide()
+    window.deleteLater()
+    tray_icon.deleteLater()
+    gc.collect()
     QApplication.quit()
 
 def init_tray_icon(window):

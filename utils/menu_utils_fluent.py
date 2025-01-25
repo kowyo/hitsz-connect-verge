@@ -79,12 +79,15 @@ def show_advanced_settings(window):
     dialog.set_settings(
         window.server_address,
         window.dns_server,
-        window.use_proxy,
-        window.connect_startup
+        window.proxy,
+        window.connect_startup,
+        window.silent_mode
     )
     
     if dialog.exec():
         settings = dialog.get_settings()
         window.server_address = settings['server']
         window.dns_server = settings['dns']
-        window.use_proxy = settings['proxy']
+        window.proxy = settings['proxy']
+        window.connect_startup = settings['connect_startup']
+        window.silent_mode = settings['silent_mode']

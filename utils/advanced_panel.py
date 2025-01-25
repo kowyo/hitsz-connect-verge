@@ -23,9 +23,8 @@ class AdvancedSettingsDialog(QDialog):
         layout.addWidget(self.dns_input)
         
         # Proxy Control
-        self.proxy_cb = QCheckBox("自动配置代理")
-        self.proxy_cb.setChecked(self.use_proxy)
-        layout.addWidget(self.proxy_cb)
+        self.proxy_switch = QCheckBox("自动配置代理")
+        layout.addWidget(self.proxy_switch)
 
         # Startup Control
         self.startup_switch = QCheckBox("开机启动")
@@ -33,9 +32,11 @@ class AdvancedSettingsDialog(QDialog):
         layout.addWidget(self.startup_switch)
 
         # Connect on startup
-        self.connect_startup = QCheckBox("启动时自动连接")
-        self.connect_startup.setChecked(self.connect_startup)
-        layout.addWidget(self.connect_startup)
+        self.connect_startup_switch = QCheckBox("启动时自动连接")
+        layout.addWidget(self.connect_startup_switch)
+
+        self.silent_mode_switch = QCheckBox("静默启动")
+        layout.addWidget(self.silent_mode_switch)
 
         # Buttons
         button_layout = QHBoxLayout()
@@ -54,16 +55,18 @@ class AdvancedSettingsDialog(QDialog):
         return {
             'server': self.server_input.text(),
             'dns': self.dns_input.text(),
-            'proxy': self.proxy_cb.isChecked(),
-            'connect_startup': self.connect_startup.isChecked()
+            'proxy': self.proxy_switch.isChecked(),
+            'connect_startup': self.connect_startup_switch.isChecked(),
+            'silent_mode': self.silent_mode_switch.isChecked()
         }
 
-    def set_settings(self, server, dns, proxy, connect_startup=False):
+    def set_settings(self, server, dns, proxy, connect_startup, silent_mode):
         """Set dialog values from main window values"""
         self.server_input.setText(server)
         self.dns_input.setText(dns)
-        self.proxy_cb.setChecked(proxy)
-        self.connect_startup.setChecked(connect_startup)
+        self.proxy_switch.setChecked(proxy)
+        self.connect_startup_switch.setChecked(connect_startup)
+        self.silent_mode_switch.setChecked(silent_mode)
 
     def accept(self):
         """Save settings before closing"""
