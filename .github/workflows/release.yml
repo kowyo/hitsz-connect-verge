@@ -33,10 +33,6 @@ jobs:
             os_name: linux
             arch: amd64
             target_arch: x86_64
-          - os: ubuntu-24.04
-            os_name: linux
-            arch: arm64
-            target_arch: arm64
             
     runs-on: ${{ matrix.os }}
 
