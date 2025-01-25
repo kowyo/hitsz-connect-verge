@@ -53,6 +53,7 @@ jobs:
     - name: Build Executable (macOS)
       if: runner.os == 'macOS'
       run: |
+        mkdir -p core
         curl -L "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-darwin-${{ matrix.arch }}.zip" -o core/zju-connect.zip
         unzip core/zju-connect.zip -d core
         rm core/zju-connect.zip
@@ -82,6 +83,7 @@ jobs:
     - name: Build Executable (Windows)
       if: runner.os == 'Windows'
       run: |
+        mkdir -p core
         Invoke-WebRequest -Uri "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-windows-${{ matrix.arch }}.zip" -OutFile "core\zju-connect-windows-${{ matrix.arch }}.zip"
         Expand-Archive -Path "core\zju-connect-windows-${{ matrix.arch }}.zip" -DestinationPath "core"
         Remove-Item -Path "core\zju-connect-windows-${{ matrix.arch }}.zip"
@@ -96,6 +98,7 @@ jobs:
     - name: Build Executable (Linux)
       if: runner.os == 'Linux'
       run: |
+        mkdir -p core
         curl -L "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-linux-${{ matrix.arch }}.zip" -o core/zju-connect.zip
         unzip core/zju-connect.zip -d core
         rm core/zju-connect.zip
