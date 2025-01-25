@@ -95,6 +95,12 @@ jobs:
           --icon assets/icon.ico `
           -n hitsz-connect-verge-windows-${{ matrix.arch }} main_fluent.py
 
+    - name: Install Linux Dependencies
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libglib2.0-0 libgl1
+
     - name: Build Executable (Linux)
       if: runner.os == 'Linux'
       run: |
@@ -102,20 +108,20 @@ jobs:
         curl -L "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-linux-${{ matrix.arch }}.zip" -o core/zju-connect.zip
         unzip core/zju-connect.zip -d core
         rm core/zju-connect.zip
-        pyinstaller --noconsole --windowed --clean --onefile \
+        pyinstaller --noconsole --windowed --clean \
           --add-data "assets:assets" \
           --add-data "utils:utils" \
           --add-data "core/zju-connect:core" \
           --add-data ".app-version:." \
           --icon assets/icon.png \
-          -n hitsz-connect-verge-linux-${{ matrix.arch }} main.py
+          -n hitsz-connect-verge main.py
 
     - name: Archive Executable
       uses: actions/upload-artifact@v4
       with:
         name: hitsz-connect-verge-${{ matrix.os_name }}-${{ matrix.arch }}
         path: |
-          ${{ runner.os == 'Windows' && format('dist/hitsz-connect-verge-windows-{0}.exe', matrix.arch) || (runner.os == 'macOS' && format('dist/*.dmg') || 'dist/*') }}
+          ${{ runner.os == 'Windows' && format('dist/hitsz-connect-verge-windows-{0}.exe', matrix.arch) || (runner.os == 'macOS' && format('dist/*.dmg') || 'dist/hitsz-connect-verge') }}
           
 
   release:
