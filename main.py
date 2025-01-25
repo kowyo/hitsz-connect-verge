@@ -2,15 +2,16 @@ from PySide6.QtWidgets import (
     QApplication, QMainWindow, QLabel, QLineEdit, QCheckBox, QPushButton, 
     QTextEdit, QVBoxLayout, QHBoxLayout, QWidget
 )
-from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
-import platform
+from PySide6.QtCore import QTimer
+from platform import system
 from utils.tray_utils import handle_close_event, quit_app, init_tray_icon
 from utils.credential_utils import load_credentials, save_credentials
-from utils.connection_utils import start_connection, stop_connection, handle_connection_finished
+from utils.connection_utils import start_connection, stop_connection
 from utils.common import get_resource_path, get_version
 from utils.password_utils import toggle_password_visibility
 from utils.menu_utils import setup_menubar
+from utils.config_utils import load_config
 
 VERSION = get_version()
 
@@ -18,18 +19,23 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("HITSZ Connect Verge")
-        self.setFixedSize(300, 450)
+        self.setMinimumSize(300, 450)
         self.service_name = "hitsz-connect-verge"
         self.username_key = "username"    
         self.password_key = "password"    
-        
-        # Initialize system tray icon
-        self.tray_icon = init_tray_icon(self)
         
         self.worker = None
         setup_menubar(self, VERSION)
         self.setup_ui()
         self.load_credentials()
+        self.load_advanced_settings()
+        self.tray_icon = init_tray_icon(self)
+        
+        if self.connect_startup:
+            self.connect_button.setChecked(True)
+        
+        if self.silent_mode:
+            QTimer.singleShot(1000, lambda: self.hide())
 
     def setup_ui(self):
         # Layouts
@@ -54,28 +60,6 @@ class MainWindow(QMainWindow):
         self.remember_cb = QCheckBox("记住密码")
         layout.addWidget(self.remember_cb)
         
-        # Server and DNS (store labels as class members)
-        self.server_label = QLabel("SSL VPN 服务端地址：")
-        layout.addWidget(self.server_label)
-        self.server_label.hide()
-        
-        self.server_input = QLineEdit("vpn.hitsz.edu.cn")
-        layout.addWidget(self.server_input)
-        self.server_input.hide()
-
-        self.dns_label = QLabel("DNS 服务器地址：")
-        layout.addWidget(self.dns_label)
-        self.dns_label.hide()
-        
-        self.dns_input = QLineEdit("10.248.98.30")
-        layout.addWidget(self.dns_input)
-        self.dns_input.hide()
-        
-        # Proxy Control
-        self.proxy_cb = QCheckBox("自动配置代理")
-        self.proxy_cb.setChecked(True)
-        # layout.addWidget(self.proxy_cb)
-
         # Status and Output
         status_layout = QHBoxLayout()
         status_layout.addWidget(QLabel("运行信息"))
@@ -128,19 +112,25 @@ class MainWindow(QMainWindow):
     def stop_connection(self):
         stop_connection(self)
 
-    def on_connection_finished(self):
-        handle_connection_finished(self)
+    def load_advanced_settings(self):
+        """Load advanced settings from config file"""
+        config = load_config()
+        self.server_address = config['server']
+        self.dns_server = config['dns']
+        self.proxy = config['proxy']
+        self.connect_startup = config['connect_startup']
+        self.silent_mode = config['silent_mode']
 
 # Run the application
 if __name__ == "__main__":
     app = QApplication([])
     app.setQuitOnLastWindowClosed(False)
     
-    if platform.system() == "Windows":
+    if system() == "Windows":
         icon_path = get_resource_path("assets/icon.ico")
-    elif platform.system() == "Darwin":
+    elif system() == "Darwin":
         icon_path = get_resource_path("assets/icon.icns")
-    elif platform.system() == "Linux":
+    elif system() == "Linux":
         icon_path = get_resource_path("assets/icon.png")
     app_icon = QIcon(icon_path)
     app.setWindowIcon(app_icon)

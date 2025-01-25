@@ -1,15 +1,18 @@
 from PySide6.QtWidgets import QSystemTrayIcon, QMenu, QApplication
 from PySide6.QtGui import QIcon
-import platform
+from platform import system
 from .common import get_resource_path
+import gc
 
 def create_tray_menu(window, tray_icon):
     """Create and set up the system tray menu"""
     menu = QMenu()
     show_action = menu.addAction("打开面板")
     show_action.triggered.connect(window.show)
-    hide_action = menu.addAction("隐藏面板")
-    hide_action.triggered.connect(window.hide)
+    connect_action = menu.addAction("连接")
+    connect_action.triggered.connect(lambda: window.connect_button.setChecked(True))
+    disconnect_action = menu.addAction("断开")
+    disconnect_action.triggered.connect(lambda: window.connect_button.setChecked(False))
     quit_action = menu.addAction("退出")
     quit_action.triggered.connect(window.quit_app)
     
@@ -33,7 +36,9 @@ def handle_close_event(window, event, tray_icon):
 def quit_app(window, tray_icon):
     """Quit the application"""
     window.stop_connection()
-    tray_icon.hide()
+    window.deleteLater()
+    tray_icon.deleteLater()
+    gc.collect()
     QApplication.quit()
 
 def init_tray_icon(window):
@@ -41,11 +46,11 @@ def init_tray_icon(window):
     tray_icon = QSystemTrayIcon(window)
     
     # Set icon based on platform
-    if platform.system() == "Windows":
+    if system() == "Windows":
         icon_path = "assets/icon.ico"
-    elif platform.system() == "Darwin":
+    elif system() == "Darwin":
         icon_path = "assets/icon.icns"
-    elif platform.system() == "Linux":
+    elif system() == "Linux":
         icon_path = "assets/icon.png"
     
     tray_icon.setIcon(QIcon(get_resource_path(icon_path)))

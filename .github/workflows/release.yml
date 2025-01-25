@@ -6,6 +6,9 @@ on:
     tags:
       - "v*"
 
+  pull_request:
+    branches: [ "main" ]
+
 jobs:
   build:
     permissions: write-all
@@ -14,19 +17,19 @@ jobs:
         include:
           - os: windows-latest
             os_name: windows
-            arch: x64
+            arch: amd64
           - os: windows-latest
             os_name: windows
             arch: arm64
           - os: macos-latest
             os_name: darwin
-            arch: x64
+            arch: amd64
           - os: macos-latest
             os_name: darwin
             arch: arm64
           - os: ubuntu-24.04
             os_name: linux
-            arch: x64
+            arch: amd64
           - os: ubuntu-24.04
             os_name: linux
             arch: arm64
@@ -50,8 +53,11 @@ jobs:
     - name: Build Executable (macOS)
       if: runner.os == 'macOS'
       run: |
-        mv core/zju-connect-${{ matrix.os_name }}-${{ matrix.arch }} core/zju-connect
-        pyinstaller --clean --onefile --noconsole --windowed \
+        mkdir -p core
+        curl -L "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-darwin-${{ matrix.arch }}.zip" -o core/zju-connect.zip
+        unzip core/zju-connect.zip -d core
+        rm core/zju-connect.zip
+        pyinstaller --clean --noconsole --windowed \
           --add-data "assets:assets" \
           --add-data "utils:utils" \
           --add-data "core/zju-connect:core" \
@@ -59,30 +65,50 @@ jobs:
           --icon assets/icon.icns \
           -n hitsz-connect-verge main.py
 
-    - name: Zip macOS Executable
+    - name: Create DMG (macOS)
       if: runner.os == 'macOS'
       run: |
-        cd dist
-        echo 'Run command `sudo xattr -rd com.apple.quarantine hitsz-connect-verge.app` in your terminal to grant access before you run!' > README.txt
-        zip -r hitsz-connect-verge-${{ matrix.os_name }}-${{ matrix.arch }}.zip hitsz-connect-verge.app README.txt
+        brew install create-dmg
+        create-dmg \
+          --volname "HITSZ Connect Verge" \
+          --background "assets/bg.svg" \
+          --window-pos 400 200 \
+          --window-size 660 400 \
+          --icon-size 100 \
+          --icon "hitsz-connect-verge.app" 160 185 \
+          --app-drop-link 500 185 \
+          "dist/hitsz-connect-verge-${{ matrix.os_name }}-${{ matrix.arch }}.dmg" \
+          "dist/hitsz-connect-verge.app"
 
     - name: Build Executable (Windows)
       if: runner.os == 'Windows'
       run: |
-        Rename-Item -Path core\zju-connect-${{ matrix.os_name }}-${{ matrix.arch }}.exe -NewName zju-connect.exe
-        pyinstaller --clean --onefile --noconsole `
+        mkdir -p core
+        Invoke-WebRequest -Uri "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-windows-${{ matrix.arch }}.zip" -OutFile "core\zju-connect-windows-${{ matrix.arch }}.zip"
+        Expand-Archive -Path "core\zju-connect-windows-${{ matrix.arch }}.zip" -DestinationPath "core"
+        Remove-Item -Path "core\zju-connect-windows-${{ matrix.arch }}.zip"
+        pyinstaller --clean --noconsole --onefile `
           --add-data "assets;assets" `
           --add-data "utils;utils" `
           --add-data "core\zju-connect.exe;core" `
           --add-data ".app-version;." `
           --icon assets/icon.ico `
-          -n hitsz-connect-verge-${{ matrix.arch }} main_fluent.py
+          -n hitsz-connect-verge-windows-${{ matrix.arch }} main_fluent.py
+
+    - name: Install Linux Dependencies
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libglib2.0-0 libgl1
 
     - name: Build Executable (Linux)
       if: runner.os == 'Linux'
       run: |
-        mv core/zju-connect-${{ matrix.os_name }}-${{ matrix.arch }} core/zju-connect
-        pyinstaller --onefile --noconsole --windowed --clean \
+        mkdir -p core
+        curl -L "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-linux-${{ matrix.arch }}.zip" -o core/zju-connect.zip
+        unzip core/zju-connect.zip -d core
+        rm core/zju-connect.zip
+        pyinstaller --noconsole --windowed --clean \
           --add-data "assets:assets" \
           --add-data "utils:utils" \
           --add-data "core/zju-connect:core" \
@@ -90,18 +116,12 @@ jobs:
           --icon assets/icon.png \
           -n hitsz-connect-verge main.py
 
-    - name: Zip Linux Executable
-      if: runner.os == 'Linux'
-      run: |
-        cd dist
-        zip -r hitsz-connect-verge-${{ matrix.os_name }}-${{ matrix.arch }}.zip hitsz-connect-verge
-
     - name: Archive Executable
       uses: actions/upload-artifact@v4
       with:
         name: hitsz-connect-verge-${{ matrix.os_name }}-${{ matrix.arch }}
         path: |
-          ${{ runner.os == 'Windows' && format('dist/hitsz-connect-verge-{0}.exe', matrix.arch) || 'dist/*.zip' }}
+          ${{ runner.os == 'Windows' && format('dist/hitsz-connect-verge-windows-{0}.exe', matrix.arch) || (runner.os == 'macOS' && format('dist/*.dmg') || 'dist/hitsz-connect-verge') }}
           
 
   release:
