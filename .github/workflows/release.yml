@@ -17,19 +17,19 @@ jobs:
         include:
           - os: windows-latest
             os_name: windows
-            arch: x64
+            arch: amd64
           - os: windows-latest
             os_name: windows
             arch: arm64
           - os: macos-latest
             os_name: darwin
-            arch: x64
+            arch: amd64
           - os: macos-latest
             os_name: darwin
             arch: arm64
           - os: ubuntu-24.04
             os_name: linux
-            arch: x64
+            arch: amd64
           - os: ubuntu-24.04
             os_name: linux
             arch: arm64
@@ -53,7 +53,9 @@ jobs:
     - name: Build Executable (macOS)
       if: runner.os == 'macOS'
       run: |
-        mv core/zju-connect-${{ matrix.os_name }}-${{ matrix.arch }} core/zju-connect
+        curl -L "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-darwin-${{ matrix.arch }}.zip" -o core/zju-connect.zip
+        unzip core/zju-connect.zip -d core
+        rm core/zju-connect.zip
         pyinstaller --clean --noconsole --windowed \
           --add-data "assets:assets" \
           --add-data "utils:utils" \
@@ -80,7 +82,9 @@ jobs:
     - name: Build Executable (Windows)
       if: runner.os == 'Windows'
       run: |
-        Rename-Item -Path core\zju-connect-${{ matrix.os_name }}-${{ matrix.arch }}.exe -NewName zju-connect.exe
+        Invoke-WebRequest -Uri "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-windows-${{ matrix.arch }}.zip" -OutFile "core\zju-connect-windows-${{ matrix.arch }}.zip"
+        Expand-Archive -Path "core\zju-connect-windows-${{ matrix.arch }}.zip" -DestinationPath "core"
+        Remove-Item -Path "core\zju-connect-windows-${{ matrix.arch }}.zip"
         pyinstaller --clean --noconsole --onefile `
           --add-data "assets;assets" `
           --add-data "utils;utils" `
@@ -92,7 +96,9 @@ jobs:
     - name: Build Executable (Linux)
       if: runner.os == 'Linux'
       run: |
-        mv core/zju-connect-${{ matrix.os_name }}-${{ matrix.arch }} core/zju-connect
+        curl -L "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-linux-${{ matrix.arch }}.zip" -o core/zju-connect.zip
+        unzip core/zju-connect.zip -d core
+        rm core/zju-connect.zip
         pyinstaller --noconsole --windowed --clean \
           --add-data "assets:assets" \
           --add-data "utils:utils" \
