@@ -104,17 +104,12 @@ jobs:
     - name: Build Executable (Linux)
       if: runner.os == 'Linux'
       run: |
-        # Map GitHub runner arch to Linux arch
         ARCH_MAP="${{ matrix.arch }}"
         if [ "$ARCH_MAP" = "amd64" ]; then
           ARCH_MAP="x86_64"
         elif [ "$ARCH_MAP" = "arm64" ]; then
-          ARCH_MAP="aarch64"
+          ARCH_MAP="arm64"
         fi
-        
-        # Set platform-specific environment
-        export PYTHONPATH=/usr/lib/python3/dist-packages
-        export PLATFORM_MACHINE=$ARCH_MAP
         
         mkdir -p core
         curl -L "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-linux-${{ matrix.arch }}.zip" -o core/zju-connect.zip
@@ -130,60 +125,12 @@ jobs:
           --icon assets/icon.png \
           -n hitsz-connect-verge main.py
 
-    - name: Create DEB Package (Linux)
-      if: runner.os == 'Linux'
-      run: |
-        # Map GitHub runner arch to Debian arch
-        DEB_ARCH="${{ matrix.arch }}"
-        if [ "$DEB_ARCH" = "amd64" ]; then
-          DEB_ARCH="amd64"
-        elif [ "$DEB_ARCH" = "arm64" ]; then
-          DEB_ARCH="arm64"
-        fi
-        
-        PACKAGE_NAME="hitsz-connect-verge"
-        VERSION=$(cat .app-version)
-        
-        # Create package structure
-        mkdir -p debian/DEBIAN
-        mkdir -p debian/usr/local/bin
-        mkdir -p debian/usr/share/applications
-        mkdir -p debian/usr/share/icons/hicolor/256x256/apps
-        
-        # Copy application
-        cp -r dist/hitsz-connect-verge/* debian/usr/local/bin/
-        cp assets/icon.png debian/usr/share/icons/hicolor/256x256/apps/hitsz-connect-verge.png
-        
-        # Create desktop entry
-        cat > debian/usr/share/applications/hitsz-connect-verge.desktop << EOF
-        [Desktop Entry]
-        Name=HITSZ Connect Verge
-        Exec=/usr/local/bin/hitsz-connect-verge
-        Icon=hitsz-connect-verge
-        Type=Application
-        Categories=Network;
-        EOF
-        
-        # Create control file
-        cat > debian/DEBIAN/control << EOF
-        Package: hitsz-connect-verge
-        Version: $VERSION
-        Architecture: $DEB_ARCH
-        Maintainer: kowyo
-        Description: HITSZ Connect Verge - VPN Client for HITSZ
-        Depends: libglib2.0-0, libgl1
-        EOF
-        
-        # Build package
-        dpkg-deb --build debian
-        mv debian.deb dist/hitsz-connect-verge-linux-${{ matrix.arch }}.deb
-
     - name: Archive Executable
       uses: actions/upload-artifact@v4
       with:
         name: hitsz-connect-verge-${{ matrix.os_name }}-${{ matrix.arch }}
         path: |
-          ${{ runner.os == 'Windows' && format('dist/hitsz-connect-verge-windows-{0}.exe', matrix.arch) || (runner.os == 'macOS' && format('dist/*.dmg') || 'dist/*.deb') }}
+          ${{ runner.os == 'Windows' && format('dist/hitsz-connect-verge-windows-{0}.exe', matrix.arch) || (runner.os == 'macOS' && format('dist/*.dmg') || 'dist/hitsz-connect-verge') }}
           
 
   release:
