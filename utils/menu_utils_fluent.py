@@ -79,7 +79,8 @@ def show_advanced_settings(window):
     dialog.set_settings(
         window.server_address,
         window.dns_server,
-        window.use_proxy
+        window.use_proxy,
+        window.connect_startup
     )
     
     if dialog.exec():

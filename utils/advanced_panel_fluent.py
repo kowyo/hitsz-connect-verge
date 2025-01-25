@@ -1,4 +1,4 @@
-from qfluentwidgets import (LineEdit, SwitchButton, BodyLabel,
+from qfluentwidgets import (LineEdit, BodyLabel, CheckBox, SwitchButton,
                           PushButton, FluentIcon)
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout
 from .config_utils import save_config
@@ -32,7 +32,6 @@ class AdvancedSettingsDialog(QDialog):
         # Proxy Control
         layout.addWidget(BodyLabel('自动配置代理'))
         self.proxy_switch = SwitchButton(self)
-        self.proxy_switch.setChecked(self.proxy_switch)
         layout.addWidget(self.proxy_switch)
 
         # Login option
@@ -44,7 +43,6 @@ class AdvancedSettingsDialog(QDialog):
         # Connect on startup
         layout.addWidget(BodyLabel('启动时自动连接'))
         self.connect_startup = SwitchButton(self)
-        self.connect_startup.setChecked(self.connect_startup)
         layout.addWidget(self.connect_startup)
         
         # Add stretch to push buttons to bottom
