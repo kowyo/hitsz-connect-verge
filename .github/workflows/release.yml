@@ -102,26 +102,20 @@ jobs:
         curl -L "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-linux-${{ matrix.arch }}.zip" -o core/zju-connect.zip
         unzip core/zju-connect.zip -d core
         rm core/zju-connect.zip
-        pyinstaller --noconsole --windowed --clean \
+        pyinstaller --noconsole --windowed --clean --onefile \
           --add-data "assets:assets" \
           --add-data "utils:utils" \
           --add-data "core/zju-connect:core" \
           --add-data ".app-version:." \
           --icon assets/icon.png \
-          -n hitsz-connect-verge main.py
-
-    - name: Zip Linux Executable
-      if: runner.os == 'Linux'
-      run: |
-        cd dist
-        zip -r hitsz-connect-verge-${{ matrix.os_name }}-${{ matrix.arch }}.zip hitsz-connect-verge
+          -n hitsz-connect-verge-linux-${{ matrix.arch }} main.py
 
     - name: Archive Executable
       uses: actions/upload-artifact@v4
       with:
         name: hitsz-connect-verge-${{ matrix.os_name }}-${{ matrix.arch }}
         path: |
-          ${{ runner.os == 'Windows' && format('dist/hitsz-connect-verge-windows-{0}.exe', matrix.arch) || (runner.os == 'macOS' && format('dist/*.dmg') || 'dist/*.zip') }}
+          ${{ runner.os == 'Windows' && format('dist/hitsz-connect-verge-windows-{0}.exe', matrix.arch) || (runner.os == 'macOS' && format('dist/*.dmg') || 'dist/*') }}
           
 
   release:
