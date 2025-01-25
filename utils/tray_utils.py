@@ -8,8 +8,10 @@ def create_tray_menu(window, tray_icon):
     menu = QMenu()
     show_action = menu.addAction("打开面板")
     show_action.triggered.connect(window.show)
-    hide_action = menu.addAction("隐藏面板")
-    hide_action.triggered.connect(window.hide)
+    connect_action = menu.addAction("连接")
+    connect_action.triggered.connect(lambda: window.connect_button.setChecked(True))
+    disconnect_action = menu.addAction("断开")
+    disconnect_action.triggered.connect(lambda: window.connect_button.setChecked(False))
     quit_action = menu.addAction("退出")
     quit_action.triggered.connect(window.quit_app)
     
