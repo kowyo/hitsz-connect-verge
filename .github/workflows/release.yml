@@ -104,11 +104,25 @@ jobs:
     - name: Build Executable (Linux)
       if: runner.os == 'Linux'
       run: |
+        # Map GitHub runner arch to Linux arch
+        ARCH_MAP="${{ matrix.arch }}"
+        if [ "$ARCH_MAP" = "amd64" ]; then
+          ARCH_MAP="x86_64"
+        elif [ "$ARCH_MAP" = "arm64" ]; then
+          ARCH_MAP="aarch64"
+        fi
+        
+        # Set platform-specific environment
+        export PYTHONPATH=/usr/lib/python3/dist-packages
+        export PLATFORM_MACHINE=$ARCH_MAP
+        
         mkdir -p core
         curl -L "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-linux-${{ matrix.arch }}.zip" -o core/zju-connect.zip
         unzip core/zju-connect.zip -d core
         rm core/zju-connect.zip
+        
         pyinstaller --noconsole --windowed --clean \
+          --target-arch $ARCH_MAP \
           --add-data "assets:assets" \
           --add-data "utils:utils" \
           --add-data "core/zju-connect:core" \
@@ -119,9 +133,16 @@ jobs:
     - name: Create DEB Package (Linux)
       if: runner.os == 'Linux'
       run: |
+        # Map GitHub runner arch to Debian arch
+        DEB_ARCH="${{ matrix.arch }}"
+        if [ "$DEB_ARCH" = "amd64" ]; then
+          DEB_ARCH="amd64"
+        elif [ "$DEB_ARCH" = "arm64" ]; then
+          DEB_ARCH="arm64"
+        fi
+        
         PACKAGE_NAME="hitsz-connect-verge"
         VERSION=$(cat .app-version)
-        ARCH="${{ matrix.arch }}"
         
         # Create package structure
         mkdir -p debian/DEBIAN
@@ -147,7 +168,7 @@ jobs:
         cat > debian/DEBIAN/control << EOF
         Package: hitsz-connect-verge
         Version: $VERSION
-        Architecture: $ARCH
+        Architecture: $DEB_ARCH
         Maintainer: kowyo
         Description: HITSZ Connect Verge - VPN Client for HITSZ
         Depends: libglib2.0-0, libgl1
