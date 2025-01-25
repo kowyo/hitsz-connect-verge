@@ -30,7 +30,6 @@ def set_launch_at_login(enable: bool):
             'Label': 'com.kowyo.hitsz-connect-verge',
             'ProgramArguments': [app_path],
             'RunAtLoad': True,
-            'KeepAlive': False
         }
         
         if enable:
