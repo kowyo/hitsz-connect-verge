@@ -45,7 +45,7 @@ HITSZ Connect Verge提供开箱即用体验，您可从[发布页面](https://gi
 > sudo xattr -rd com.apple.quarantine hitsz-connect-verge.app
 > ```
 >
-> 部分情况下需前往 macOS `设置`->`隐私与安全性`->`安全性`->`打开`——`仍要打开`
+> 或者，前往 macOS `设置`->`隐私与安全性`->`安全性`->`打开`——`仍要打开` 来打开应用。
 
 ### 方式二：从源码构建
 
