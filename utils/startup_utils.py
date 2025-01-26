@@ -3,7 +3,7 @@ import sys
 from platform import system
 if system() == "Windows":
     import winreg
-import plistlib
+import subprocess
 
 def set_launch_at_login(enable: bool):
     """Set application to launch at login"""
@@ -23,24 +23,27 @@ def set_launch_at_login(enable: bool):
             pass
             
     elif system() == "Darwin":
-        plist_path = os.path.expanduser("~/Library/LaunchAgents/com.kowyo.hitsz-connect-verge.plist")
-        app_path = sys.argv[0]
-        
-        plist_content = {
-            'Label': 'com.kowyo.hitsz-connect-verge',
-            'ProgramArguments': [app_path],
-            'RunAtLoad': True,
-        }
-        
-        if enable:
-            with open(plist_path, 'wb') as f:
-                plistlib.dump(plist_content, f)
-            os.chmod(plist_path, 0o644)
-        else:
-            try:
-                os.remove(plist_path)
-            except FileNotFoundError:
-                pass
+        try:
+            app_path = sys.argv[0]
+            if ".app/Contents/MacOS/" in app_path:
+                # Extract path to the .app bundle
+                app_path = app_path.split(".app/Contents/MacOS/")[0] + ".app"
+            
+            if enable:
+                subprocess.run([
+                    'osascript',
+                    '-e',
+                    f'tell application "System Events" to make login item at end with properties {{path:"{app_path}", hidden:false}}'
+                ])
+            else:
+                app_name = os.path.basename(app_path).replace(".app", "")
+                subprocess.run([
+                    'osascript',
+                    '-e',
+                    f'tell application "System Events" to delete login item "{app_name}"'
+                ])
+        except subprocess.SubprocessError:
+            pass
 
 def get_launch_at_login() -> bool:
     """Check if application is set to launch at login"""
@@ -54,7 +57,15 @@ def get_launch_at_login() -> bool:
             return False
             
     elif system() == "Darwin":
-        plist_path = os.path.expanduser("~/Library/LaunchAgents/com.kowyo.hitsz-connect-verge.plist")
-        return os.path.exists(plist_path)
+        try:
+            app_name = os.path.basename(sys.argv[0]).replace(".app", "")     
+            result = subprocess.run([
+                'osascript',
+                '-e',
+                'tell application "System Events" to get the name of every login item'
+            ], capture_output=True, text=True)
+            return app_name.lower() in result.stdout.lower()
+        except subprocess.SubprocessError:
+            return False
     
     return False
