@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QSystemTrayIcon, QMenu, QApplication, QMainWindow
-from PySide6.QtGui import QIcon
+from PySide6.QtGui import QIcon, QAction
 from platform import system
 from .common import get_resource_path
 import gc
@@ -10,10 +10,10 @@ def create_tray_menu(window: QMainWindow, tray_icon):
     show_action = menu.addAction("打开面板")
     show_action.triggered.connect(window.show)
     show_action.triggered.connect(window.raise_)
-    connect_action = menu.addAction("连接")
-    connect_action.triggered.connect(lambda: window.connect_button.setChecked(True))
-    disconnect_action = menu.addAction("断开")
-    disconnect_action.triggered.connect(lambda: window.connect_button.setChecked(False))
+    connect_action = QAction("系统代理", menu)
+    connect_action.setCheckable(True)
+    connect_action.triggered.connect(lambda checked: window.connect_button.setChecked(checked))
+    menu.addAction(connect_action)
     quit_action = menu.addAction("退出")
     quit_action.triggered.connect(window.quit_app)
     
