@@ -1,14 +1,15 @@
-from PySide6.QtWidgets import QSystemTrayIcon, QMenu, QApplication
+from PySide6.QtWidgets import QSystemTrayIcon, QMenu, QApplication, QMainWindow
 from PySide6.QtGui import QIcon
 from platform import system
 from .common import get_resource_path
 import gc
 
-def create_tray_menu(window, tray_icon):
+def create_tray_menu(window: QMainWindow, tray_icon):
     """Create and set up the system tray menu"""
     menu = QMenu()
     show_action = menu.addAction("打开面板")
     show_action.triggered.connect(window.show)
+    show_action.triggered.connect(window.raise_)
     connect_action = menu.addAction("连接")
     connect_action.triggered.connect(lambda: window.connect_button.setChecked(True))
     disconnect_action = menu.addAction("断开")
