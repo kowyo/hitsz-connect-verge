@@ -85,8 +85,22 @@ del "%~f0"
             with open("update.bat", "w") as f:
                 f.write(batch_script)
             os.system("start /b update.bat")
-        elif system() == "Darwin" or system() == "Linux":
-            shutil.copy2(update_file, sys.executable)
+        elif system() == "Darwin":
+            # unzip and mount dmg
+            temp_dir = tempfile.mkdtemp()
+            os.system(f"unzip -o {update_file} -d {temp_dir}")
+            dmg_file = next((f for f in os.listdir(temp_dir) if f.endswith(".dmg")), None)
+            if dmg_file:
+                os.system(f"hdiutil attach {os.path.join(temp_dir, dmg_file)}")
+                os.system(f"cp -f /Volumes/hitsz-connect-verge/hitsz-connect-verge.app/Contents/MacOS/hitsz-connect-verge {sys.executable}")
+                os.system("hdiutil detach /Volumes/hitsz-connect-verge")
+        elif system() == "Linux":
+            # unzip and replace executable
+            temp_dir = tempfile.mkdtemp()
+            os.system(f"unzip -o {update_file} -d {temp_dir}")
+            executable = sys.executable
+            shutil.copyfile(os.path.join(temp_dir, "hitsz-connect-verge"), executable)
+            os.chmod(executable, 0o755)
 
 def check_for_updates(parent, current_version):
     """
