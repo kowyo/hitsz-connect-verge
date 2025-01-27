@@ -73,7 +73,7 @@ def check_for_updates(parent, current_version, startup=False):
             if not startup:
                 MessageBox("检查更新", "当前已是最新版本。", parent=parent).exec()
             else:
-                print("当前已是最新版本。")
+                parent.output_text.append("App is up to date.")
             
     except requests.RequestException:
         MessageBox("检查更新", "检查更新失败，请检查网络连接。", parent=parent).exec()

@@ -90,7 +90,7 @@ def check_for_updates(parent, current_version, startup=False):
             if not startup:
                 QMessageBox.information(parent, "检查更新", "当前已是最新版本！")
             else:
-                parent.output_text.append("There are currently no updates available.")
+                parent.output_text.append("App is up to date.")
 
     except requests.RequestException:
         QMessageBox.warning(parent, "检查更新", "检查更新失败，请检查网络连接。")

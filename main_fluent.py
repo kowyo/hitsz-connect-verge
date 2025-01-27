@@ -47,13 +47,13 @@ class MainWindow(QMainWindow):
         self.check_update = getattr(self, 'check_update', True)
 
         if self.connect_startup:
-            QTimer.singleShot(1000, lambda: self.connect_button.setChecked(True))
+            QTimer.singleShot(5000, lambda: self.connect_button.setChecked(True))
         
         if self.silent_mode:
             QTimer.singleShot(0, lambda: self.hide())
 
         if self.check_update:
-            QTimer.singleShot(500, lambda: check_for_updates(parent=self, current_version=VERSION, startup=True))
+            QTimer.singleShot(1000, lambda: check_for_updates(parent=self, current_version=VERSION, startup=True))
 
         setTheme(Theme.AUTO)
         self.themeListener.start()
