@@ -13,12 +13,12 @@ class AdvancedSettingsDialog(QDialog):
         layout = QVBoxLayout()
         
         # Server settings
-        layout.addWidget(QLabel("SSL VPN 服务端地址："))
+        layout.addWidget(QLabel("VPN 服务端地址"))
         self.server_input = QLineEdit("vpn.hitsz.edu.cn")
         layout.addWidget(self.server_input)
 
         # DNS settings
-        layout.addWidget(QLabel("DNS 服务器地址："))
+        layout.addWidget(QLabel("DNS 服务器地址"))
         self.dns_input = QLineEdit("10.248.98.30")
         layout.addWidget(self.dns_input)
         

@@ -31,14 +31,14 @@ class MainWindow(QMainWindow):
         self.load_settings()
         self.tray_icon = init_tray_icon(self)
         
-        if self.check_update:
-            QTimer.singleShot(1000, lambda: check_for_updates(parent=None, current_version=VERSION))
-
         if self.connect_startup:
             QTimer.singleShot(1000, lambda: self.connect_button.setChecked(True))
         
         if self.silent_mode:
             QTimer.singleShot(0, lambda: self.hide())
+
+        if self.check_update:
+            QTimer.singleShot(500, lambda: check_for_updates(parent=self, current_version=VERSION, startup=True))
 
     def setup_ui(self):
         # Layouts
@@ -104,10 +104,10 @@ class MainWindow(QMainWindow):
         quit_app(self, self.tray_icon)
 
     def load_credentials(self):
-        load_credentials(self, self.service_name, self.username_key, self.password_key)
+        load_credentials(self)
 
     def save_credentials(self):
-        save_credentials(self, self.service_name, self.username_key, self.password_key)
+        save_credentials(self)
 
     def start_connection(self):
         start_connection(self)

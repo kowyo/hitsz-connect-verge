@@ -18,7 +18,7 @@ class AdvancedSettingsDialog(QDialog):
         layout.setContentsMargins(24, 24, 24, 24)
         
         # Server settings
-        layout.addWidget(BodyLabel('SSL VPN 服务端地址'))
+        layout.addWidget(BodyLabel('VPN 服务端地址'))
         self.server_input = LineEdit(self)
         self.server_input.setPlaceholderText('vpn.hitsz.edu.cn')
         layout.addWidget(self.server_input)

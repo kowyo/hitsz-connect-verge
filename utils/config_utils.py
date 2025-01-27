@@ -15,6 +15,9 @@ def save_config(config):
 def load_config():
     """Load config from file"""
     default_config = {
+        'username': '',
+        'password': '',
+        'remember': False,
         'server': 'vpn.hitsz.edu.cn',
         'dns': '10.248.98.30',
         'proxy': True,
@@ -28,9 +31,8 @@ def load_config():
         if os.path.exists(CONFIG_FILE):
             with open(CONFIG_FILE, 'r') as f:
                 config = json.load(f)
-                for key in default_config:
-                    if key not in config:
-                        config[key] = default_config[key]
+                return {**default_config, **config}
+        return default_config
     except Exception:
         return default_config
 
@@ -43,3 +45,8 @@ def load_settings(self):
     self.connect_startup = config['connect_startup']
     self.silent_mode = config['silent_mode']
     self.check_update = config['check_update']
+
+    if hasattr(self, 'username_input'):
+        self.username_input.setText(config['username'])
+        self.password_input.setText(config['password'])
+        self.remember_cb.setChecked(config['remember'])
