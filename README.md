@@ -80,25 +80,7 @@ HITSZ Connect Verge provides out-of-the-box experience. You can download the lat
 
 4. (Optional) Build the binaries:
 
-    You can build the binaries for Windows by running:
-
-    ```bash
-    pyinstaller --clean --onefile --noconsole `
-    --icon assets/icon.ico `
-    --add-data "assets;assets" `
-    --add-data "core/zju-connect;core" `
-    -n hitsz-connect-verge main.py
-    ```
-
-    For macOS/Linux, you can run the following commands:
-
-    ```bash
-    pyinstaller --clean --onefile --noconsole --windowed \
-    --icon assets/icon.icns \
-    --add-data "assets:assets" \
-    --add-data "core/zju-connect:core" \
-    -n hitsz-connect-verge main.py
-    ```
+    Please refer to our [GitHub Actions workflow](.github/workflows/release.yml) for more information.
 
 ## Working with other applications
 

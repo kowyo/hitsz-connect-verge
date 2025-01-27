@@ -79,25 +79,7 @@ HITSZ Connect Verge提供开箱即用体验，您可从[发布页面](https://gi
 
 4. （可选）构建二进制文件：
 
-    Windows 平台构建命令：
-
-    ```bash
-    pyinstaller --clean --onefile --noconsole `
-    --icon assets/icon.ico `
-    --add-data "assets;assets" `
-    --add-data "core/zju-connect;core" `
-    -n hitsz-connect-verge main.py
-    ```
-
-    macOS/Linux 平台构建命令：
-
-    ```bash
-    pyinstaller --clean --onefile --noconsole --windowed \
-    --icon assets/icon.icns \
-    --add-data "assets:assets" \
-    --add-data "core/zju-connect:core" \
-    -n hitsz-connect-verge main.py
-    ```
+    请参考我们的[GitHub Actions工作流](.github/workflows/release.yml)。
 
 ## 与其他应用协同工作
 
