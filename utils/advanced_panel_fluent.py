@@ -44,21 +44,22 @@ class AdvancedSettingsDialog(QDialog):
         self.startup_switch.setChecked(get_launch_at_login())
         launch_layout.addWidget(self.startup_switch)
         layout.addLayout(launch_layout)
-
-        # Connect on startup and Silent mode
-        startup_layout = QHBoxLayout()
-        startup_layout.addWidget(BodyLabel('启动时自动连接'))
-        startup_layout.addStretch()
-        self.connect_startup_switch = SwitchButton(self)
-        startup_layout.addWidget(self.connect_startup_switch)
-        layout.addLayout(startup_layout)
         
+        # Silent mode
         silent_layout = QHBoxLayout()
         silent_layout.addWidget(BodyLabel('静默启动'))
         silent_layout.addStretch() 
         self.silent_mode_switch = SwitchButton(self)
         silent_layout.addWidget(self.silent_mode_switch)
         layout.addLayout(silent_layout)
+
+        # Connect on startup
+        startup_layout = QHBoxLayout()
+        startup_layout.addWidget(BodyLabel('启动时自动连接'))
+        startup_layout.addStretch()
+        self.connect_startup_switch = SwitchButton(self)
+        startup_layout.addWidget(self.connect_startup_switch)
+        layout.addLayout(startup_layout)
 
         # Check for update on startup
         check_update_layout = QHBoxLayout()
@@ -91,16 +92,15 @@ class AdvancedSettingsDialog(QDialog):
 
     def get_settings(self):
         return {
-            'server': self.server_input.text() or self.server_input.placeholderText(),
-            'dns': self.dns_input.text() or self.dns_input.placeholderText(),
+            'server': self.server_input.text(),
+            'dns': self.dns_input.text(),
             'proxy': self.proxy_switch.isChecked(),
             'connect_startup': self.connect_startup_switch.isChecked(),
             'silent_mode': self.silent_mode_switch.isChecked(),
-            'check_update': self.check_update_switch.isChecked
+            'check_update': self.check_update_switch.isChecked()
         }
-
-    def set_settings(self, server, dns, proxy, connect_startup, silent_mode, 
-                     check_update):
+    
+    def set_settings(self, server, dns, proxy, connect_startup, silent_mode, check_update):
         """Set dialog values from main window values"""
         self.server_input.setText(server)
         self.dns_input.setText(dns)

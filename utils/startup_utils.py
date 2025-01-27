@@ -64,7 +64,10 @@ def get_launch_at_login() -> bool:
                 '-e',
                 'tell application "System Events" to get the name of every login item'
             ], capture_output=True, text=True)
-            return app_name.lower() in result.stdout.lower()
+            if app_name in result.stdout:
+                return True
+            else:
+                return False
         except subprocess.SubprocessError:
             return False
     

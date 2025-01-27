@@ -31,13 +31,13 @@ class AdvancedSettingsDialog(QDialog):
         self.startup_switch.setChecked(get_launch_at_login())
         layout.addWidget(self.startup_switch)
 
-        # Connect on startup
-        self.connect_startup_switch = QCheckBox("启动时自动连接")
-        layout.addWidget(self.connect_startup_switch)
-
         # Silent mode
         self.silent_mode_switch = QCheckBox("静默启动")
         layout.addWidget(self.silent_mode_switch)
+
+        # Connect on startup
+        self.connect_startup_switch = QCheckBox("启动时自动连接")
+        layout.addWidget(self.connect_startup_switch)
 
         # Check for update on startup
         self.check_update_switch = QCheckBox("启动时检查更新")
@@ -65,15 +65,15 @@ class AdvancedSettingsDialog(QDialog):
             'silent_mode': self.silent_mode_switch.isChecked(),
             'check_update': self.check_update_switch.isChecked()
         }
-
-    def set_settings(self, server, dns, proxy, connect_startup, silent_mode, 
-                     check_update):
+    
+    def set_settings(self, server, dns, proxy, connect_startup, silent_mode, check_update):
         """Set dialog values from main window values"""
         self.server_input.setText(server)
         self.dns_input.setText(dns)
         self.proxy_switch.setChecked(proxy)
         self.connect_startup_switch.setChecked(connect_startup)
         self.silent_mode_switch.setChecked(silent_mode)
+        print(f"Set silent_mode_switch to {silent_mode}")
         self.check_update_switch.setChecked(check_update)
 
     def accept(self):

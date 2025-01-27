@@ -27,12 +27,19 @@ def load_config():
     try:
         if os.path.exists(CONFIG_FILE):
             with open(CONFIG_FILE, 'r') as f:
-                # if file lacks some keys, fill them with default values
                 config = json.load(f)
                 for key in default_config:
                     if key not in config:
                         config[key] = default_config[key]
     except Exception:
-        pass
-    
-    return default_config
+        return default_config
+
+def load_settings(self):
+    """Load advanced settings from config file"""
+    config = load_config()
+    self.server_address = config['server']
+    self.dns_server = config['dns']
+    self.proxy = config['proxy']
+    self.connect_startup = config['connect_startup']
+    self.silent_mode = config['silent_mode']
+    self.check_update = config['check_update']
