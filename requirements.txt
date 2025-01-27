@@ -1,5 +1,4 @@
 pyside6
-keyring
 pyinstaller
 PySide6-Fluent-Widgets
 requests
