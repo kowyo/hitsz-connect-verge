@@ -35,7 +35,7 @@ def copy_log(window):
     QGuiApplication.clipboard().setText(window.output_text.toPlainText())
     QMessageBox.information(window, "复制日志", "日志已复制到剪贴板")
 
-def check_for_updates(parent, current_version):
+def check_for_updates(parent, current_version, startup=False):
     """
     Check for updates and show appropriate dialog.
     
@@ -87,10 +87,10 @@ def check_for_updates(parent, current_version):
             dialog.finished.connect(dialog.deleteLater)
             dialog.exec()
         else:
-            if parent is not None:
+            if not startup:
                 QMessageBox.information(parent, "检查更新", "当前已是最新版本！")
             else:
-                print("当前已是最新版本！")
+                parent.output_text.append("There are currently no updates available.")
 
     except requests.RequestException:
         QMessageBox.warning(parent, "检查更新", "检查更新失败，请检查网络连接。")
