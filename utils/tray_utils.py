@@ -13,6 +13,7 @@ def create_tray_menu(window: QMainWindow, tray_icon):
     connect_action = QAction("系统代理", menu)
     connect_action.setCheckable(True)
     connect_action.triggered.connect(lambda checked: window.connect_button.setChecked(checked))
+    window.connect_button.toggled.connect(connect_action.setChecked) # Sync connect_action item with connect_button state
     menu.addAction(connect_action)
     quit_action = menu.addAction("退出")
     quit_action.triggered.connect(window.quit_app)
