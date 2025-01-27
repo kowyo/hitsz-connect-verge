@@ -57,7 +57,7 @@ jobs:
         curl -L "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-darwin-${{ matrix.arch }}.zip" -o core/zju-connect.zip
         unzip core/zju-connect.zip -d core
         rm core/zju-connect.zip
-        pyinstaller --clean --noconsole --windowed \
+        pyinstaller --clean --windowed \
           --target-arch ${{ matrix.target_arch }} \
           --add-data "assets:assets" \
           --add-data "utils:utils" \
