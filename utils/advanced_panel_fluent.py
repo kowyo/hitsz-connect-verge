@@ -113,5 +113,5 @@ class AdvancedSettingsDialog(QDialog):
         """Save settings before closing"""
         settings = self.get_settings()
         save_config(settings)
-        set_launch_at_login(self.startup_switch.isChecked())
+        set_launch_at_login(enable_startup=self.startup_switch.isChecked(), enable_silent_mode=self.silent_mode_switch.isChecked())
         super().accept()

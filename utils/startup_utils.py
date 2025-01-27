@@ -5,14 +5,14 @@ if system() == "Windows":
     import winreg
 import subprocess
 
-def set_launch_at_login(enable: bool):
+def set_launch_at_login(enable_startup: bool, enable_silent_mode: bool):
     """Set application to launch at login"""
     if system() == "Windows":
         app_path = sys.argv[0]
         key_path = r"Software\Microsoft\Windows\CurrentVersion\Run"
         try:
             with winreg.OpenKey(winreg.HKEY_CURRENT_USER, key_path, 0, winreg.KEY_SET_VALUE) as key:
-                if enable:
+                if enable_startup:
                     winreg.SetValueEx(key, "HITSZ Connect Verge", 0, winreg.REG_SZ, f'"{app_path}"')
                 else:
                     try:
@@ -29,11 +29,11 @@ def set_launch_at_login(enable: bool):
                 # Extract path to the .app bundle
                 app_path = app_path.split(".app/Contents/MacOS/")[0] + ".app"
             
-            if enable:
+            if enable_startup:
                 subprocess.run([
                     'osascript',
                     '-e',
-                    f'tell application "System Events" to make login item at end with properties {{path:"{app_path}", hidden:false}}'
+                    f'tell application "System Events" to make login item at end with properties {{path:"{app_path}", hidden:{enable_silent_mode}}}'
                 ])
             else:
                 app_name = os.path.basename(app_path).replace(".app", "")
