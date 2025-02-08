@@ -24,7 +24,8 @@ def load_config():
         'launch_at_login': get_launch_at_login(),
         'connect_startup': False,
         'silent_mode': False,
-        'check_update': True
+        'check_update': True,
+        'hide_dock_icon': False
     }
     
     try:
@@ -48,3 +49,4 @@ def load_settings(self):
     self.connect_startup = config['connect_startup']
     self.silent_mode = config['silent_mode']
     self.check_update = config['check_update']
+    self.hide_dock_icon = config.get('hide_dock_icon')

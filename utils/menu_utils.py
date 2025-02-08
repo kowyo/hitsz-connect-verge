@@ -116,7 +116,8 @@ def show_advanced_settings(window):
         window.proxy,
         window.connect_startup,
         window.silent_mode,
-        window.check_update
+        window.check_update,
+        window.hide_dock_icon
     )
     
     if dialog.exec():
@@ -127,8 +128,12 @@ def show_advanced_settings(window):
         window.connect_startup = settings['connect_startup']
         window.silent_mode = settings['silent_mode']
         window.check_update = settings['check_update']
+        window.hide_dock_icon = settings.get('hide_dock_icon', False)
+        if system() == "Darwin":
+            hide_dock_icon(window.hide_dock_icon)
 
-def hide_dock_icon():
-    """ 使用 macOS API 让应用变为后台模式，不显示 Dock 图标 """
-    NSApp = objc.lookUpClass("NSApplication").sharedApplication()
-    NSApp.setActivationPolicy_(1)  # 1 = NSApplicationActivationPolicyAccessory
+def hide_dock_icon(hide=True):
+    """ 使用 macOS API 控制 Dock 图标显示状态 """
+    if system() == "Darwin":
+        NSApp = objc.lookUpClass("NSApplication").sharedApplication()
+        NSApp.setActivationPolicy_(1 if hide else 0)  # 1 = NSApplicationActivationPolicyAccessory, 0 = NSApplicationActivationPolicyRegular

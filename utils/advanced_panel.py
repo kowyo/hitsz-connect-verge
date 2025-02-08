@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QCheckBox, QPushButton, QHBoxLayout
 from .config_utils import save_config, load_config
 from .startup_utils import set_launch_at_login, get_launch_at_login
+from platform import system
 
 class AdvancedSettingsDialog(QDialog):
     def __init__(self, parent=None):
@@ -43,6 +44,11 @@ class AdvancedSettingsDialog(QDialog):
         self.check_update_switch = QCheckBox("启动时检查更新")
         layout.addWidget(self.check_update_switch)
 
+        # Hide dock icon option (only for macOS)
+        if system() == "Darwin":
+            self.hide_dock_icon_switch = QCheckBox("隐藏 Dock 图标")
+            layout.addWidget(self.hide_dock_icon_switch)
+
         # Buttons
         button_layout = QHBoxLayout()
         save_button = QPushButton("保存")
@@ -57,7 +63,7 @@ class AdvancedSettingsDialog(QDialog):
         self.setLayout(layout)
 
     def get_settings(self):
-        return {
+        settings = {
             'server': self.server_input.text(),
             'dns': self.dns_input.text(),
             'proxy': self.proxy_switch.isChecked(),
@@ -65,8 +71,13 @@ class AdvancedSettingsDialog(QDialog):
             'silent_mode': self.silent_mode_switch.isChecked(),
             'check_update': self.check_update_switch.isChecked()
         }
+        
+        if system() == "Darwin":
+            settings['hide_dock_icon'] = self.hide_dock_icon_switch.isChecked()
+            
+        return settings
     
-    def set_settings(self, server, dns, proxy, connect_startup, silent_mode, check_update):
+    def set_settings(self, server, dns, proxy, connect_startup, silent_mode, check_update, hide_dock_icon=False):
         """Set dialog values from main window values"""
         self.server_input.setText(server)
         self.dns_input.setText(dns)
@@ -74,6 +85,8 @@ class AdvancedSettingsDialog(QDialog):
         self.connect_startup_switch.setChecked(connect_startup)
         self.silent_mode_switch.setChecked(silent_mode)
         self.check_update_switch.setChecked(check_update)
+        if system() == "Darwin":
+            self.hide_dock_icon_switch.setChecked(hide_dock_icon)
 
     def accept(self):
         """Save settings before closing"""

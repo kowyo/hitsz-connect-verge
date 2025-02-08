@@ -115,18 +115,18 @@ class MainWindow(QMainWindow):
 if __name__ == "__main__":
     app = QApplication([])
     app.setQuitOnLastWindowClosed(False)
+    window = MainWindow() 
     
     if system() == "Windows":
         icon_path = get_resource_path("assets/icon.ico")
     elif system() == "Darwin":
         icon_path = get_resource_path("assets/icon.icns")
-        hide_dock_icon()
+        hide_dock_icon(window.hide_dock_icon)
     elif system() == "Linux":
         icon_path = get_resource_path("assets/icon.png")
     app_icon = QIcon(icon_path)
     app.setWindowIcon(app_icon)
     
-    window = MainWindow()
     if not window.silent_mode:
         window.show()
     app.exec()
