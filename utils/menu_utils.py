@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QMessageBox, QDialog, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QMessageBox, QMainWindow, QMenuBar
-from PySide6.QtGui import QGuiApplication
+from PySide6.QtGui import QGuiApplication, QKeySequence
 import requests
 import objc
 from packaging import version
@@ -11,17 +11,17 @@ from platform import system
 def setup_menubar(window: QMainWindow, version):
     """Set up the main window menu bar"""
     if system() == "Darwin":
-        # 在 macOS 上创建非原生菜单栏
         menubar = QMenuBar(window)
         menubar.setNativeMenuBar(False)  # 让菜单栏出现在窗口内部
         window.setMenuBar(menubar)
     else:
-        # 在其他平台上使用默认菜单栏
         menubar = window.menuBar()
     
     # Settings Menu
     settings_menu = menubar.addMenu("设置")
-    window.advanced_action = settings_menu.addAction("高级设置")
+    window.advanced_action = settings_menu.addAction("高级设置   ")
+    if system() == "Darwin":
+        window.advanced_action.setShortcut(QKeySequence(Qt.CTRL | Qt.Key_Comma))  # Command + ,
     window.advanced_action.triggered.connect(lambda: show_advanced_settings(window))
     
     # Help Menu
