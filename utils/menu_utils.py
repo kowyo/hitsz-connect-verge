@@ -1,14 +1,23 @@
-from PySide6.QtWidgets import QMessageBox, QDialog, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QMessageBox, QMainWindow
+from PySide6.QtWidgets import QMessageBox, QDialog, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QMessageBox, QMainWindow, QMenuBar
 from PySide6.QtGui import QGuiApplication
 import requests
+import objc
 from packaging import version
 import webbrowser
 from PySide6.QtCore import Qt
 from .advanced_panel import AdvancedSettingsDialog
+from platform import system
 
 def setup_menubar(window: QMainWindow, version):
     """Set up the main window menu bar"""
-    menubar = window.menuBar()
+    if system() == "Darwin":
+        # 在 macOS 上创建非原生菜单栏
+        menubar = QMenuBar(window)
+        menubar.setNativeMenuBar(False)  # 让菜单栏出现在窗口内部
+        window.setMenuBar(menubar)
+    else:
+        # 在其他平台上使用默认菜单栏
+        menubar = window.menuBar()
     
     # Settings Menu
     settings_menu = menubar.addMenu("设置")
@@ -118,3 +127,8 @@ def show_advanced_settings(window):
         window.connect_startup = settings['connect_startup']
         window.silent_mode = settings['silent_mode']
         window.check_update = settings['check_update']
+
+def hide_dock_icon():
+    """ 使用 macOS API 让应用变为后台模式，不显示 Dock 图标 """
+    NSApp = objc.lookUpClass("NSApplication").sharedApplication()
+    NSApp.setActivationPolicy_(1)  # 1 = NSApplicationActivationPolicyAccessory

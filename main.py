@@ -10,7 +10,7 @@ from utils.credential_utils import save_credentials
 from utils.connection_utils import start_connection, stop_connection
 from utils.common import get_resource_path, get_version
 from utils.password_utils import toggle_password_visibility
-from utils.menu_utils import setup_menubar, check_for_updates
+from utils.menu_utils import setup_menubar, check_for_updates, hide_dock_icon
 from utils.config_utils import load_settings
 
 VERSION = get_version()
@@ -120,6 +120,7 @@ if __name__ == "__main__":
         icon_path = get_resource_path("assets/icon.ico")
     elif system() == "Darwin":
         icon_path = get_resource_path("assets/icon.icns")
+        hide_dock_icon()
     elif system() == "Linux":
         icon_path = get_resource_path("assets/icon.png")
     app_icon = QIcon(icon_path)
