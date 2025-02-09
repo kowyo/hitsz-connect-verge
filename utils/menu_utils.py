@@ -1,7 +1,6 @@
 from PySide6.QtWidgets import QMessageBox, QDialog, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QMessageBox, QMainWindow, QMenuBar
 from PySide6.QtGui import QGuiApplication, QKeySequence
 import requests
-import objc
 from packaging import version
 import webbrowser
 from PySide6.QtCore import Qt
