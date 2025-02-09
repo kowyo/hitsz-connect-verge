@@ -12,7 +12,7 @@ def setup_menubar(window: QMainWindow, version):
     """Set up the main window menu bar"""
     if system() == "Darwin":
         menubar = QMenuBar(window)
-        menubar.setNativeMenuBar(False)  # 让菜单栏出现在窗口内部
+        menubar.setNativeMenuBar(not window.hide_dock_icon)
         window.setMenuBar(menubar)
     else:
         menubar = window.menuBar()
