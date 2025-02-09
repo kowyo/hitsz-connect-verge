@@ -49,4 +49,4 @@ def load_settings(self):
     self.connect_startup = config['connect_startup']
     self.silent_mode = config['silent_mode']
     self.check_update = config['check_update']
-    self.hide_dock_icon = config.get('hide_dock_icon')
+    self.hide_dock_icon = config['hide_dock_icon']

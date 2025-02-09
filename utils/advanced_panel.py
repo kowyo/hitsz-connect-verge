@@ -2,6 +2,10 @@ from PySide6.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QCheckBox
 from .config_utils import save_config, load_config
 from .startup_utils import set_launch_at_login, get_launch_at_login
 from platform import system
+from .macos_utils import hide_dock_icon
+from .common import get_version
+
+VERSION = get_version()
 
 class AdvancedSettingsDialog(QDialog):
     def __init__(self, parent=None):
@@ -99,4 +103,8 @@ class AdvancedSettingsDialog(QDialog):
         
         save_config(settings)
         set_launch_at_login(enable=self.startup_switch.isChecked())
+        
+        if system() == "Darwin":
+            hide_dock_icon(self.hide_dock_icon_switch.isChecked())
+
         super().accept()

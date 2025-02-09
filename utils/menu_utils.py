@@ -7,6 +7,7 @@ import webbrowser
 from PySide6.QtCore import Qt
 from .advanced_panel import AdvancedSettingsDialog
 from platform import system
+from .macos_utils import hide_dock_icon
 
 def setup_menubar(window: QMainWindow, version):
     """Set up the main window menu bar"""
@@ -131,9 +132,3 @@ def show_advanced_settings(window):
         window.hide_dock_icon = settings.get('hide_dock_icon', False)
         if system() == "Darwin":
             hide_dock_icon(window.hide_dock_icon)
-
-def hide_dock_icon(hide=True):
-    """ 使用 macOS API 控制 Dock 图标显示状态 """
-    if system() == "Darwin":
-        NSApp = objc.lookUpClass("NSApplication").sharedApplication()
-        NSApp.setActivationPolicy_(1 if hide else 0)  # 1 = NSApplicationActivationPolicyAccessory, 0 = NSApplicationActivationPolicyRegular
