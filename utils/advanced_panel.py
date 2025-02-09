@@ -1,9 +1,10 @@
-from PySide6.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QCheckBox, QPushButton, QHBoxLayout
+from PySide6.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QCheckBox, QPushButton, QHBoxLayout, QApplication
+from PySide6.QtGui import QIcon
 from .config_utils import save_config, load_config
 from .startup_utils import set_launch_at_login, get_launch_at_login
 from platform import system
 from .macos_utils import hide_dock_icon
-from .common import get_version
+from utils.common import get_resource_path, get_version
 
 VERSION = get_version()
 
@@ -106,5 +107,19 @@ class AdvancedSettingsDialog(QDialog):
         
         if system() == "Darwin":
             hide_dock_icon(self.hide_dock_icon_switch.isChecked())
+            
+            from .menu_utils import setup_menubar
+            main_window = self.parent()
+            main_window.hide_dock_icon = self.hide_dock_icon_switch.isChecked()
+            setup_menubar(main_window, VERSION)
+
+            main_window.show()
+            main_window.raise_()
+            
+            icon_path = get_resource_path("assets/icon.icns")
+
+            app_icon = QIcon(icon_path)
+            app = QApplication.instance()
+            app.setWindowIcon(app_icon)
 
         super().accept()
