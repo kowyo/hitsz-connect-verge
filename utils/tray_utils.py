@@ -51,7 +51,7 @@ def init_tray_icon(window):
     if system() == "Windows":
         icon_path = "assets/icon.ico"
     elif system() == "Darwin":
-        icon_path = "assets/icon.icns"
+        icon_path = "assets/icon.png"
     elif system() == "Linux":
         icon_path = "assets/icon.png"
     
