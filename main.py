@@ -120,6 +120,9 @@ if __name__ == "__main__":
     
     if system() == "Windows":
         icon_path = get_resource_path("assets/icon.ico")
+        font = app.font()
+        font.setFamily("Microsoft YaHei UI")
+        app.setFont(font)
     elif system() == "Darwin":
         icon_path = get_resource_path("assets/icon.icns")
     elif system() == "Linux":
