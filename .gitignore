@@ -4,3 +4,4 @@ __pycache__/
 core/
 .venv/
 *.spec
+config.json
