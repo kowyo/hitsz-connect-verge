@@ -2,7 +2,7 @@ import json
 import os
 from .startup_utils import get_launch_at_login
 
-CONFIG_FILE = os.path.join(os.path.expanduser("~"), ".hitsz-connect-verge.json")
+CONFIG_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "config.json")
 
 def save_config(config):
     """Save config to file"""

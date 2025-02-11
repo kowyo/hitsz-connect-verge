@@ -64,7 +64,7 @@ jobs:
           --add-data "core/zju-connect:core" \
           --add-data ".app-version:." \
           --icon assets/icon.icns \
-          -n hitsz-connect-verge main.py
+          -n "HITSZ Connect Verge" main.py
 
     - name: Create DMG (macOS)
       if: runner.os == 'macOS'
@@ -76,10 +76,10 @@ jobs:
           --window-pos 400 200 \
           --window-size 660 400 \
           --icon-size 100 \
-          --icon "hitsz-connect-verge.app" 160 185 \
+          --icon "HITSZ Connect Verge.app" 110 200 \
           --app-drop-link 500 185 \
           "dist/hitsz-connect-verge-${{ matrix.os_name }}-${{ matrix.arch }}.dmg" \
-          "dist/hitsz-connect-verge.app"
+          "dist/HITSZ Connect Verge.app"
 
     - name: Build Executable (Windows)
       if: runner.os == 'Windows'
@@ -94,7 +94,7 @@ jobs:
           --add-data "core\zju-connect.exe;core" `
           --add-data ".app-version;." `
           --icon assets/icon.ico `
-          -n hitsz-connect-verge-windows-${{ matrix.arch }} main_fluent.py
+          -n "HITSZ Connect Verge" main_fluent.py
 
     - name: Install Linux Dependencies
       if: runner.os == 'Linux'
@@ -117,15 +117,16 @@ jobs:
           --add-data "core/zju-connect:core" \
           --add-data ".app-version:." \
           --icon assets/icon.png \
-          -n hitsz-connect-verge-linux-${{ matrix.arch }} main.py
+          -n hitsz-connect-verge main.py
 
     - name: Archive Executable
       uses: actions/upload-artifact@v4
       with:
         name: hitsz-connect-verge-${{ matrix.os_name }}-${{ matrix.arch }}
         path: |
-          ${{ runner.os == 'Windows' && format('dist/hitsz-connect-verge-windows-{0}.exe', matrix.arch) || (runner.os == 'macOS' && format('dist/*.dmg') || format('dist/hitsz-connect-verge-linux-{0}', matrix.arch)) }}
-          
+          ${{ runner.os == 'macOS' && 'dist/hitsz-connect-verge-*.dmg' || '' }}
+          ${{ runner.os == 'Windows' && 'dist/HITSZ Connect Verge.exe' || '' }}
+          ${{ runner.os == 'Linux' && 'dist/hitsz-connect-verge' || '' }}
 
   release:
     permissions: write-all

@@ -42,7 +42,7 @@ HITSZ Connect Verge提供开箱即用体验，您可从[发布页面](https://gi
 > macOS 版本需通过以下命令授予应用权限：
 >
 > ```bash
-> sudo xattr -rd com.apple.quarantine hitsz-connect-verge.app
+> sudo xattr -rd com.apple.quarantine HITSZ\ Connect\ Verge.app
 > ```
 >
 > 或者，前往 macOS `设置`->`隐私与安全性`->`安全性`->`打开`——`仍要打开` 来打开应用。
