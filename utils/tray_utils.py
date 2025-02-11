@@ -51,7 +51,13 @@ def init_tray_icon(window):
     if system() == "Windows":
         icon_path = "assets/icon.ico"
     elif system() == "Darwin":
-        icon_path = "assets/icon.png"
+        icon_path = "assets/menu-icon.svg"
+        icon = QIcon(get_resource_path(icon_path))
+        icon.setIsMask(True)
+        tray_icon.setIcon(icon)
+        create_tray_menu(window, tray_icon)
+        tray_icon.show()
+        return tray_icon
     elif system() == "Linux":
         icon_path = "assets/icon.png"
     
