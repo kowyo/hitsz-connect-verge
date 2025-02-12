@@ -76,7 +76,7 @@ jobs:
           --window-pos 400 200 \
           --window-size 660 400 \
           --icon-size 100 \
-          --icon "HITSZ Connect Verge.app" 110 200 \
+          --icon "HITSZ Connect Verge.app" 160 185 \
           --app-drop-link 500 185 \
           "dist/hitsz-connect-verge-${{ matrix.os_name }}-${{ matrix.arch }}.dmg" \
           "dist/HITSZ Connect Verge.app"
