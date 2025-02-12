@@ -79,6 +79,14 @@ class AdvancedSettingsDialog(QDialog):
         check_update_layout.addWidget(self.check_update_switch)
         layout.addLayout(check_update_layout)
 
+        # Add disable-keep-alive switch before button layout
+        keep_alive_layout = QHBoxLayout()
+        keep_alive_layout.addWidget(BodyLabel('禁用定时保活'))
+        keep_alive_layout.addStretch()
+        self.disable_keep_alive_switch = SwitchButton(self)
+        keep_alive_layout.addWidget(self.disable_keep_alive_switch)
+        layout.addLayout(keep_alive_layout)
+
         # Add stretch to push buttons to bottom
         layout.addStretch()
         
@@ -108,10 +116,11 @@ class AdvancedSettingsDialog(QDialog):
             'proxy': self.proxy_switch.isChecked(),
             'connect_startup': self.connect_startup_switch.isChecked(),
             'silent_mode': self.silent_mode_switch.isChecked(),
-            'check_update': self.check_update_switch.isChecked()
+            'check_update': self.check_update_switch.isChecked(),
+            'disable_keep_alive': self.disable_keep_alive_switch.isChecked(),
         }
     
-    def set_settings(self, server, port, dns, proxy, connect_startup, silent_mode, check_update):
+    def set_settings(self, server, port, dns, proxy, connect_startup, silent_mode, check_update, disable_keep_alive=False):
         """Set dialog values from main window values"""
         self.server_input.setText(server)
         self.port_input.setText(port)
@@ -120,6 +129,7 @@ class AdvancedSettingsDialog(QDialog):
         self.connect_startup_switch.setChecked(connect_startup)
         self.silent_mode_switch.setChecked(silent_mode)
         self.check_update_switch.setChecked(check_update)
+        self.disable_keep_alive_switch.setChecked(disable_keep_alive)
 
     def accept(self):
         """Save settings before closing"""

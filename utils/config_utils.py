@@ -23,7 +23,8 @@ def load_config():
         'connect_startup': False,
         'silent_mode': False,
         'check_update': True,
-        'hide_dock_icon': False
+        'hide_dock_icon': False,
+        'disable_keep_alive': False
     }
     
     # Load values from QSettings, falling back to defaults if not found

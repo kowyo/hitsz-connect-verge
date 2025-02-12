@@ -62,6 +62,10 @@ class AdvancedSettingsDialog(QDialog):
             self.hide_dock_icon_switch = QCheckBox("隐藏 Dock 图标")
             layout.addWidget(self.hide_dock_icon_switch)
 
+        # Add disable-keep-alive checkbox
+        self.disable_keep_alive_switch = QCheckBox("禁用定时保活")
+        layout.addWidget(self.disable_keep_alive_switch)
+
         # Buttons
         button_layout = QHBoxLayout()
         save_button = QPushButton("保存")
@@ -83,7 +87,8 @@ class AdvancedSettingsDialog(QDialog):
             'proxy': self.proxy_switch.isChecked(),
             'connect_startup': self.connect_startup_switch.isChecked(),
             'silent_mode': self.silent_mode_switch.isChecked(),
-            'check_update': self.check_update_switch.isChecked()
+            'check_update': self.check_update_switch.isChecked(),
+            'disable_keep_alive': self.disable_keep_alive_switch.isChecked(),
         }
         
         if system() == "Darwin":
@@ -91,7 +96,7 @@ class AdvancedSettingsDialog(QDialog):
             
         return settings
     
-    def set_settings(self, server, port, dns, proxy, connect_startup, silent_mode, check_update, hide_dock_icon=False):
+    def set_settings(self, server, port, dns, proxy, connect_startup, silent_mode, check_update, hide_dock_icon=False, disable_keep_alive=False):
         """Set dialog values from main window values"""
         self.server_input.setText(server)
         self.port_input.setText(port)
@@ -102,6 +107,7 @@ class AdvancedSettingsDialog(QDialog):
         self.check_update_switch.setChecked(check_update)
         if system() == "Darwin":
             self.hide_dock_icon_switch.setChecked(hide_dock_icon)
+        self.disable_keep_alive_switch.setChecked(disable_keep_alive)
 
     def accept(self):
         """Save settings before closing"""

@@ -61,9 +61,13 @@ def start_connection(window):
         "-server", shlex.quote(server_address),
         "-port", shlex.quote(str(port)),
         "-zju-dns-server", shlex.quote(dns_server_address),
-        "-username", shlex.quote(username), "-password", shlex.quote(password)
+        "-username", shlex.quote(username),
+        "-password", shlex.quote(password)
     ]
     
+    if window.disable_keep_alive:
+        command_args.append("-disable-keep-alive")
+
     window.worker = CommandWorker(command_args=command_args, proxy_enabled=window.proxy)
     window.worker.output.connect(lambda text: handle_output(window, text))
     window.worker.finished.connect(lambda: handle_connection_finished(window))
