@@ -18,15 +18,23 @@ class AdvancedSettingsDialog(QDialog):
     def setup_ui(self):
         layout = QVBoxLayout()
         
-        # Server settings
-        layout.addWidget(QLabel("VPN 服务端地址"))
+        # Server & Port
+        server_layout = QHBoxLayout()
+        server_layout.addWidget(QLabel("VPN 服务端地址"))
         self.server_input = QLineEdit("vpn.hitsz.edu.cn")
-        layout.addWidget(self.server_input)
+        server_layout.addWidget(self.server_input)
+        server_layout.addWidget(QLabel("端口"))
+        self.port_input = QLineEdit("443")
+        self.port_input.setMaximumWidth(60)
+        server_layout.addWidget(self.port_input)
+        layout.addLayout(server_layout)
 
         # DNS settings
-        layout.addWidget(QLabel("DNS 服务器地址"))
+        dns_layout = QHBoxLayout()
+        dns_layout.addWidget(QLabel("DNS 服务器地址"))
         self.dns_input = QLineEdit("10.248.98.30")
-        layout.addWidget(self.dns_input)
+        dns_layout.addWidget(self.dns_input)
+        layout.addLayout(dns_layout)
         
         # Proxy Control
         self.proxy_switch = QCheckBox("自动配置代理")
@@ -70,6 +78,7 @@ class AdvancedSettingsDialog(QDialog):
     def get_settings(self):
         settings = {
             'server': self.server_input.text(),
+            'port': self.port_input.text(),
             'dns': self.dns_input.text(),
             'proxy': self.proxy_switch.isChecked(),
             'connect_startup': self.connect_startup_switch.isChecked(),
@@ -82,9 +91,10 @@ class AdvancedSettingsDialog(QDialog):
             
         return settings
     
-    def set_settings(self, server, dns, proxy, connect_startup, silent_mode, check_update, hide_dock_icon=False):
+    def set_settings(self, server, port, dns, proxy, connect_startup, silent_mode, check_update, hide_dock_icon=False):
         """Set dialog values from main window values"""
         self.server_input.setText(server)
+        self.port_input.setText(port)
         self.dns_input.setText(dns)
         self.proxy_switch.setChecked(proxy)
         self.connect_startup_switch.setChecked(connect_startup)

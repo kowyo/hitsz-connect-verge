@@ -16,6 +16,7 @@ def load_config():
         'password': '',
         'remember': False,
         'server': 'vpn.hitsz.edu.cn',
+        'port': '443',
         'dns': '10.248.98.30',
         'proxy': True,
         'launch_at_login': get_launch_at_login(),
@@ -41,6 +42,7 @@ def load_settings(self):
     self.password = config['password']
     self.remember = config['remember']
     self.server_address = config['server']
+    self.port = config['port']
     self.dns_server = config['dns']
     self.proxy = config['proxy']
     self.connect_startup = config['connect_startup']

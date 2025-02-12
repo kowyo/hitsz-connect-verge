@@ -111,6 +111,7 @@ def show_advanced_settings(window):
     dialog = AdvancedSettingsDialog(window)
     dialog.set_settings(
         window.server_address,
+        window.port,
         window.dns_server,
         window.proxy,
         window.connect_startup,
@@ -122,6 +123,7 @@ def show_advanced_settings(window):
     if dialog.exec():
         settings = dialog.get_settings()
         window.server_address = settings['server']
+        window.port = settings['port']
         window.dns_server = settings['dns']
         window.proxy = settings['proxy']
         window.connect_startup = settings['connect_startup']

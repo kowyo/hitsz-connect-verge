@@ -9,6 +9,7 @@ class AdvancedSettingsDialog(QDialog):
         super().__init__(parent)
         self.setWindowTitle('高级设置')
         self.setMinimumWidth(300)
+        self.setMaximumHeight(450)
         self.setup_ui()
         
     def setup_ui(self):
@@ -17,17 +18,26 @@ class AdvancedSettingsDialog(QDialog):
         layout.setSpacing(15)
         layout.setContentsMargins(24, 24, 24, 24)
         
-        # Server settings
-        layout.addWidget(BodyLabel('VPN 服务端地址'))
+        # Server & Port row
+        server_layout = QHBoxLayout()
+        server_layout.addWidget(BodyLabel('VPN 服务端地址'))
         self.server_input = LineEdit(self)
         self.server_input.setPlaceholderText('vpn.hitsz.edu.cn')
-        layout.addWidget(self.server_input)
-
+        server_layout.addWidget(self.server_input)
+        server_layout.addWidget(BodyLabel('端口'))
+        self.port_input = LineEdit(self)
+        self.port_input.setMaximumWidth(60)
+        self.port_input.setPlaceholderText('443')
+        server_layout.addWidget(self.port_input)
+        layout.addLayout(server_layout)
+        
         # DNS settings
-        layout.addWidget(BodyLabel('DNS 服务器地址'))
+        dns_layout = QHBoxLayout()
+        dns_layout.addWidget(BodyLabel('DNS 服务器地址'))
         self.dns_input = LineEdit(self)
         self.dns_input.setPlaceholderText('10.248.98.30')
-        layout.addWidget(self.dns_input)
+        dns_layout.addWidget(self.dns_input)
+        layout.addLayout(dns_layout)
         
         # Proxy Control and Login option        
         proxy_layout = QHBoxLayout()
@@ -93,6 +103,7 @@ class AdvancedSettingsDialog(QDialog):
     def get_settings(self):
         return {
             'server': self.server_input.text(),
+            'port': self.port_input.text(),
             'dns': self.dns_input.text(),
             'proxy': self.proxy_switch.isChecked(),
             'connect_startup': self.connect_startup_switch.isChecked(),
@@ -100,9 +111,10 @@ class AdvancedSettingsDialog(QDialog):
             'check_update': self.check_update_switch.isChecked()
         }
     
-    def set_settings(self, server, dns, proxy, connect_startup, silent_mode, check_update):
+    def set_settings(self, server, port, dns, proxy, connect_startup, silent_mode, check_update):
         """Set dialog values from main window values"""
         self.server_input.setText(server)
+        self.port_input.setText(port)
         self.dns_input.setText(dns)
         self.proxy_switch.setChecked(proxy)
         self.connect_startup_switch.setChecked(connect_startup)
