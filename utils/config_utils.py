@@ -50,3 +50,4 @@ def load_settings(self):
     self.silent_mode = config['silent_mode']
     self.check_update = config['check_update']
     self.hide_dock_icon = config['hide_dock_icon']
+    self.disable_keep_alive = config['disable_keep_alive']
