@@ -1,4 +1,5 @@
-from PySide6.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QCheckBox, QPushButton, QHBoxLayout, QApplication
+from PySide6.QtWidgets import (QDialog, QVBoxLayout, QLabel, QLineEdit, QCheckBox, 
+                              QPushButton, QHBoxLayout, QApplication, QTabWidget, QWidget)
 from PySide6.QtGui import QIcon
 from .config_utils import save_config, load_config
 from .startup_utils import set_launch_at_login, get_launch_at_login
@@ -18,6 +19,13 @@ class AdvancedSettingsDialog(QDialog):
     def setup_ui(self):
         layout = QVBoxLayout()
         
+        # Create tab widget
+        tab_widget = QTabWidget()
+        
+        # Network tab
+        network_tab = QWidget()
+        network_layout = QVBoxLayout()
+        
         # Server & Port
         server_layout = QHBoxLayout()
         server_layout.addWidget(QLabel("VPN 服务端地址"))
@@ -27,44 +35,57 @@ class AdvancedSettingsDialog(QDialog):
         self.port_input = QLineEdit("443")
         self.port_input.setMaximumWidth(60)
         server_layout.addWidget(self.port_input)
-        layout.addLayout(server_layout)
+        network_layout.addLayout(server_layout)
 
         # DNS settings
         dns_layout = QHBoxLayout()
         dns_layout.addWidget(QLabel("DNS 服务器地址"))
         self.dns_input = QLineEdit("10.248.98.30")
         dns_layout.addWidget(self.dns_input)
-        layout.addLayout(dns_layout)
+        network_layout.addLayout(dns_layout)
         
         # Proxy Control
         self.proxy_switch = QCheckBox("自动配置代理")
-        layout.addWidget(self.proxy_switch)
+        network_layout.addWidget(self.proxy_switch)
+
+        # Add disable-keep-alive checkbox
+        self.disable_keep_alive_switch = QCheckBox("禁用定时保活")
+        network_layout.addWidget(self.disable_keep_alive_switch)
+
+        network_tab.setLayout(network_layout)
+        
+        # General tab
+        general_tab = QWidget()
+        general_layout = QVBoxLayout()
 
         # Startup Control
         self.startup_switch = QCheckBox("开机启动")
         self.startup_switch.setChecked(get_launch_at_login())
-        layout.addWidget(self.startup_switch)
+        general_layout.addWidget(self.startup_switch)
 
         # Silent mode
         self.silent_mode_switch = QCheckBox("静默启动")
-        layout.addWidget(self.silent_mode_switch)
+        general_layout.addWidget(self.silent_mode_switch)
 
         # Connect on startup
         self.connect_startup_switch = QCheckBox("启动时自动连接")
-        layout.addWidget(self.connect_startup_switch)
+        general_layout.addWidget(self.connect_startup_switch)
 
         # Check for update on startup
         self.check_update_switch = QCheckBox("启动时检查更新")
-        layout.addWidget(self.check_update_switch)
+        general_layout.addWidget(self.check_update_switch)
 
         # Hide dock icon option (only for macOS)
         if system() == "Darwin":
             self.hide_dock_icon_switch = QCheckBox("隐藏 Dock 图标")
-            layout.addWidget(self.hide_dock_icon_switch)
+            general_layout.addWidget(self.hide_dock_icon_switch)
 
-        # Add disable-keep-alive checkbox
-        self.disable_keep_alive_switch = QCheckBox("禁用定时保活")
-        layout.addWidget(self.disable_keep_alive_switch)
+        general_tab.setLayout(general_layout)
+
+        # Add tabs to widget
+        tab_widget.addTab(network_tab, "网络")
+        tab_widget.addTab(general_tab, "常规")
+        layout.addWidget(tab_widget)
 
         # Buttons
         button_layout = QHBoxLayout()
