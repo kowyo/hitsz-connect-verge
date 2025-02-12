@@ -1,19 +1,16 @@
-import json
-import os
+from PySide6.QtCore import QSettings
 from .startup_utils import get_launch_at_login
 
-CONFIG_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "config.json")
-
 def save_config(config):
-    """Save config to file"""
-    try:
-        with open(CONFIG_FILE, 'w') as f:
-            json.dump(config, f)
-    except Exception:
-        pass
+    """Save config using QSettings"""
+    settings = QSettings("Kowyo", "HITSZ Connect Verge")
+    for key, value in config.items():
+        settings.setValue(key, value)
+    settings.sync()
 
 def load_config():
-    """Load config from file"""
+    """Load config from QSettings"""
+    settings = QSettings("Kowyo", "HITSZ Connect Verge")
     default_config = {
         'username': '',
         'password': '',
@@ -28,17 +25,17 @@ def load_config():
         'hide_dock_icon': False
     }
     
-    try:
-        if os.path.exists(CONFIG_FILE):
-            with open(CONFIG_FILE, 'r') as f:
-                config = json.load(f)
-                default_config.update(config)
-        return default_config
-    except Exception:
-        return default_config
+    # Load values from QSettings, falling back to defaults if not found
+    for key in default_config.keys():
+        value = settings.value(key, default_config[key])
+        if isinstance(default_config[key], bool):
+            value = str(value).lower() == 'true'
+        default_config[key] = value
+    
+    return default_config
 
 def load_settings(self):
-    """Load advanced settings from config file"""
+    """Load advanced settings from QSettings"""
     config = load_config()
     self.username = config['username']
     self.password = config['password']
