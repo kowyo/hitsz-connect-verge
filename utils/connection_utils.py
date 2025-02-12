@@ -26,6 +26,12 @@ def handle_connection_finished(window):
     if hasattr(window, 'connect_button'):
         window.connect_button.setChecked(False)
 
+def get_app_root():
+    """Get the application root directory regardless of frozen status"""
+    if getattr(sys, 'frozen', False):
+        return os.path.dirname(sys.executable)
+    return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 def start_connection(window):
     """Start VPN connection"""
     if window.worker and window.worker.isRunning():
@@ -39,19 +45,19 @@ def start_connection(window):
     server_address = window.server_address
     dns_server_address = window.dns_server
 
-    if getattr(sys, 'frozen', False):
-        base_path = sys._MEIPASS
-    else:
-        base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        
+    app_root = get_app_root()
     if system() == "Windows":
-        stable_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "zju-connect.exe")
+        stable_path = os.path.join(app_root, "core", "zju-connect.exe")
         if not os.path.exists(stable_path):
             os.makedirs(os.path.dirname(stable_path), exist_ok=True)
-            shutil.copy(os.path.join(base_path, "core", "zju-connect.exe"), stable_path)
+            if getattr(sys, 'frozen', False):
+                source_exe = os.path.join(sys._MEIPASS, "core", "zju-connect.exe")
+            else:
+                source_exe = os.path.join(app_root, "core", "zju-connect.exe")
+            shutil.copy(source_exe, stable_path)
         command = stable_path
     else:
-        command = os.path.join(base_path, "core", "zju-connect")
+        command = os.path.join(app_root, "core", "zju-connect")
         if os.path.exists(command):
             os.chmod(command, 0o755)
 
