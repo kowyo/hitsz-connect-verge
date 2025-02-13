@@ -15,7 +15,7 @@ class NetworkSettingsWidget(QWidget):
         layout = QVBoxLayout(self)
         layout.setSpacing(15)
         
-        # Server & Port row
+        # Server & Port
         server_layout = QHBoxLayout()
         server_layout.addWidget(BodyLabel('VPN 服务端地址'))
         self.server_input = LineEdit(self)
@@ -46,11 +46,19 @@ class NetworkSettingsWidget(QWidget):
         
         # Disable keep-alive
         keep_alive_layout = QHBoxLayout()
-        keep_alive_layout.addWidget(BodyLabel('禁用定时保活'))
+        keep_alive_layout.addWidget(BodyLabel('定时保活'))
         keep_alive_layout.addStretch()
         self.disable_keep_alive_switch = SwitchButton(self)
         keep_alive_layout.addWidget(self.disable_keep_alive_switch)
         layout.addLayout(keep_alive_layout)
+        
+        # Debug dump
+        debug_dump_layout = QHBoxLayout()
+        debug_dump_layout.addWidget(BodyLabel('调试模式'))
+        debug_dump_layout.addStretch()
+        self.debug_dump_switch = SwitchButton(self)
+        debug_dump_layout.addWidget(self.debug_dump_switch)
+        layout.addLayout(debug_dump_layout)
         
         layout.addStretch()
 
@@ -163,9 +171,10 @@ class AdvancedSettingsDialog(QDialog):
             'silent_mode': self.general_settings.silent_mode_switch.isChecked(),
             'check_update': self.general_settings.check_update_switch.isChecked(),
             'disable_keep_alive': self.network_settings.disable_keep_alive_switch.isChecked(),
+            'debug_dump': self.network_settings.debug_dump_switch.isChecked(),
         }
     
-    def set_settings(self, server, port, dns, proxy, connect_startup, silent_mode, check_update, disable_keep_alive=False):
+    def set_settings(self, server, port, dns, proxy, connect_startup, silent_mode, check_update, disable_keep_alive=False, debug_dump=False):
         """Set dialog values from main window values"""
         self.network_settings.server_input.setText(server)
         self.network_settings.port_input.setText(port)
@@ -175,6 +184,7 @@ class AdvancedSettingsDialog(QDialog):
         self.general_settings.silent_mode_switch.setChecked(silent_mode)
         self.general_settings.check_update_switch.setChecked(check_update)
         self.network_settings.disable_keep_alive_switch.setChecked(disable_keep_alive)
+        self.network_settings.debug_dump_switch.setChecked(debug_dump)
 
     def accept(self):
         """Save settings before closing"""

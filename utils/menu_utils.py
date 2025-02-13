@@ -118,7 +118,8 @@ def show_advanced_settings(window):
         window.silent_mode,
         window.check_update,
         window.hide_dock_icon,
-        window.disable_keep_alive
+        window.disable_keep_alive,
+        window.debug_dump
     )
     
     if dialog.exec():
@@ -132,5 +133,6 @@ def show_advanced_settings(window):
         window.check_update = settings['check_update']
         window.hide_dock_icon = settings.get('hide_dock_icon', False)
         window.disable_keep_alive = settings['disable_keep_alive']
+        window.debug_dump = settings['debug_dump']
         if system() == "Darwin":
             hide_dock_icon(window.hide_dock_icon)

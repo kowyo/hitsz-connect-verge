@@ -19,7 +19,6 @@ class AdvancedSettingsDialog(QDialog):
     def setup_ui(self):
         layout = QVBoxLayout()
         
-        # Create tab widget
         tab_widget = QTabWidget()
         
         # Network tab
@@ -48,9 +47,13 @@ class AdvancedSettingsDialog(QDialog):
         self.proxy_switch = QCheckBox("自动配置代理")
         network_layout.addWidget(self.proxy_switch)
 
-        # Add disable-keep-alive checkbox
-        self.disable_keep_alive_switch = QCheckBox("禁用定时保活")
+        # Disable keep-alive
+        self.disable_keep_alive_switch = QCheckBox("定时保活")
         network_layout.addWidget(self.disable_keep_alive_switch)
+
+        # Debug-dump
+        self.debug_dump_switch = QCheckBox("调试模式")
+        network_layout.addWidget(self.debug_dump_switch)
 
         network_tab.setLayout(network_layout)
         
@@ -110,6 +113,7 @@ class AdvancedSettingsDialog(QDialog):
             'silent_mode': self.silent_mode_switch.isChecked(),
             'check_update': self.check_update_switch.isChecked(),
             'disable_keep_alive': self.disable_keep_alive_switch.isChecked(),
+            'debug_dump': self.debug_dump_switch.isChecked(),
         }
         
         if system() == "Darwin":
@@ -117,7 +121,7 @@ class AdvancedSettingsDialog(QDialog):
             
         return settings
     
-    def set_settings(self, server, port, dns, proxy, connect_startup, silent_mode, check_update, hide_dock_icon=False, disable_keep_alive=False):
+    def set_settings(self, server, port, dns, proxy, connect_startup, silent_mode, check_update, hide_dock_icon=False, disable_keep_alive=False, debug_dump=False):
         """Set dialog values from main window values"""
         self.server_input.setText(server)
         self.port_input.setText(port)
@@ -129,6 +133,7 @@ class AdvancedSettingsDialog(QDialog):
         if system() == "Darwin":
             self.hide_dock_icon_switch.setChecked(hide_dock_icon)
         self.disable_keep_alive_switch.setChecked(disable_keep_alive)
+        self.debug_dump_switch.setChecked(debug_dump)
 
     def accept(self):
         """Save settings before closing"""

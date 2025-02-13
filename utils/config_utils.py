@@ -24,7 +24,8 @@ def load_config():
         'silent_mode': False,
         'check_update': True,
         'hide_dock_icon': False,
-        'disable_keep_alive': False
+        'disable_keep_alive': False,
+        'debug_dump': False,
     }
     
     # Load values from QSettings, falling back to defaults if not found
@@ -51,3 +52,4 @@ def load_settings(self):
     self.check_update = config['check_update']
     self.hide_dock_icon = config['hide_dock_icon']
     self.disable_keep_alive = config['disable_keep_alive']
+    self.debug_dump = config['debug_dump']

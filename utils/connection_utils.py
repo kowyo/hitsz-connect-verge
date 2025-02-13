@@ -65,8 +65,11 @@ def start_connection(window):
         "-password", shlex.quote(password)
     ]
     
-    if window.disable_keep_alive:
+    if not window.disable_keep_alive:
         command_args.append("-disable-keep-alive")
+    
+    if window.debug_dump:
+        command_args.append("-debug-dump")
 
     window.worker = CommandWorker(command_args=command_args, proxy_enabled=window.proxy)
     window.worker.output.connect(lambda text: handle_output(window, text))
