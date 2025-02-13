@@ -48,8 +48,8 @@ class NetworkSettingsWidget(QWidget):
         keep_alive_layout = QHBoxLayout()
         keep_alive_layout.addWidget(BodyLabel('定时保活'))
         keep_alive_layout.addStretch()
-        self.disable_keep_alive_switch = SwitchButton(self)
-        keep_alive_layout.addWidget(self.disable_keep_alive_switch)
+        self.keep_alive_switch = SwitchButton(self)
+        keep_alive_layout.addWidget(self.keep_alive_switch)
         layout.addLayout(keep_alive_layout)
         
         # Debug dump
@@ -170,11 +170,11 @@ class AdvancedSettingsDialog(QDialog):
             'connect_startup': self.general_settings.connect_startup_switch.isChecked(),
             'silent_mode': self.general_settings.silent_mode_switch.isChecked(),
             'check_update': self.general_settings.check_update_switch.isChecked(),
-            'disable_keep_alive': self.network_settings.disable_keep_alive_switch.isChecked(),
+            'keep_alive': self.network_settings.keep_alive_switch.isChecked(),
             'debug_dump': self.network_settings.debug_dump_switch.isChecked(),
         }
     
-    def set_settings(self, server, port, dns, proxy, connect_startup, silent_mode, check_update, disable_keep_alive=False, debug_dump=False):
+    def set_settings(self, server, port, dns, proxy, connect_startup, silent_mode, check_update, keep_alive=False, debug_dump=False):
         """Set dialog values from main window values"""
         self.network_settings.server_input.setText(server)
         self.network_settings.port_input.setText(port)
@@ -183,7 +183,7 @@ class AdvancedSettingsDialog(QDialog):
         self.general_settings.connect_startup_switch.setChecked(connect_startup)
         self.general_settings.silent_mode_switch.setChecked(silent_mode)
         self.general_settings.check_update_switch.setChecked(check_update)
-        self.network_settings.disable_keep_alive_switch.setChecked(disable_keep_alive)
+        self.network_settings.keep_alive_switch.setChecked(keep_alive)
         self.network_settings.debug_dump_switch.setChecked(debug_dump)
 
     def accept(self):

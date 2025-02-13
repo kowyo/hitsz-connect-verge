@@ -48,8 +48,8 @@ class AdvancedSettingsDialog(QDialog):
         network_layout.addWidget(self.proxy_switch)
 
         # Disable keep-alive
-        self.disable_keep_alive_switch = QCheckBox("定时保活")
-        network_layout.addWidget(self.disable_keep_alive_switch)
+        self.keep_alive_switch = QCheckBox("定时保活")
+        network_layout.addWidget(self.keep_alive_switch)
 
         # Debug-dump
         self.debug_dump_switch = QCheckBox("调试模式")
@@ -112,7 +112,7 @@ class AdvancedSettingsDialog(QDialog):
             'connect_startup': self.connect_startup_switch.isChecked(),
             'silent_mode': self.silent_mode_switch.isChecked(),
             'check_update': self.check_update_switch.isChecked(),
-            'disable_keep_alive': self.disable_keep_alive_switch.isChecked(),
+            'keep_alive': self.keep_alive_switch.isChecked(),
             'debug_dump': self.debug_dump_switch.isChecked(),
         }
         
@@ -121,7 +121,7 @@ class AdvancedSettingsDialog(QDialog):
             
         return settings
     
-    def set_settings(self, server, port, dns, proxy, connect_startup, silent_mode, check_update, hide_dock_icon=False, disable_keep_alive=False, debug_dump=False):
+    def set_settings(self, server, port, dns, proxy, connect_startup, silent_mode, check_update, hide_dock_icon=False, keep_alive=False, debug_dump=False):
         """Set dialog values from main window values"""
         self.server_input.setText(server)
         self.port_input.setText(port)
@@ -132,7 +132,7 @@ class AdvancedSettingsDialog(QDialog):
         self.check_update_switch.setChecked(check_update)
         if system() == "Darwin":
             self.hide_dock_icon_switch.setChecked(hide_dock_icon)
-        self.disable_keep_alive_switch.setChecked(disable_keep_alive)
+        self.keep_alive_switch.setChecked(keep_alive)
         self.debug_dump_switch.setChecked(debug_dump)
 
     def accept(self):

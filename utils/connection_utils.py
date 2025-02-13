@@ -65,7 +65,7 @@ def start_connection(window):
         "-password", shlex.quote(password)
     ]
     
-    if not window.disable_keep_alive:
+    if not window.keep_alive:
         command_args.append("-disable-keep-alive")
     
     if window.debug_dump:

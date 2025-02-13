@@ -89,7 +89,7 @@ def show_advanced_settings(window):
         window.connect_startup,
         window.silent_mode,
         window.check_update,
-        window.disable_keep_alive,
+        window.keep_alive,
         window.debug_dump
     )
     
@@ -102,5 +102,5 @@ def show_advanced_settings(window):
         window.connect_startup = settings['connect_startup']
         window.silent_mode = settings['silent_mode']
         window.check_update = settings['check_update']
-        window.disable_keep_alive = settings['disable_keep_alive']
+        window.keep_alive = settings['keep_alive']
         window.debug_dump = settings['debug_dump']
