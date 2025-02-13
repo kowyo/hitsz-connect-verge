@@ -98,13 +98,13 @@ def check_for_updates(parent, current_version, startup=False):
             if not startup:
                 QMessageBox.information(parent, "检查更新", "当前已是最新版本！")
             else:
-                parent.output_text.append("App is up to date.")
+                parent.output_text.append("App is up to date.\n")
 
     except requests.RequestException:
         if not startup:
             QMessageBox.warning(parent, "检查更新", "检查更新失败，请检查网络连接。")
         else:
-            parent.output_text.append("Failed to check for updates. Please check your network connection.")
+            parent.output_text.append("Failed to check for updates. Please check your network connection.\n")
 
 def show_advanced_settings(window):
     """Show advanced settings dialog with proper cleanup"""
