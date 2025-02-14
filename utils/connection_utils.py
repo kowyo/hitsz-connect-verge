@@ -3,7 +3,6 @@ import sys
 from platform import system
 import shlex
 import gc
-import shutil
 from .set_proxy import CommandWorker
 from qfluentwidgets import FluentIcon
 
@@ -102,3 +101,22 @@ def stop_connection(window):
     window.status_label.setText("状态: 未连接")
     if hasattr(window, 'status_icon'):
         window.status_icon.setIcon(FluentIcon.CANCEL_MEDIUM)
+
+def get_proxy_settings(window):
+    """Get proxy settings from window HTTP and SOCKS binds"""
+    http_host, http_port = "127.0.0.1", None
+    socks_host, socks_port = "127.0.0.1", None
+    
+    if hasattr(window, 'http_bind') and window.http_bind:
+        try:
+            http_port = int(window.http_bind)
+        except ValueError:
+            pass
+            
+    if hasattr(window, 'socks_bind') and window.socks_bind:
+        try:
+            socks_port = int(window.socks_bind)
+        except ValueError:
+            pass
+            
+    return http_host, http_port, socks_host, socks_port

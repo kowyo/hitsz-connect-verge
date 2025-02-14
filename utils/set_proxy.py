@@ -1,5 +1,6 @@
 import subprocess
 from platform import system
+from utils.connection_utils import get_proxy_settings
 
 from PySide6.QtCore import QThread, Signal
 if system() == "Windows":
@@ -10,19 +11,25 @@ class CommandWorker(QThread):
     output = Signal(str)
     finished = Signal()
 
-    def __init__(self, command_args, proxy_enabled):
+    def __init__(self, command_args, proxy_enabled, window=None):
         super().__init__()
         self.command_args = command_args
         self.proxy_enabled = proxy_enabled
+        self.window = window
         self.process = None
 
     def run(self):
-        if system() == "Windows" and self.proxy_enabled:
-            set_windows_proxy(True, server="127.0.0.1", port=1081)
-        elif system() == "Darwin" and self.proxy_enabled:
-            set_macos_proxy(True, server="127.0.0.1", port=1081)
-        elif system() == "Linux" and self.proxy_enabled:
-            set_linux_proxy(True, server="127.0.0.1", port=1081)
+        if self.proxy_enabled and self.window:
+            http_host, http_port, socks_host, socks_port = get_proxy_settings(self.window)
+            if system() == "Windows":
+                set_windows_proxy(True, http_host=http_host, http_port=http_port, 
+                                socks_host=socks_host, socks_port=socks_port)
+            elif system() == "Darwin":
+                set_macos_proxy(True, http_host=http_host, http_port=http_port,
+                              socks_host=socks_host, socks_port=socks_port)
+            elif system() == "Linux":
+                set_linux_proxy(True, http_host=http_host, http_port=http_port,
+                              socks_host=socks_host, socks_port=socks_port)
     
         if system() == "Windows":
             creation_flags = CREATE_NO_WINDOW
@@ -57,7 +64,7 @@ class CommandWorker(QThread):
             self.process.terminate()
             self.process.wait()
 
-def set_windows_proxy(enable, server=None, port=None):
+def set_windows_proxy(enable, http_host=None, http_port=None, socks_host=None, socks_port=None):
     """Manage proxy settings for Windows using the Windows Registry."""
     if system() == "Windows":
         import winreg as reg
@@ -67,14 +74,14 @@ def set_windows_proxy(enable, server=None, port=None):
                                         r'Software\Microsoft\Windows\CurrentVersion\Internet Settings',
                                         0, reg.KEY_ALL_ACCESS)
         reg.SetValueEx(internet_settings, 'ProxyEnable', 0, reg.REG_DWORD, 1 if enable else 0)
-        if enable and server and port:
-            proxy = f"{server}:{port}"
+        if enable and http_host and http_port:
+            proxy = f"{http_host}:{http_port}"
             reg.SetValueEx(internet_settings, 'ProxyServer', 0, reg.REG_SZ, proxy)
         ctypes.windll.Wininet.InternetSetOptionW(0, 37, 0, 0)
         ctypes.windll.Wininet.InternetSetOptionW(0, 39, 0, 0)
         reg.CloseKey(internet_settings)
 
-def set_macos_proxy(enable, server=None, port=None):
+def set_macos_proxy(enable, http_host=None, http_port=None, socks_host=None, socks_port=None):
     """Manage proxy settings for macOS using networksetup."""
     # Get list of network services
     network_services = subprocess.check_output(['networksetup', '-listallnetworkservices']).decode().split('\n')
@@ -82,20 +89,26 @@ def set_macos_proxy(enable, server=None, port=None):
         if not service or service.startswith('*'):  # Skip empty lines and disabled services
             continue
             
-        if enable and server and port:
-            subprocess.run(['networksetup', '-setwebproxy', service, server, str(port)])
-            subprocess.run(['networksetup', '-setsecurewebproxy', service, server, str(port)])
+        if enable and http_host and http_port:
+            subprocess.run(['networksetup', '-setwebproxy', service, http_host, str(http_port)])
+            subprocess.run(['networksetup', '-setsecurewebproxy', service, http_host, str(http_port)])
+            if socks_host and socks_port:
+                subprocess.run(['networksetup', '-setsocksfirewallproxy', service, socks_host, str(socks_port)])
         else:
             subprocess.run(['networksetup', '-setwebproxystate', service, 'off'])
             subprocess.run(['networksetup', '-setsecurewebproxystate', service, 'off'])
+            subprocess.run(['networksetup', '-setsocksfirewallproxystate', service, 'off'])
 
-def set_linux_proxy(enable, server=None, port=None):
+def set_linux_proxy(enable, http_host=None, http_port=None, socks_host=None, socks_port=None):
     """Manage proxy settings for Linux using gsettings."""
-    if enable and server and port:
+    if enable and http_host and http_port:
         subprocess.run(['gsettings', 'set', 'org.gnome.system.proxy', 'mode', 'manual'])
-        subprocess.run(['gsettings', 'set', 'org.gnome.system.proxy.http', 'host', server])
-        subprocess.run(['gsettings', 'set', 'org.gnome.system.proxy.http', 'port', str(port)])
-        subprocess.run(['gsettings', 'set', 'org.gnome.system.proxy.https', 'host', server])
-        subprocess.run(['gsettings', 'set', 'org.gnome.system.proxy.https', 'port', str(port)])
+        subprocess.run(['gsettings', 'set', 'org.gnome.system.proxy.http', 'host', http_host])
+        subprocess.run(['gsettings', 'set', 'org.gnome.system.proxy.http', 'port', str(http_port)])
+        subprocess.run(['gsettings', 'set', 'org.gnome.system.proxy.https', 'host', http_host])
+        subprocess.run(['gsettings', 'set', 'org.gnome.system.proxy.https', 'port', str(http_port)])
+        if socks_host and socks_port:
+            subprocess.run(['gsettings', 'set', 'org.gnome.system.proxy.socks', 'host', socks_host])
+            subprocess.run(['gsettings', 'set', 'org.gnome.system.proxy.socks', 'port', str(socks_port)])
     else:
         subprocess.run(['gsettings', 'set', 'org.gnome.system.proxy', 'mode', 'none'])
