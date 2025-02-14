@@ -78,7 +78,7 @@ def start_connection(window):
     debug_command[pwd_index] = "********"
     window.output_text.append(f"Running command: {' '.join(debug_command)}\n")
 
-    window.worker = CommandWorker(command_args=command_args, proxy_enabled=window.proxy)
+    window.worker = CommandWorker(command_args=command_args, proxy_enabled=window.proxy, window=window)
     window.worker.output.connect(lambda text: handle_output(window, text))
     window.worker.finished.connect(lambda: handle_connection_finished(window))
     window.worker.start()
@@ -101,22 +101,3 @@ def stop_connection(window):
     window.status_label.setText("状态: 未连接")
     if hasattr(window, 'status_icon'):
         window.status_icon.setIcon(FluentIcon.CANCEL_MEDIUM)
-
-def get_proxy_settings(window):
-    """Get proxy settings from window HTTP and SOCKS binds"""
-    http_host, http_port = "127.0.0.1", None
-    socks_host, socks_port = "127.0.0.1", None
-    
-    if hasattr(window, 'http_bind') and window.http_bind:
-        try:
-            http_port = int(window.http_bind)
-        except ValueError:
-            pass
-            
-    if hasattr(window, 'socks_bind') and window.socks_bind:
-        try:
-            socks_port = int(window.socks_bind)
-        except ValueError:
-            pass
-            
-    return http_host, http_port, socks_host, socks_port
