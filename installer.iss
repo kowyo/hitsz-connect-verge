@@ -41,6 +41,10 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
+[UninstallDelete]
+; Remove the entire application directory after uninstalling.
+Type: filesandordirs; Name: "{app}"
+
 [Code]
 procedure CurUninstallStepsChange(CurUninstallStep: TUninstallStep);
 var
@@ -48,7 +52,14 @@ var
 begin
   if CurUninstallStep = usUninstall then
   begin
-    Exec('taskkill.exe', '/f /im "HITSZ Connect Verge.exe"', '', SW_HIDE,
-      ewWaitUntilTerminated, ResultCode);
+    // Force-kill the main executable and any child processes
+    if Exec('taskkill.exe', '/f /t /im "HITSZ Connect Verge.exe"', '', SW_HIDE,
+      ewWaitUntilTerminated, ResultCode) then
+    begin
+      if ResultCode <> 0 then
+        Log('Warning: taskkill returned error code ' + IntToStr(ResultCode));
+    end
+    else
+      Log('Error: failed to execute taskkill.exe');
   end;
 end;
