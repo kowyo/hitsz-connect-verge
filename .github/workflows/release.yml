@@ -40,19 +40,24 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
+    - name: Install uv (macOS/Linux)
+      if: runner.os != 'Windows'
+      run: |
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+
+    - name: Install uv (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 
     - name: Install Dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        uv sync
 
     - name: Build Executable (macOS)
       if: runner.os == 'macOS'
       run: |
+        source .venv/bin/activate
         mkdir -p core
         curl -L "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-darwin-${{ matrix.arch }}.zip" -o core/zju-connect.zip
         unzip -o core/zju-connect.zip -d core
@@ -84,6 +89,7 @@ jobs:
     - name: Build Executable (Windows)
       if: runner.os == 'Windows'
       run: |
+        .\venv\Scripts\Activate.ps1
         mkdir -p core
         Invoke-WebRequest -Uri "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-windows-${{ matrix.arch }}.zip" -OutFile "core\zju-connect-windows-${{ matrix.arch }}.zip"
         Expand-Archive -Path "core\zju-connect-windows-${{ matrix.arch }}.zip" -DestinationPath "core"
@@ -126,7 +132,8 @@ jobs:
 
     - name: Build Executable (Linux)
       if: runner.os == 'Linux'
-      run: |        
+      run: |
+        source .venv/bin/activate        
         mkdir -p core
         curl -L "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-linux-${{ matrix.arch }}.zip" -o core/zju-connect.zip
         unzip -o core/zju-connect.zip -d core
