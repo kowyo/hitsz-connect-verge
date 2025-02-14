@@ -44,13 +44,9 @@ def start_connection(window):
         base_path = sys._MEIPASS
     else:
         base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        
+    
     if system() == "Windows":
-        stable_path = os.path.join(os.path.expanduser("~"), "hitsz-connect-verge", "zju-connect.exe")
-        if not os.path.exists(stable_path):
-            os.makedirs(os.path.dirname(stable_path), exist_ok=True)
-            shutil.copy(os.path.join(base_path, "core", "zju-connect.exe"), stable_path)
-        command = stable_path
+        command = os.path.join(base_path, "core", "zju-connect.exe")
     else:
         command = os.path.join(base_path, "core", "zju-connect")
         if os.path.exists(command):

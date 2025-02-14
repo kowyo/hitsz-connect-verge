@@ -88,7 +88,7 @@ jobs:
         Invoke-WebRequest -Uri "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-windows-${{ matrix.arch }}.zip" -OutFile "core\zju-connect-windows-${{ matrix.arch }}.zip"
         Expand-Archive -Path "core\zju-connect-windows-${{ matrix.arch }}.zip" -DestinationPath "core"
         Remove-Item -Path "core\zju-connect-windows-${{ matrix.arch }}.zip"
-        pyinstaller --clean --noconsole --onefile `
+        pyinstaller --clean --noconsole `
           --add-data "assets;assets" `
           --add-data "utils;utils" `
           --add-data "core\zju-connect.exe;core" `
