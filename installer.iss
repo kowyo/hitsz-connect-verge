@@ -43,9 +43,12 @@ Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChang
 
 [Code]
 procedure CurUninstallStepsChange(CurUninstallStep: TUninstallStep);
+var
+  ResultCode: Integer;
 begin
   if CurUninstallStep = usUninstall then
   begin
-    CloseApplications('HITSZ Connect Verge.exe', False);
+    Exec('taskkill.exe', '/f /im "HITSZ Connect Verge.exe"', '', SW_HIDE,
+      ewWaitUntilTerminated, ResultCode);
   end;
 end;
