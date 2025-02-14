@@ -95,6 +95,28 @@ jobs:
           --add-data ".app-version;." `
           --icon assets/icon.ico `
           -n "HITSZ Connect Verge" main_fluent.py
+        
+        # Install Inno Setup
+        choco install innosetup -y
+        
+        # Get version from .app-version
+        $version = Get-Content .app-version -Raw
+        
+        # Set architecture-specific variables
+        if ("${{ matrix.arch }}" -eq "amd64") {
+          $arch_allowed = "x64"
+          $arch_install64 = "x64"
+        } else {
+          $arch_allowed = "arm64"
+          $arch_install64 = "arm64"
+        }
+        
+        # Compile installer
+        iscc /DMyAppVersion="$version" `
+             /DArchitecture="${{ matrix.arch }}" `
+             /DArchitecturesAllowed="$arch_allowed" `
+             /DArchitecturesInstallIn64BitMode="$arch_install64" `
+             installer.iss
 
     - name: Install Linux Dependencies
       if: runner.os == 'Linux'
@@ -125,7 +147,7 @@ jobs:
         name: hitsz-connect-verge-${{ matrix.os_name }}-${{ matrix.arch }}
         path: |
           ${{ runner.os == 'macOS' && 'dist/hitsz-connect-verge-*.dmg' || '' }}
-          ${{ runner.os == 'Windows' && 'dist/HITSZ Connect Verge.exe' || '' }}
+          ${{ runner.os == 'Windows' && 'dist/hitsz-connect-verge-*-setup.exe' || '' }}
           ${{ runner.os == 'Linux' && 'dist/hitsz-connect-verge' || '' }}
 
   release:
