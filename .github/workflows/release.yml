@@ -89,7 +89,7 @@ jobs:
     - name: Build Executable (Windows)
       if: runner.os == 'Windows'
       run: |
-        .\venv\Scripts\Activate.ps1
+        .\.venv\Scripts\Activate.ps1
         mkdir -p core
         Invoke-WebRequest -Uri "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-windows-${{ matrix.arch }}.zip" -OutFile "core\zju-connect-windows-${{ matrix.arch }}.zip"
         Expand-Archive -Path "core\zju-connect-windows-${{ matrix.arch }}.zip" -DestinationPath "core"
