@@ -26,6 +26,8 @@ def load_config():
         'hide_dock_icon': False,
         'keep_alive': True,
         'debug_dump': False,
+        'socks_bind': '1080',
+        'http_bind': '1081',
     }
     
     # Load values from QSettings, falling back to defaults if not found
@@ -53,3 +55,5 @@ def load_settings(self):
     self.hide_dock_icon = config['hide_dock_icon']
     self.keep_alive = config['keep_alive']
     self.debug_dump = config['debug_dump']
+    self.http_bind = config['http_bind']
+    self.socks_bind = config['socks_bind']

@@ -43,6 +43,24 @@ class AdvancedSettingsDialog(QDialog):
         dns_layout.addWidget(self.dns_input)
         network_layout.addLayout(dns_layout)
         
+        # SOCKS bind
+        socks_bind_layout = QHBoxLayout()
+        socks_bind_layout.addWidget(QLabel("SOCKS5 代理监听地址"))
+        self.socks_bind_input = QLineEdit()
+        self.socks_bind_input.setPlaceholderText("1080")
+        socks_bind_layout.addStretch()
+        socks_bind_layout.addWidget(self.socks_bind_input)
+        network_layout.addLayout(socks_bind_layout)
+
+        # HTTP bind
+        http_bind_layout = QHBoxLayout()
+        http_bind_layout.addWidget(QLabel("HTTP 代理监听地址 "))
+        self.http_bind_input = QLineEdit()
+        self.http_bind_input.setPlaceholderText("1081")
+        http_bind_layout.addStretch()
+        http_bind_layout.addWidget(self.http_bind_input)
+        network_layout.addLayout(http_bind_layout)
+
         # Proxy Control
         self.proxy_switch = QCheckBox("自动配置代理")
         network_layout.addWidget(self.proxy_switch)
@@ -87,7 +105,7 @@ class AdvancedSettingsDialog(QDialog):
 
         # Add tabs to widget
         tab_widget.addTab(network_tab, "网络")
-        tab_widget.addTab(general_tab, "常规")
+        tab_widget.addTab(general_tab, "通用")
         layout.addWidget(tab_widget)
 
         # Buttons
@@ -114,6 +132,8 @@ class AdvancedSettingsDialog(QDialog):
             'check_update': self.check_update_switch.isChecked(),
             'keep_alive': self.keep_alive_switch.isChecked(),
             'debug_dump': self.debug_dump_switch.isChecked(),
+            'http_bind': self.http_bind_input.text(),
+            'socks_bind': self.socks_bind_input.text(),
         }
         
         if system() == "Darwin":
@@ -121,7 +141,7 @@ class AdvancedSettingsDialog(QDialog):
             
         return settings
     
-    def set_settings(self, server, port, dns, proxy, connect_startup, silent_mode, check_update, hide_dock_icon=False, keep_alive=False, debug_dump=False):
+    def set_settings(self, server, port, dns, proxy, connect_startup, silent_mode, check_update, hide_dock_icon=False, keep_alive=False, debug_dump=False, http_bind='', socks_bind=''):
         """Set dialog values from main window values"""
         self.server_input.setText(server)
         self.port_input.setText(port)
@@ -134,6 +154,8 @@ class AdvancedSettingsDialog(QDialog):
             self.hide_dock_icon_switch.setChecked(hide_dock_icon)
         self.keep_alive_switch.setChecked(keep_alive)
         self.debug_dump_switch.setChecked(debug_dump)
+        self.http_bind_input.setText(http_bind)
+        self.socks_bind_input.setText(socks_bind)
 
     def accept(self):
         """Save settings before closing"""

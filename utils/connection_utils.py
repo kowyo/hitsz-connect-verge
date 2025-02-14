@@ -65,6 +65,11 @@ def start_connection(window):
         "-password", shlex.quote(password)
     ]
     
+    if window.http_bind:
+        command_args.extend(["-http-bind", shlex.quote("127.0.0.1:" + window.http_bind)])
+    if window.socks_bind:
+        command_args.extend(["-socks-bind", shlex.quote("127.0.0.1:" + window.socks_bind)])
+
     if not window.keep_alive:
         command_args.append("-disable-keep-alive")
     

@@ -23,7 +23,7 @@ class NetworkSettingsWidget(QWidget):
         server_layout.addWidget(self.server_input)
         server_layout.addWidget(BodyLabel('端口'))
         self.port_input = LineEdit(self)
-        self.port_input.setMaximumWidth(60)
+        self.port_input.setFixedWidth(60)
         self.port_input.setPlaceholderText('443')
         server_layout.addWidget(self.port_input)
         layout.addLayout(server_layout)
@@ -35,6 +35,26 @@ class NetworkSettingsWidget(QWidget):
         self.dns_input.setPlaceholderText('10.248.98.30')
         dns_layout.addWidget(self.dns_input)
         layout.addLayout(dns_layout)
+
+        # SOCKS bind
+        socks_bind_layout = QHBoxLayout()
+        socks_bind_layout.addWidget(BodyLabel('SOCKS5 代理监听地址'))
+        self.socks_bind_input = LineEdit(self)
+        self.socks_bind_input.setFixedWidth(60)
+        self.socks_bind_input.setPlaceholderText('1080')
+        socks_bind_layout.addStretch()
+        socks_bind_layout.addWidget(self.socks_bind_input)
+        layout.addLayout(socks_bind_layout)
+
+        # HTTP bind
+        http_bind_layout = QHBoxLayout()
+        http_bind_layout.addWidget(BodyLabel('HTTP 代理监听地址'))
+        self.http_bind_input = LineEdit(self)
+        self.http_bind_input.setFixedWidth(60)
+        self.http_bind_input.setPlaceholderText('1081')
+        http_bind_layout.addStretch()
+        http_bind_layout.addWidget(self.http_bind_input)
+        layout.addLayout(http_bind_layout)
         
         # Proxy Control
         proxy_layout = QHBoxLayout()
@@ -59,7 +79,7 @@ class NetworkSettingsWidget(QWidget):
         self.debug_dump_switch = SwitchButton(self)
         debug_dump_layout.addWidget(self.debug_dump_switch)
         layout.addLayout(debug_dump_layout)
-        
+
         layout.addStretch()
 
 class GeneralSettingsWidget(QWidget):
@@ -127,7 +147,7 @@ class AdvancedSettingsDialog(QDialog):
         
         # Add sub interfaces
         self.addSubInterface(self.network_settings, 'networkSettings', '网络')
-        self.addSubInterface(self.general_settings, 'generalSettings', '常规')
+        self.addSubInterface(self.general_settings, 'generalSettings', '通用')
         
         # Initialize current tab
         self.stackedWidget.setCurrentWidget(self.network_settings)
@@ -172,9 +192,11 @@ class AdvancedSettingsDialog(QDialog):
             'check_update': self.general_settings.check_update_switch.isChecked(),
             'keep_alive': self.network_settings.keep_alive_switch.isChecked(),
             'debug_dump': self.network_settings.debug_dump_switch.isChecked(),
+            'http_bind': self.network_settings.http_bind_input.text(),
+            'socks_bind': self.network_settings.socks_bind_input.text(),
         }
     
-    def set_settings(self, server, port, dns, proxy, connect_startup, silent_mode, check_update, keep_alive=False, debug_dump=False):
+    def set_settings(self, server, port, dns, proxy, connect_startup, silent_mode, check_update, keep_alive=False, debug_dump=False, http_bind='', socks_bind=''):
         """Set dialog values from main window values"""
         self.network_settings.server_input.setText(server)
         self.network_settings.port_input.setText(port)
@@ -185,6 +207,8 @@ class AdvancedSettingsDialog(QDialog):
         self.general_settings.check_update_switch.setChecked(check_update)
         self.network_settings.keep_alive_switch.setChecked(keep_alive)
         self.network_settings.debug_dump_switch.setChecked(debug_dump)
+        self.network_settings.http_bind_input.setText(http_bind)
+        self.network_settings.socks_bind_input.setText(socks_bind)
 
     def accept(self):
         """Save settings before closing"""
