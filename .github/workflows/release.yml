@@ -29,10 +29,9 @@ jobs:
             os_name: darwin
             arch: arm64
             target_arch: arm64
-          - os: ubuntu-24.04
+          - os: ubuntu-latest
             os_name: linux
             arch: amd64
-            target_arch: x86_64
             
     runs-on: ${{ matrix.os }}
 
@@ -140,7 +139,6 @@ jobs:
         rm core/zju-connect.zip
         
         pyinstaller --noconsole --clean --onefile \
-          --target-arch ${{ matrix.target_arch }} \
           --add-data "assets:assets" \
           --add-data "utils:utils" \
           --add-data "core/zju-connect:core" \
