@@ -57,6 +57,45 @@ jobs:
     - name: Install Dependencies
       run: uv sync
 
+    - name: Cache apt packages
+      if: runner.os == 'Linux'
+      id: cache-apt
+      uses: actions/cache@v4
+      with:
+        path: /var/cache/apt/archives
+        key: ${{ runner.os }}-apt-${{ hashFiles('**/release.yml') }}
+        restore-keys: |
+          ${{ runner.os }}-apt-
+
+    - name: Install Linux Dependencies
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libglib2.0-0 libgl1 dpkg-dev debhelper \
+          libxcb-xinerama0 \
+          libxkbcommon-x11-0 \
+          libxcb-icccm4 \
+          libxcb-image0 \
+          libxcb-keysyms1 \
+          libxcb-randr0 \
+          libxcb-render-util0 \
+          libxcb-xfixes0 \
+          libxcb-shape0 \
+          libxcb-cursor0 \
+          libxcb-sync1 \
+          libxcb-xkb1 \
+          libxcb1
+
+    - name: Cache chocolatey packages
+      if: runner.os == 'Windows'
+      id: cache-choco
+      uses: actions/cache@v4
+      with:
+        path: C:\Users\runneradmin\AppData\Local\Temp\chocolatey
+        key: ${{ runner.os }}-chocolatey-${{ hashFiles('**/release.yml') }}
+        restore-keys: |
+          ${{ runner.os }}-chocolatey-
+
     - name: Build Executable (macOS)
       if: runner.os == 'macOS'
       run: |
@@ -122,25 +161,6 @@ jobs:
         iscc /DMyAppVersion="$version" `
              /DArchitecture="${{ matrix.arch }}" `
              installer.iss
-
-    - name: Install Linux Dependencies
-      if: runner.os == 'Linux'
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y libglib2.0-0 libgl1 dpkg-dev debhelper \
-          libxcb-xinerama0 \
-          libxkbcommon-x11-0 \
-          libxcb-icccm4 \
-          libxcb-image0 \
-          libxcb-keysyms1 \
-          libxcb-randr0 \
-          libxcb-render-util0 \
-          libxcb-xfixes0 \
-          libxcb-shape0 \
-          libxcb-cursor0 \
-          libxcb-sync1 \
-          libxcb-xkb1 \
-          libxcb1
 
     - name: Setup UPX (Linux)
       if: runner.os == 'Linux'
