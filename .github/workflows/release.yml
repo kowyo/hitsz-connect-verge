@@ -176,13 +176,20 @@ jobs:
 
         install: |
           apt-get update -q -y
-          apt-get install -q -y python3-pip python3-dev libglib2.0-0 libgl1 curl unzip
-          pip3 install -U pip pyinstaller
+          apt-get install -q -y \
+            curl \
+            unzip
+          # Install uv
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          uv python install 3.11  # specified Python version
 
         run: |
           curl -L "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-linux-arm64.zip" -o core/zju-connect.zip
           unzip -o core/zju-connect.zip -d core
           rm core/zju-connect.zip
+          
+          # Install dependencies using uv
+          uv sync
           
           pyinstaller --noconsole --clean --onefile \
             --add-data "assets:assets" \
