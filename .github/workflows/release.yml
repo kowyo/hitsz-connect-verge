@@ -37,7 +37,7 @@ jobs:
             arch: arm64
             use_emulation: true
             container_arch: aarch64
-            container_distro: ubuntu22.04
+            container_distro: ubuntu24.04
             
     runs-on: ${{ matrix.os }}
 
