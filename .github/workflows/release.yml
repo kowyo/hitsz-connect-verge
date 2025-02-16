@@ -184,7 +184,7 @@ jobs:
         unzip -o core/zju-connect.zip -d core
         rm core/zju-connect.zip
         
-        pyinstaller --noconsole --clean --onefile \
+        pyinstaller --noconsole --clean \
           --add-data "assets:assets" \
           --add-data "utils:utils" \
           --add-data "core/zju-connect:core" \
