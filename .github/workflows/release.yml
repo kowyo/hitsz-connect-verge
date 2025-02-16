@@ -179,19 +179,19 @@ jobs:
           apt-get install -q -y \
             curl \
             unzip
+
+        run: |
           # Install uv
           curl -LsSf https://astral.sh/uv/install.sh | sh
           source $HOME/.local/bin/env
           uv python install 3.11  # specified Python version
+          uv sync
+          source .venv/bin/activate
 
-        run: |
           curl -L "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-linux-arm64.zip" -o core/zju-connect.zip
           unzip -o core/zju-connect.zip -d core
           rm core/zju-connect.zip
-          
-          # Install dependencies using uv
-          uv sync
-          
+
           pyinstaller --noconsole --clean --onefile \
             --add-data "assets:assets" \
             --add-data "utils:utils" \
