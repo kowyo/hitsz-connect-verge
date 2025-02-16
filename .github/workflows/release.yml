@@ -77,16 +77,6 @@ jobs:
           libxcb1
         version: 1.0
 
-    - name: Cache chocolatey packages
-      if: runner.os == 'Windows'
-      id: cache-choco
-      uses: actions/cache@v4
-      with:
-        path: C:\Users\runneradmin\AppData\Local\Temp\chocolatey
-        key: ${{ runner.os }}-chocolatey-${{ hashFiles('**/release.yml') }}
-        restore-keys: |
-          ${{ runner.os }}-chocolatey-
-
     - name: Build Executable (macOS)
       if: runner.os == 'macOS'
       run: |
