@@ -32,7 +32,6 @@ You can install HITSZ Connect Verge in two ways: downloading pre-built binaries 
 >
 > 1. Username and password are the same as the ones you use to log in to the [Unified Identity Authentic Platform](https://ids.hit.edu.cn)
 > 2. If the download speed is slow, you can try using [gh-proxy](https://gh-proxy.com) to download.
-> 3. Linux running on arm64 architecture only supports building from source.
 
 ### Method 1: Downloading pre-built binaries
 

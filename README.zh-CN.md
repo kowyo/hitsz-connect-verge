@@ -32,7 +32,6 @@ HITSZ Connect Verge 是 [ZJU Connect](https://github.com/Mythologyli/zju-connect
 >
 > 1. 用户名与密码与[统一身份认证平台](https://ids.hit.edu.cn)的登录凭证相同
 > 2. 若下载速度较慢，可尝试使用 [gh-proxy](https://gh-proxy.com) 进行加速
-> 3. 运行在 ARM64 架构的 Linux 仅支持从源码构建
 
 ### 方式一：下载预编译版本
 
