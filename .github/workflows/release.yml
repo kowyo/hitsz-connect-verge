@@ -32,6 +32,12 @@ jobs:
           - os: ubuntu-latest
             os_name: linux
             arch: amd64
+          - os: ubuntu-latest
+            os_name: linux
+            arch: arm64
+            use_emulation: true
+            container_arch: aarch64
+            container_distro: ubuntu22.04
             
     runs-on: ${{ matrix.os }}
 
@@ -128,13 +134,13 @@ jobs:
              installer.iss
 
     - name: Install Linux Dependencies
-      if: runner.os == 'Linux'
+      if: runner.os == 'Linux' && matrix.arch == 'amd64'
       run: |
         sudo apt-get update
         sudo apt-get install -y libglib2.0-0 libgl1 dpkg-dev debhelper
 
-    - name: Build Executable (Linux)
-      if: runner.os == 'Linux'
+    - name: Build Executable (Linux AMD64)
+      if: runner.os == 'Linux' && matrix.arch == 'amd64'
       run: |
         source .venv/bin/activate        
         mkdir -p core
@@ -149,6 +155,42 @@ jobs:
           --add-data ".app-version:." \
           --icon assets/icon.png \
           -n hitsz-connect-verge main.py
+
+    - name: Build Executable (Linux ARM64)
+      if: runner.os == 'Linux' && matrix.arch == 'arm64'
+      uses: uraimo/run-on-arch-action@v2
+      with:
+        arch: ${{ matrix.container_arch }}
+        distro: ${{ matrix.container_distro }}
+        githubToken: ${{ github.token }}
+        
+        setup: |
+          mkdir -p "${PWD}/dist"
+          mkdir -p "${PWD}/core"
+
+        dockerRunArgs: |
+          --volume "${PWD}/dist:/dist"
+          --volume "${PWD}/core:/core"
+          --volume "${PWD}:/workspace"
+          --workdir /workspace
+
+        install: |
+          apt-get update -q -y
+          apt-get install -q -y python3-pip python3-dev libglib2.0-0 libgl1 curl unzip
+          pip3 install -U pip pyinstaller
+
+        run: |
+          curl -L "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-linux-arm64.zip" -o core/zju-connect.zip
+          unzip -o core/zju-connect.zip -d core
+          rm core/zju-connect.zip
+          
+          pyinstaller --noconsole --clean --onefile \
+            --add-data "assets:assets" \
+            --add-data "utils:utils" \
+            --add-data "core/zju-connect:core" \
+            --add-data ".app-version:." \
+            --icon assets/icon.png \
+            -n hitsz-connect-verge main.py
 
     - name: Archive Executable
       uses: actions/upload-artifact@v4
