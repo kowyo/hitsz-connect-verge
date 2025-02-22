@@ -126,13 +126,13 @@ jobs:
         Expand-Archive -Path "core\zju-connect-windows-${{ matrix.arch }}.zip" -DestinationPath "core"
         Remove-Item -Path "core\zju-connect-windows-${{ matrix.arch }}.zip"
         pyinstaller --clean --noconsole `
-          --add-data "assets;assets" `
+          --add-data "app;app" `
           --add-data "utils;utils" `
           --add-data "core\zju-connect.exe;core" `
           --add-data ".app-version;." `
-          --icon assets/icon.ico `
-          --upx-dir "upx/upx-4.2.4-win64" `
-          -n "HITSZ Connect Verge" main_fluent.py
+          --icon "app\resources\icons\icon.ico" `
+          --upx-dir "upx\upx-4.2.4-win64" `
+          -n "HITSZ Connect Verge" main_fluent2.py
         
         # Install Inno Setup
         choco install innosetup -y
