@@ -25,7 +25,7 @@ OutputBaseFilename=hitsz-connect-verge-windows-{#Architecture}-setup
 
 PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
-SetupIconFile=assets\icon.ico
+SetupIconFile=app\resources\icons\icon.ico
 SolidCompression=yes
 WizardStyle=modern
 
