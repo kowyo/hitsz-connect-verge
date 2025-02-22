@@ -87,11 +87,11 @@ jobs:
         rm core/zju-connect.zip
         pyinstaller --clean --windowed \
           --target-arch ${{ matrix.target_arch }} \
-          --add-data "assets:assets" \
+          --add-data "app:app" \
           --add-data "utils:utils" \
           --add-data "core/zju-connect:core" \
           --add-data ".app-version:." \
-          --icon assets/icon.icns \
+          --icon app/resources/icons/icon.icns \
           -n "HITSZ Connect Verge" main.py
 
     - name: Create DMG (macOS)
@@ -100,7 +100,7 @@ jobs:
         brew install create-dmg
         create-dmg \
           --volname "HITSZ Connect Verge" \
-          --background "assets/bg.svg" \
+          --background "app/resources/bg.svg" \
           --window-pos 400 200 \
           --window-size 660 400 \
           --icon-size 100 \
@@ -182,11 +182,11 @@ jobs:
         rm core/zju-connect.zip
         
         pyinstaller --noconsole --clean \
-          --add-data "assets:assets" \
+          --add-data "app:app" \
           --add-data "utils:utils" \
           --add-data "core/zju-connect:core" \
           --add-data ".app-version:." \
-          --icon assets/icon.png \
+          --icon "app\resources\icons\icon.png"
           --upx-dir "upx-4.2.4-${{ matrix.arch }}_linux" \
           -n hitsz-connect-verge main.py
 
