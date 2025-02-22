@@ -186,7 +186,7 @@ jobs:
           --add-data "utils:utils" \
           --add-data "core/zju-connect:core" \
           --add-data ".app-version:." \
-          --icon "app\resources\icons\icon.png"
+          --icon "app\resources\icons\icon.png" \
           --upx-dir "upx-4.2.4-${{ matrix.arch }}_linux" \
           -n hitsz-connect-verge main.py
 
