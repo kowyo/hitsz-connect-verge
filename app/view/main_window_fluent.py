@@ -19,7 +19,7 @@ class MainWindow(FluentWindow):
         setTheme(Theme.AUTO)
 
         self.settingInterface = SettingInterface(self)
-        self.navigationInterface.setExpandWidth(215)
+        self.navigationInterface.setMenuButtonVisible(False)
         self.navigationInterface.setAcrylicEnabled(True)
 
         self.initNavigation()
@@ -33,7 +33,7 @@ class MainWindow(FluentWindow):
 
     def initWindow(self):
         self.resize(463, 693)
-        self.setMinimumWidth(300)
+        self.setMinimumWidth(363)
         self.setWindowIcon(QIcon(':/icons/icon.png'))
         self.setWindowTitle('HITSZ Connect Verge')
     
