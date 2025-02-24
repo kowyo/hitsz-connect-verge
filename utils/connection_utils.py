@@ -74,6 +74,7 @@ def start_connection(window):
 
     command_args.append("-disable-zju-config")
     command_args.append("-disable-zju-dns")
+    command_args.append("-skip-domain-resource")
     
     debug_command = command_args.copy()
     username_index = debug_command.index("-username") + 1
