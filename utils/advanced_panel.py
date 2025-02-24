@@ -6,7 +6,8 @@ from .startup_utils import set_launch_at_login, get_launch_at_login
 from platform import system
 if system() == "Darwin":
     from utils.macos_utils import hide_dock_icon
-from utils.common import get_resource_path, get_version
+from utils.common import get_version
+from app.common import resources
 
 VERSION = get_version()
 
@@ -181,7 +182,7 @@ class AdvancedSettingsDialog(QDialog):
             main_window.show()
             main_window.raise_()
             
-            icon_path = get_resource_path("assets/icon.icns")
+            icon_path = ':/icons/icon.icns'
 
             app_icon = QIcon(icon_path)
             app = QApplication.instance()

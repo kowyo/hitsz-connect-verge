@@ -10,7 +10,7 @@ from platform import system
 from utils.tray_utils import handle_close_event, quit_app, init_tray_icon
 from utils.credential_utils import save_credentials
 from utils.connection_utils import start_connection, stop_connection
-from utils.common import get_resource_path, get_version
+from utils.common import get_version
 from utils.menu_utils_fluent import setup_menubar, check_for_updates
 from utils.config_utils import load_settings
 
@@ -130,16 +130,16 @@ if __name__ == "__main__":
     app.setQuitOnLastWindowClosed(False)
     
     if system() == "Windows":
-        icon_path = get_resource_path("assets/icon.ico")
         font = app.font()
         font.setFamily("Microsoft YaHei UI")
         app.setFont(font)
+
+    if system() == "Windows":
+        app.setWindowIcon(QIcon(':/icons/icon.ico'))
     elif system() == "Darwin":
-        icon_path = get_resource_path("assets/icon.icns")
+        app.setWindowIcon(QIcon(':/icons/icon.icns'))
     elif system() == "Linux":
-        icon_path = get_resource_path("assets/icon.png")
-    app_icon = QIcon(icon_path)
-    app.setWindowIcon(app_icon)
+        app.setWindowIcon(QIcon(':/icons/icon.png'))
     
     window = MainWindow()
     if not window.silent_mode:
