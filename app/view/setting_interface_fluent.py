@@ -1,4 +1,4 @@
-from qfluentwidgets import (ScrollArea, ExpandLayout, TitleLabel)
+from qfluentwidgets import (ScrollArea, ExpandLayout)
 
 from PySide6.QtWidgets import QWidget, QLabel
 from PySide6.QtCore import Qt
@@ -19,7 +19,6 @@ class SettingInterface(ScrollArea):
         self.__initWidget()
 
     def __initWidget(self):
-        self.resize(1000, 800)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setViewportMargins(0, 80, 0, 20)
         self.setWidget(self.scrollWidget)
