@@ -62,6 +62,7 @@ def start_connection(window):
     
     if window.http_bind:
         command_args.extend(["-http-bind", shlex.quote("127.0.0.1:" + window.http_bind)])
+    
     if window.socks_bind:
         command_args.extend(["-socks-bind", shlex.quote("127.0.0.1:" + window.socks_bind)])
 
@@ -71,6 +72,9 @@ def start_connection(window):
     if window.debug_dump:
         command_args.append("-debug-dump")
 
+    command_args.append("-disable-zju-config")
+    command_args.append("-disable-zju-dns")
+    
     debug_command = command_args.copy()
     username_index = debug_command.index("-username") + 1
     debug_command[username_index] = "********"
