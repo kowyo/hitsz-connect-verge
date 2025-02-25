@@ -113,6 +113,7 @@ jobs:
       if: runner.os == 'macOS'
       run: |
         source .venv/bin/activate
+        pyside6-rcc app/resources/resources.qrc -o app/common/resources.py
         pyinstaller --clean --windowed \
           --target-arch ${{ matrix.target_arch }} \
           --add-data "app:app" \
@@ -202,14 +203,17 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         source .venv/bin/activate
+        pyside6-rcc app/resources/resources.qrc -o app/common/resources.py
         pyinstaller --noconsole --clean \
           --add-data "app:app" \
           --add-data "utils:utils" \
           --add-data "core/zju-connect:core" \
           --add-data ".app-version:." \
           --icon "app\resources\icons\icon.png" \
-          --runtime-tmpdir "." \
           --hidden-import shlex \
+          --hidden-import qfluentwidgets \
+          --hidden-import requests \
+          --hidden-import packaging \
           --upx-dir "upx-5.0.0-${{ matrix.arch }}_linux" \
           -n hitsz-connect-verge main.py
 
