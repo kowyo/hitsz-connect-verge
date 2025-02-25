@@ -18,6 +18,8 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@v4
+      with:
+        ref: main
     
     - name: Update version
       run: |
@@ -76,8 +78,6 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@v4
-      with:
-        ref: main
 
     - name: Update version
       if: startsWith(github.ref, 'refs/tags/v')
