@@ -10,7 +10,44 @@ on:
     branches: [ "main" ]
 
 jobs:
+  update-version:
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions: write-all
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+      with:
+        ref: main
+    
+    - name: Update version
+      run: |
+        TAG_VERSION="${{ github.ref_name }}"
+        VERSION="${TAG_VERSION#v}"
+        CURRENT_VERSION=$(cat .app-version)
+        
+        echo "Current version: $CURRENT_VERSION"
+        echo "New version from tag: $VERSION"
+        
+        if [ "$CURRENT_VERSION" != "$VERSION" ]; then
+          echo "Updating .app-version to $VERSION"
+          echo "$VERSION" > .app-version
+          
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          
+          git add .app-version
+          git commit -m "chore: bump version to $VERSION"
+          git push origin HEAD:main
+          echo "Version updated and committed"
+        else
+          echo "Version is already up to date, no changes needed"
+        fi
+
   build:
+    needs: update-version
+    if: always() # Continue even if update-version was skipped or failed
     permissions: write-all
     strategy:
       matrix:
@@ -41,6 +78,8 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@v4
+      with:
+        ref: main
 
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -113,7 +152,7 @@ jobs:
       if: runner.os == 'Windows'
       run: |
         mkdir -p upx
-        Invoke-WebRequest -Uri "https://github.com/upx/upx/releases/download/v4.2.4/upx-4.2.4-win64.zip" -OutFile "upx.zip"
+        Invoke-WebRequest -Uri "https://github.com/upx/upx/releases/download/v5.0.0/upx-5.0.0-win64.zip" -OutFile "upx.zip"
         Expand-Archive -Path "upx.zip" -DestinationPath "upx"
         Remove-Item -Path "upx.zip"
 
@@ -134,7 +173,7 @@ jobs:
           --add-data "core\zju-connect.exe;core" `
           --add-data ".app-version;." `
           --icon "app\resources\icons\icon.ico" `
-          --upx-dir "upx\upx-4.2.4-win64" `
+          --upx-dir "upx/upx-5.0.0-win64" `
           -n "HITSZ Connect Verge" main_fluent2.py
         
         # Install Inno Setup
@@ -150,13 +189,13 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         if [ "${{ matrix.arch }}" = "amd64" ]; then
-          wget https://github.com/upx/upx/releases/download/v4.2.4/upx-4.2.4-amd64_linux.tar.xz
-          tar -xf upx-4.2.4-amd64_linux.tar.xz
-          rm upx-4.2.4-amd64_linux.tar.xz
+          wget https://github.com/upx/upx/releases/download/v5.0.0/upx-5.0.0-amd64_linux.tar.xz
+          tar -xf upx-5.0.0-amd64_linux.tar.xz
+          rm upx-5.0.0-amd64_linux.tar.xz
         else
-          wget https://github.com/upx/upx/releases/download/v4.2.4/upx-4.2.4-arm64_linux.tar.xz
-          tar -xf upx-4.2.4-arm64_linux.tar.xz
-          rm upx-4.2.4-arm64_linux.tar.xz
+          wget https://github.com/upx/upx/releases/download/v5.0.0/upx-5.0.0-arm64_linux.tar.xz
+          tar -xf upx-5.0.0-arm64_linux.tar.xz
+          rm upx-5.0.0-arm64_linux.tar.xz
         fi
 
     - name: Build Executable (Linux)
@@ -174,7 +213,7 @@ jobs:
           --add-data "core/zju-connect:core" \
           --add-data ".app-version:." \
           --icon "app\resources\icons\icon.png" \
-          --upx-dir "upx-4.2.4-${{ matrix.arch }}_linux" \
+          --upx-dir "upx-5.0.0-${{ matrix.arch }}_linux" \
           -n hitsz-connect-verge main.py
 
     - name: Archive Executable
