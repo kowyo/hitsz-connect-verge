@@ -153,7 +153,7 @@ class AdvancedSettingsDialog(QDialog):
         self.stackedWidget.setCurrentWidget(self.network_settings)
         self.pivot.setCurrentItem(self.network_settings.objectName())
         
-        layout.addWidget(self.pivot, 0, Qt.AlignHCenter)
+        layout.addWidget(self.pivot, 0)
         layout.addWidget(self.stackedWidget)
         
         # Button layout

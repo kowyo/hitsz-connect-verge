@@ -151,7 +151,7 @@ For Windows users, you can use [PuTTY](https://www.putty.org/) to establish a co
 
 |   Windows   |   Mac   |  Linux   |
 | ---- | ---- | ---- |
-|  <img width="412" alt="windows" src="resource/windows.png" />   | <img width="412" alt="mac" src="resource/mac.png" />  | <img width="412" alt="linux" src="resource/linux.png" />  |
+|  <img width="412" alt="windows" src="assets/windows.png" />   | <img width="412" alt="mac" src="assets/mac.png" />  | <img width="412" alt="linux" src="assets/linux.png" />  |
 
 ## Contributing
 
