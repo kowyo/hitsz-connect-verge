@@ -8,7 +8,7 @@ from platform import system
 from utils.tray_utils import handle_close_event, quit_app, init_tray_icon
 from utils.credential_utils import save_credentials
 from utils.connection_utils import start_connection, stop_connection
-from utils.common import get_version
+from app.common.version import get_version
 from utils.password_utils import toggle_password_visibility
 from utils.menu_utils import setup_menubar, check_for_updates
 if system() == "Darwin":

@@ -6,7 +6,7 @@ from .startup_utils import set_launch_at_login, get_launch_at_login
 from platform import system
 if system() == "Darwin":
     from utils.macos_utils import hide_dock_icon
-from utils.common import get_version
+from app.common.version import get_version
 from app.common import resources
 
 VERSION = get_version()
