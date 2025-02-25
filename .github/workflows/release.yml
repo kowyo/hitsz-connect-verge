@@ -128,7 +128,7 @@ jobs:
         brew install create-dmg
         create-dmg \
           --volname "HITSZ Connect Verge" \
-          --background "app/resources/background/bg.svg" \
+          --background "app/resources/installer/bg.svg" \
           --window-pos 400 200 \
           --window-size 660 400 \
           --icon-size 100 \
