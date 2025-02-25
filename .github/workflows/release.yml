@@ -209,10 +209,10 @@ jobs:
           --add-data ".app-version:." \
           --icon "app\resources\icons\icon.png" \
           --runtime-tmpdir "." \
+          --hidden-import shlex \
           --upx-dir "upx-5.0.0-${{ matrix.arch }}_linux" \
           -n hitsz-connect-verge main.py
 
-    # Create package for Linux with proper library handling
     - name: Create DEB Package (Linux)
       if: runner.os == 'Linux'
       run: |
@@ -226,9 +226,10 @@ jobs:
         # Copy the entire distribution folder instead of just the binary
         cp -r dist/hitsz-connect-verge/* deb/usr/lib/hitsz-connect-verge/
         
-        # Create a wrapper script in /usr/bin
         cat > deb/usr/bin/hitsz-connect-verge << EOF
         #!/bin/bash
+        export PYTHONPATH=/usr/lib/hitsz-connect-verge
+        export LD_LIBRARY_PATH=/usr/lib/hitsz-connect-verge:\$LD_LIBRARY_PATH
         cd /usr/lib/hitsz-connect-verge
         exec ./hitsz-connect-verge "\$@"
         EOF
