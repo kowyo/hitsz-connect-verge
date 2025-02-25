@@ -159,19 +159,6 @@ jobs:
           rm upx-4.2.4-arm64_linux.tar.xz
         fi
 
-    - name: Setup UPX (Linux)
-      if: runner.os == 'Linux'
-      run: |
-        if [ "${{ matrix.arch }}" = "amd64" ]; then
-          wget https://github.com/upx/upx/releases/download/v4.2.4/upx-4.2.4-amd64_linux.tar.xz
-          tar -xf upx-4.2.4-amd64_linux.tar.xz
-          rm upx-4.2.4-amd64_linux.tar.xz
-        else
-          wget https://github.com/upx/upx/releases/download/v4.2.4/upx-4.2.4-arm64_linux.tar.xz
-          tar -xf upx-4.2.4-arm64_linux.tar.xz
-          rm upx-4.2.4-arm64_linux.tar.xz
-        fi
-
     - name: Build Executable (Linux)
       if: runner.os == 'Linux'
       run: |
