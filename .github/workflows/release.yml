@@ -138,7 +138,7 @@ jobs:
           "dist/HITSZ Connect Verge.app"
 
     # Windows specific build
-    - name: Download UPX (Windows - if cache missed)
+    - name: Download UPX (Windows)
       if: runner.os == 'Windows'
       run: |
         mkdir -p upx
@@ -191,7 +191,7 @@ jobs:
           libxcb1
         version: 1.0
 
-    - name: Download UPX (Linux - if cache missed)
+    - name: Download UPX (Linux)
       if: runner.os == 'Linux'
       run: |
         wget https://github.com/upx/upx/releases/download/v5.0.0/upx-5.0.0-${{ matrix.arch }}_linux.tar.xz
@@ -202,26 +202,76 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         source .venv/bin/activate
+        
+        # Find Python library location
+        PYTHON_PATH=$(which python)
+        PYTHON_DIR=$(dirname "$PYTHON_PATH")
+        PYTHON_LIB=$(find /usr/lib -name "libpython3*.so*" | head -1)
+        echo "Python library found at: $PYTHON_LIB"
+        
+        # Create a custom hook to include Python library
+        mkdir -p hooks
+        cat > hooks/hook-python.py << EOF
+        from PyInstaller.utils.hooks import collect_dynamic_libs
+        binaries = collect_dynamic_libs('os')
+        # Add specific Python library if found
+        if '${PYTHON_LIB}':
+            binaries.append(('${PYTHON_LIB}', '.'))
+        EOF
+        
+        # Build with proper library handling
         pyinstaller --noconsole --clean \
           --add-data "app:app" \
           --add-data "utils:utils" \
           --add-data "core/zju-connect:core" \
           --add-data ".app-version:." \
-          --icon "app\resources\icons\icon.png" \
+          --icon "app/resources/icons/icon.png" \
+          --additional-hooks-dir=hooks \
           --upx-dir "upx-5.0.0-${{ matrix.arch }}_linux" \
+          --collect-all PySide6 \
+          --hidden-import PySide6.QtCore \
+          --hidden-import PySide6.QtGui \
+          --hidden-import PySide6.QtWidgets \
           -n hitsz-connect-verge main.py
+        
+        # Copy the Python shared library to the dist folder if it exists
+        if [ -f "${PYTHON_LIB}" ]; then
+          cp "${PYTHON_LIB}" dist/hitsz-connect-verge/
+          echo "Copied Python library to dist folder"
+        fi
+        
+        # Create wrapper script that sets LD_LIBRARY_PATH
+        cat > dist/hitsz-connect-verge/run.sh << EOF
+        #!/bin/bash
+        SCRIPT_DIR="\$(cd "\$(dirname "\${BASH_SOURCE[0]}")" && pwd)"
+        export LD_LIBRARY_PATH="\$SCRIPT_DIR:\$LD_LIBRARY_PATH"
+        "\$SCRIPT_DIR/hitsz-connect-verge"
+        EOF
+        
+        chmod +x dist/hitsz-connect-verge/run.sh
+        chmod +x dist/hitsz-connect-verge/hitsz-connect-verge
 
-    # Create package for Linux
     - name: Create DEB Package (Linux)
       if: runner.os == 'Linux'
       run: |
         VERSION=$(cat .app-version)
         mkdir -p deb/DEBIAN
+        mkdir -p deb/opt/hitsz-connect-verge
         mkdir -p deb/usr/bin
         mkdir -p deb/usr/share/applications
         mkdir -p deb/usr/share/icons/hicolor/256x256/apps
         
-        cp dist/hitsz-connect-verge/hitsz-connect-verge deb/usr/bin/
+        # Copy entire folder to opt
+        cp -r dist/hitsz-connect-verge/* deb/opt/hitsz-connect-verge/
+        
+        # Create launcher script
+        cat > deb/usr/bin/hitsz-connect-verge << EOF
+        #!/bin/bash
+        cd /opt/hitsz-connect-verge
+        exec ./run.sh
+        EOF
+        
+        chmod +x deb/usr/bin/hitsz-connect-verge
         cp app/resources/icons/icon.png deb/usr/share/icons/hicolor/256x256/apps/hitsz-connect-verge.png
         
         cat > deb/usr/share/applications/hitsz-connect-verge.desktop << EOF
