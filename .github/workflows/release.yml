@@ -292,6 +292,7 @@ jobs:
         Maintainer: Kowyo
         Description: HITSZ Connect Verge
          A VPN client for ZJU Connect/EasyConnect users.
+        Depends: libc6, libgcc1, libstdc++6
         EOF
         
         dpkg-deb --build deb dist/hitsz-connect-verge-${{ matrix.os_name }}-${{ matrix.arch }}.deb
