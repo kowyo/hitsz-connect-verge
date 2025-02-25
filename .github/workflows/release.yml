@@ -46,10 +46,11 @@ jobs:
         fi
 
   build:
-    needs: update-version
+    needs: [update-version]
     if: always() # Continue even if update-version was skipped or failed
     permissions: write-all
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: windows-latest
@@ -79,31 +80,6 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    - name: Update version
-      if: startsWith(github.ref, 'refs/tags/v')
-      run: |
-        TAG_VERSION="${{ github.ref_name }}"
-        VERSION="${TAG_VERSION#v}"
-        CURRENT_VERSION=$(cat .app-version)
-        
-        echo "Current version: $CURRENT_VERSION"
-        echo "New version from tag: $VERSION"
-        
-        if [ "$CURRENT_VERSION" != "$VERSION" ]; then
-          echo "Updating .app-version to $VERSION"
-          echo "$VERSION" > .app-version
-          
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          
-          git add .app-version
-          git commit -m "chore: bump version to $VERSION"
-          git push origin HEAD:main
-          echo "Version updated and committed"
-        else
-          echo "Version is already up to date, no changes needed"
-        fi
-
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
@@ -119,34 +95,24 @@ jobs:
     - name: Install Dependencies
       run: uv sync
 
-    - name: Cache apt packages
-      if: runner.os == 'Linux'
-      uses: awalsh128/cache-apt-pkgs-action@latest
-      with:
-        packages: libglib2.0-0 libgl1 dpkg-dev debhelper 
-          libxcb-xinerama0 
-          libxkbcommon-x11-0 
-          libxcb-icccm4 
-          libxcb-image0 
-          libxcb-keysyms1 
-          libxcb-randr0 
-          libxcb-render-util0 
-          libxcb-xfixes0 
-          libxcb-shape0 
-          libxcb-cursor0 
-          libxcb-sync1 
-          libxcb-xkb1 
-          libxcb1
-        version: 1.0
+    # Download ZJU-connect core package
+    - name: Download ZJU-connect Core
+      run: |
+        mkdir -p core
+        curl -L "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-${{ matrix.os_name }}-${{ matrix.arch }}.zip" -o core/zju-connect.zip
+        if [ "${{ matrix.os_name }}" = "windows" ]; then
+          powershell -command "Expand-Archive -Path core/zju-connect.zip -DestinationPath core"
+        else
+          unzip -o core/zju-connect.zip -d core
+        fi
+        rm core/zju-connect.zip
+      shell: bash
 
+    # macOS specific build
     - name: Build Executable (macOS)
       if: runner.os == 'macOS'
       run: |
         source .venv/bin/activate
-        mkdir -p core
-        curl -L "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-darwin-${{ matrix.arch }}.zip" -o core/zju-connect.zip
-        unzip -o core/zju-connect.zip -d core
-        rm core/zju-connect.zip
         pyinstaller --clean --windowed \
           --target-arch ${{ matrix.target_arch }} \
           --add-data "app:app" \
@@ -171,23 +137,19 @@ jobs:
           "dist/hitsz-connect-verge-${{ matrix.os_name }}-${{ matrix.arch }}.dmg" \
           "dist/HITSZ Connect Verge.app"
 
-    - name: Setup UPX (Windows)
+    # Windows specific build
+    - name: Download UPX (Windows - if cache missed)
       if: runner.os == 'Windows'
       run: |
         mkdir -p upx
         Invoke-WebRequest -Uri "https://github.com/upx/upx/releases/download/v5.0.0/upx-5.0.0-win64.zip" -OutFile "upx.zip"
         Expand-Archive -Path "upx.zip" -DestinationPath "upx"
         Remove-Item -Path "upx.zip"
-
+        
     - name: Build Executable (Windows)
       if: runner.os == 'Windows'
       run: |
         .\.venv\Scripts\Activate.ps1
-        mkdir -p core
-        Invoke-WebRequest -Uri "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-windows-${{ matrix.arch }}.zip" -OutFile "core\zju-connect-windows-${{ matrix.arch }}.zip"
-        Expand-Archive -Path "core\zju-connect-windows-${{ matrix.arch }}.zip" -DestinationPath "core"
-        Remove-Item -Path "core\zju-connect-windows-${{ matrix.arch }}.zip"
-        
         pyside6-rcc .\app\resources\resources.qrc -o .\app\common\resources.py
         
         pyinstaller --clean --noconsole `
@@ -208,28 +170,38 @@ jobs:
              /DArchitecture="${{ matrix.arch }}" `
              installer.iss
 
-    - name: Setup UPX (Linux)
+    # Linux specific build
+    - name: Cache apt packages
+      if: runner.os == 'Linux'
+      uses: awalsh128/cache-apt-pkgs-action@latest
+      with:
+        packages: libglib2.0-0 libgl1 dpkg-dev debhelper 
+          libxcb-xinerama0 
+          libxkbcommon-x11-0 
+          libxcb-icccm4 
+          libxcb-image0 
+          libxcb-keysyms1 
+          libxcb-randr0 
+          libxcb-render-util0 
+          libxcb-xfixes0 
+          libxcb-shape0 
+          libxcb-cursor0 
+          libxcb-sync1 
+          libxcb-xkb1 
+          libxcb1
+        version: 1.0
+
+    - name: Download UPX (Linux - if cache missed)
       if: runner.os == 'Linux'
       run: |
-        if [ "${{ matrix.arch }}" = "amd64" ]; then
-          wget https://github.com/upx/upx/releases/download/v5.0.0/upx-5.0.0-amd64_linux.tar.xz
-          tar -xf upx-5.0.0-amd64_linux.tar.xz
-          rm upx-5.0.0-amd64_linux.tar.xz
-        else
-          wget https://github.com/upx/upx/releases/download/v5.0.0/upx-5.0.0-arm64_linux.tar.xz
-          tar -xf upx-5.0.0-arm64_linux.tar.xz
-          rm upx-5.0.0-arm64_linux.tar.xz
-        fi
+        wget https://github.com/upx/upx/releases/download/v5.0.0/upx-5.0.0-${{ matrix.arch }}_linux.tar.xz
+        tar -xf upx-5.0.0-${{ matrix.arch }}_linux.tar.xz
+        rm upx-5.0.0-${{ matrix.arch }}_linux.tar.xz
 
     - name: Build Executable (Linux)
       if: runner.os == 'Linux'
       run: |
-        source .venv/bin/activate        
-        mkdir -p core
-        curl -L "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-linux-${{ matrix.arch }}.zip" -o core/zju-connect.zip
-        unzip -o core/zju-connect.zip -d core
-        rm core/zju-connect.zip
-        
+        source .venv/bin/activate
         pyinstaller --noconsole --clean \
           --add-data "app:app" \
           --add-data "utils:utils" \
@@ -239,6 +211,42 @@ jobs:
           --upx-dir "upx-5.0.0-${{ matrix.arch }}_linux" \
           -n hitsz-connect-verge main.py
 
+    # Create package for Linux
+    - name: Create DEB Package (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        VERSION=$(cat .app-version)
+        mkdir -p deb/DEBIAN
+        mkdir -p deb/usr/bin
+        mkdir -p deb/usr/share/applications
+        mkdir -p deb/usr/share/icons/hicolor/256x256/apps
+        
+        cp dist/hitsz-connect-verge/hitsz-connect-verge deb/usr/bin/
+        cp app/resources/icons/icon.png deb/usr/share/icons/hicolor/256x256/apps/hitsz-connect-verge.png
+        
+        cat > deb/usr/share/applications/hitsz-connect-verge.desktop << EOF
+        [Desktop Entry]
+        Name=HITSZ Connect Verge
+        Exec=hitsz-connect-verge
+        Icon=hitsz-connect-verge
+        Type=Application
+        Categories=Network;
+        EOF
+        
+        cat > deb/DEBIAN/control << EOF
+        Package: hitsz-connect-verge
+        Version: $VERSION
+        Section: net
+        Priority: optional
+        Architecture: ${{ matrix.arch == 'amd64' && 'amd64' || 'arm64' }}
+        Maintainer: Kowyo
+        Description: HITSZ Connect Verge
+         A VPN client for ZJU Connect/EasyConnect users.
+        EOF
+        
+        dpkg-deb --build deb dist/hitsz-connect-verge-${{ matrix.os_name }}-${{ matrix.arch }}.deb
+
+    # Upload artifacts common step
     - name: Archive Executable
       uses: actions/upload-artifact@v4
       with:
@@ -246,35 +254,32 @@ jobs:
         path: |
           ${{ runner.os == 'macOS' && 'dist/hitsz-connect-verge-*.dmg' || '' }}
           ${{ runner.os == 'Windows' && 'dist/hitsz-connect-verge-*-setup.exe' || '' }}
-          ${{ runner.os == 'Linux' && 'dist/hitsz-connect-verge' || '' }}
+          ${{ runner.os == 'Linux' && 'dist/hitsz-connect-verge-*.deb' || '' }}
+        if-no-files-found: error
 
   release:
     permissions: write-all
     needs: build
     if: startsWith(github.ref, 'refs/tags/')
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
 
     steps:
     - name: Download All Artifacts
-      uses: dawidd6/action-download-artifact@v8
+      uses: actions/download-artifact@v3
       with:
         path: artifacts
 
-    - name: Archive Artifact Directories
+    - name: Prepare Release Files
       run: |
-        cd artifacts
-        for dir in *; do
-          if [ -d "$dir" ]; then
-            echo "Zipping $dir"
-            zip -r "$dir.zip" "$dir"
-            rm -rf "$dir"
-          fi
-        done
+        mkdir -p release
+        cp artifacts/*/*.dmg release/ 2>/dev/null || true
+        cp artifacts/*/*.exe release/ 2>/dev/null || true
+        cp artifacts/*/*.deb release/ 2>/dev/null || true
 
     - name: Publish Release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "artifacts/*.zip"
+        artifacts: "release/*"
         token: ${{ secrets.GITHUB_TOKEN }}
         tag: ${{ github.ref_name }}
         generateReleaseNotes: true
