@@ -127,7 +127,7 @@ rules:
 > 1. It is recommended to enable `TUN Mode`
 > 2. You need to turn off the `Always use Default Bypass` option in the `System Proxy` settings, and add `localhost` to the `Proxy Bypass` field.
 
-For further information, please refer to [this article](https://oldkingok.cc/share/8bFQXBjOkXt8).
+[Learn more](https://oldkingok.cc/share/8bFQXBjOkXt8)
 
 ### Remote Desktop
 
@@ -137,11 +137,15 @@ If you want to connect to the remote desktop in the campus network, you can use 
 
 If you want to use SSH, you can use the following command to establish a connection.
 
+For macOS/Linux users:
+
 ```bash
-ssh -o ProxyCommand="nc -X 5 -x 127.0.0.1:1080 %h %p" <your_root>@<your_server>
+ssh -o ProxyCommand="nc -X 5 -x 127.0.0.1:1080 %h %p" <root>@<server> -p <port>
 ```
 
-See [this article](https://kuokuo.io/2019/07/01/ssh-over-http-or-socks/) for more information.
+For Windows users, you can use [PuTTY](https://www.putty.org/) to establish a connection.
+
+[Learn more](https://www.simplified.guide/putty/connect-via-proxy)
 
 ## Screenshots
 

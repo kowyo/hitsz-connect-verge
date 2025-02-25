@@ -126,7 +126,7 @@ rules:
 > 1. 建议启用 `TUN 模式`
 > 2. 需要关闭内网绕过代理, 并添加 `localhost` 到`代理绕过设置`区域
 
-更多信息请参考[这篇文章](https://oldkingok.cc/share/8bFQXBjOkXt8)。
+[了解更多](https://oldkingok.cc/share/8bFQXBjOkXt8)
 
 ### 远程桌面连接
 
@@ -134,13 +134,15 @@ rules:
 
 ### SSH连接
 
-通过以下命令建立SSH连接：
+如果你是 macOS/Linux 用户，可以通过以下命令建立SSH连接：
 
 ```bash
-ssh -o ProxyCommand="nc -X 5 -x 127.0.0.1:1080 %h %p" <用户名>@<服务器地址>
+ssh -o ProxyCommand="nc -X 5 -x 127.0.0.1:1080 %h %p" <用户名>@<服务器地址> -p <端口>
 ```
 
-更多信息请参考[此文](https://kuokuo.io/2019/07/01/ssh-over-http-or-socks/)。
+如果你是 Windows 用户，可以使用 [PuTTY](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html) 并在 `Connection` -> `Proxy` 中配置 `SOCKS5` 代理。
+
+[了解更多](https://www.simplified.guide/putty/connect-via-proxy)
 
 ## 截图
 
