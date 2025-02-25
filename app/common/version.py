@@ -1,5 +1,5 @@
 import sys
-import resources
+from . import resources
 from PySide6.QtCore import QFile, QIODevice
 
 def get_version():
