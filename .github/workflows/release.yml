@@ -208,10 +208,11 @@ jobs:
           --add-data "core/zju-connect:core" \
           --add-data ".app-version:." \
           --icon "app\resources\icons\icon.png" \
+          --runtime-tmpdir "." \
           --upx-dir "upx-5.0.0-${{ matrix.arch }}_linux" \
           -n hitsz-connect-verge main.py
 
-    # Create package for Linux
+    # Create package for Linux with proper library handling
     - name: Create DEB Package (Linux)
       if: runner.os == 'Linux'
       run: |
@@ -220,8 +221,20 @@ jobs:
         mkdir -p deb/usr/bin
         mkdir -p deb/usr/share/applications
         mkdir -p deb/usr/share/icons/hicolor/256x256/apps
+        mkdir -p deb/usr/lib/hitsz-connect-verge
         
-        cp dist/hitsz-connect-verge/hitsz-connect-verge deb/usr/bin/
+        # Copy the entire distribution folder instead of just the binary
+        cp -r dist/hitsz-connect-verge/* deb/usr/lib/hitsz-connect-verge/
+        
+        # Create a wrapper script in /usr/bin
+        cat > deb/usr/bin/hitsz-connect-verge << EOF
+        #!/bin/bash
+        cd /usr/lib/hitsz-connect-verge
+        exec ./hitsz-connect-verge "\$@"
+        EOF
+        
+        chmod +x deb/usr/bin/hitsz-connect-verge
+        
         cp app/resources/icons/icon.png deb/usr/share/icons/hicolor/256x256/apps/hitsz-connect-verge.png
         
         cat > deb/usr/share/applications/hitsz-connect-verge.desktop << EOF
@@ -242,6 +255,7 @@ jobs:
         Maintainer: Kowyo
         Description: HITSZ Connect Verge
          A VPN client for ZJU Connect/EasyConnect users.
+        Depends: libc6, libglib2.0-0, libgl1
         EOF
         
         dpkg-deb --build deb dist/hitsz-connect-verge-${{ matrix.os_name }}-${{ matrix.arch }}.deb
