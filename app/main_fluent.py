@@ -10,7 +10,7 @@ from platform import system
 from utils.tray_utils import handle_close_event, quit_app, init_tray_icon
 from utils.credential_utils import save_credentials
 from utils.connection_utils import start_connection, stop_connection
-from app.common.version import get_version
+from common.version import get_version
 from utils.menu_utils_fluent import setup_menubar, check_for_updates
 from utils.config_utils import load_settings
 

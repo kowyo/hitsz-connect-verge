@@ -8,13 +8,13 @@ from platform import system
 from utils.tray_utils import handle_close_event, quit_app, init_tray_icon
 from utils.credential_utils import save_credentials
 from utils.connection_utils import start_connection, stop_connection
-from app.common.version import get_version
+from common.version import get_version
 from utils.password_utils import toggle_password_visibility
 from utils.menu_utils import setup_menubar, check_for_updates
 if system() == "Darwin":
     from utils.macos_utils import hide_dock_icon
 from utils.config_utils import load_settings
-from app.common import resources
+from common import resources
 
 VERSION = get_version()
 

@@ -3,7 +3,7 @@ import gc
 from PySide6.QtWidgets import QSystemTrayIcon, QMenu, QApplication, QMainWindow
 from PySide6.QtGui import QIcon, QAction
 from platform import system
-from app.common import resources
+from common import resources
 
 
 def create_tray_menu(window: QMainWindow, tray_icon):

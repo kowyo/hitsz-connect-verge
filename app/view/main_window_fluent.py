@@ -6,8 +6,8 @@ from qfluentwidgets import (FluentWindow, SystemThemeListener, setTheme, Theme,
 from qfluentwidgets import FluentIcon as FIF
 
 from .setting_interface_fluent import SettingInterface
-from ..common.translator import Translator
-from ..common import resources
+from common.translator import Translator
+from common import resources
 
 class MainWindow(FluentWindow):
 

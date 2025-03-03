@@ -5,8 +5,8 @@ from qfluentwidgets import FluentIcon as FIF
 from PySide6.QtWidgets import QWidget, QLabel
 from PySide6.QtCore import Qt, QUrl
 from PySide6.QtGui import QDesktopServices
-from ..common.style_sheet import StyleSheet
-from ..utils.check_for_update_fluent import check_for_updates
+from common.style_sheet import StyleSheet
+from utils.check_for_update_fluent import check_for_updates
 
 
 class SettingInterface(ScrollArea):
