@@ -105,7 +105,7 @@ jobs:
         else
           unzip -o core/zju-connect.zip -d core
         fi
-        rm core/zju-connect.zip
+        rm core/zju-connect.zip 
       shell: bash
 
     # macOS specific build
@@ -117,10 +117,9 @@ jobs:
         pyinstaller --clean --windowed \
           --target-arch ${{ matrix.target_arch }} \
           --add-data "app:app" \
-          --add-data "utils:utils" \
           --add-data "core/zju-connect:core" \
           --icon app/resources/icons/icon.icns \
-          -n "HITSZ Connect Verge" main.py
+          -n "HITSZ Connect Verge" app/main.py
 
     - name: Create DMG (macOS)
       if: runner.os == 'macOS'
@@ -154,20 +153,20 @@ jobs:
         
         pyinstaller --clean --noconsole `
           --add-data "app;app" `
-          --add-data "utils;utils" `
           --add-data "core\zju-connect.exe;core" `
           --icon "app\resources\icons\icon.ico" `
           --upx-dir "upx/upx-5.0.0-win64" `
-          -n "HITSZ Connect Verge" main_fluent2.py
+          -n "HITSZ Connect Verge" app\main_fluent2.py
         
         # Install Inno Setup
         choco install innosetup -y
         
         # Compile installer
         $version = Get-Content .\app\resources\version\.app-version
+        $setup_script = ".\app\resources\installer\setup.iss"
         iscc /DMyAppVersion="$version" `
              /DArchitecture="${{ matrix.arch }}" `
-             installer.iss
+             $setup_script
 
     # Linux specific build
     - name: Cache apt packages
@@ -204,7 +203,6 @@ jobs:
         pyside6-rcc app/resources/resources.qrc -o app/common/resources.py
         pyinstaller --noconsole --clean \
           --add-data "app:app" \
-          --add-data "utils:utils" \
           --add-data "core/zju-connect:core" \
           --icon "app\resources\icons\icon.png" \
           --hidden-import shlex \
@@ -212,7 +210,7 @@ jobs:
           --hidden-import requests \
           --hidden-import packaging \
           --upx-dir "upx-5.0.0-${{ matrix.arch }}_linux" \
-          -n hitsz-connect-verge main.py
+          -n hitsz-connect-verge app/main.py
 
     - name: Create DEB Package (Linux)
       if: runner.os == 'Linux'
