@@ -127,7 +127,7 @@ jobs:
         brew install create-dmg
         create-dmg \
           --volname "HITSZ Connect Verge" \
-          --background "installer/bg.svg" \
+          --background "app/resources/installer/bg.svg" \
           --window-pos 400 200 \
           --window-size 660 400 \
           --icon-size 100 \
@@ -163,7 +163,7 @@ jobs:
         
         # Compile installer
         $version = Get-Content .\app\resources\version\.app-version
-        $setup_script = ".\installer\setup.iss"
+        $setup_script = ".\setup.iss"
         iscc /DMyAppVersion="$version" `
              /DArchitecture="${{ matrix.arch }}" `
              $setup_script
