@@ -1,4 +1,0 @@
-pyside6
-pyinstaller
-PySide6-Fluent-Widgets
-requests
