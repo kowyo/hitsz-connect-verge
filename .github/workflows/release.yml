@@ -25,19 +25,19 @@ jobs:
       run: |
         TAG_VERSION="${{ github.ref_name }}"
         VERSION="${TAG_VERSION#v}"
-        CURRENT_VERSION=$(cat app/resources/version/.app-version)
+        CURRENT_VERSION=$(cat .app-version)
         
         echo "Current version: $CURRENT_VERSION"
         echo "New version from tag: $VERSION"
         
         if [ "$CURRENT_VERSION" != "$VERSION" ]; then
           echo "Updating .app-version to $VERSION"
-          echo "$VERSION" > app/resources/version/.app-version
+          echo "$VERSION" > .app-version
           
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           
-          git add app/resources/version/.app-version
+          git add .app-version
           git commit -m "chore: bump version to $VERSION"
           git push origin HEAD:main
           echo "Version updated and committed"
@@ -117,6 +117,7 @@ jobs:
         pyinstaller --clean --windowed \
           --target-arch ${{ matrix.target_arch }} \
           --add-data "app:app" \
+          --add-data ".app-version:." \
           --add-data "core/zju-connect:core" \
           --icon app/resources/icons/icon.icns \
           -n "HITSZ Connect Verge" app/main.py
@@ -154,6 +155,7 @@ jobs:
         pyinstaller --clean --noconsole `
           --add-data "app;app" `
           --add-data "core\zju-connect.exe;core" `
+          --add-data ".app-version;." `
           --icon "app\resources\icons\icon.ico" `
           --upx-dir "upx/upx-5.0.0-win64" `
           -n "HITSZ Connect Verge" app\main_fluent2.py
@@ -162,7 +164,7 @@ jobs:
         choco install innosetup -y
         
         # Compile installer
-        $version = Get-Content .\app\resources\version\.app-version
+        $version = Get-Content .app-version
         $setup_script = ".\setup.iss"
         iscc /DMyAppVersion="$version" `
              /DArchitecture="${{ matrix.arch }}" `
@@ -203,6 +205,7 @@ jobs:
         pyside6-rcc app/resources/resources.qrc -o app/common/resources.py
         pyinstaller --noconsole --clean \
           --add-data "app:app" \
+          --add-data ".app-version:." \
           --add-data "core/zju-connect:core" \
           --icon "app\resources\icons\icon.png" \
           --hidden-import shlex \
@@ -215,7 +218,7 @@ jobs:
     - name: Create DEB Package (Linux)
       if: runner.os == 'Linux'
       run: |
-        VERSION=$(cat app/resources/version/.app-version)
+        VERSION=$(cat .app-version)
         mkdir -p deb/DEBIAN
         mkdir -p deb/usr/bin
         mkdir -p deb/usr/share/applications

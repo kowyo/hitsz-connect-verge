@@ -9,6 +9,6 @@
     </qresource>
 
     <qresource prefix="texts">
-            <file>version/.app-version</file>
+        <file>../../.app-version</file>
     </qresource>
 </RCC>
