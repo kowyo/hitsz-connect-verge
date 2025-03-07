@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "pyinstaller>=6.11.1",
+    "pyobjc>=11.0",
     "pyside6>=6.8.1.1",
     "requests>=2.32.3",
 ]
