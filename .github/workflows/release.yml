@@ -158,7 +158,7 @@ jobs:
           --add-data ".app-version;." `
           --icon "app\resources\icons\icon.ico" `
           --upx-dir "upx/upx-5.0.0-win64" `
-          -n "HITSZ Connect Verge" app\main_fluent2.py
+          -n "HITSZ Connect Verge" app\main.py
         
         # Install Inno Setup
         choco install innosetup -y
@@ -209,7 +209,6 @@ jobs:
           --add-data "core/zju-connect:core" \
           --icon "app\resources\icons\icon.png" \
           --hidden-import shlex \
-          --hidden-import qfluentwidgets \
           --hidden-import requests \
           --hidden-import packaging \
           --upx-dir "upx-5.0.0-${{ matrix.arch }}_linux" \
