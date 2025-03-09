@@ -10,7 +10,7 @@ from utils.credential_utils import save_credentials
 from utils.connection_utils import start_connection, stop_connection
 from common.version import get_version
 from utils.password_utils import toggle_password_visibility
-from utils.menu_utils import setup_menubar, check_for_updates
+from views.menu_utils import setup_menubar, check_for_updates
 if system() == "Darwin":
     from utils.macos_utils import hide_dock_icon
 from utils.config_utils import load_settings

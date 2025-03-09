@@ -1,8 +1,8 @@
 from PySide6.QtWidgets import (QDialog, QVBoxLayout, QLabel, QLineEdit, QCheckBox, 
                               QPushButton, QHBoxLayout, QApplication, QTabWidget, QWidget)
 from PySide6.QtGui import QIcon
-from .config_utils import save_config, load_config
-from .startup_utils import set_launch_at_login, get_launch_at_login
+from utils.config_utils import save_config, load_config
+from utils.startup_utils import set_launch_at_login, get_launch_at_login
 from platform import system
 if system() == "Darwin":
     from utils.macos_utils import hide_dock_icon
