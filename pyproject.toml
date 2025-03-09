@@ -5,8 +5,16 @@ description = "A GUI for connecting to the HITSZ Verge network."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "pyinstaller>=6.11.1",
-    "pyobjc>=11.0",
     "pyside6>=6.8.1.1",
     "requests>=2.32.3",
+]
+
+[tool.uv.sources]
+pyobjc = [
+  { git = "https://github.com/ronaldoussoren/pyobjc", tag = "11.0", marker = "sys_platform == 'darwin'" }
+]
+
+[dependency-groups]
+dev = [
+  "pyinstaller>=6.11.1"
 ]
