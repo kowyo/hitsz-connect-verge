@@ -72,19 +72,25 @@ name = "hitsz-connect-verge"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
-    { name = "pyinstaller" },
-    { name = "pyobjc" },
+    { name = "pyobjc", marker = "sys_platform == 'darwin'" },
     { name = "pyside6" },
     { name = "requests" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pyinstaller" },
+]
+
 [package.metadata]
 requires-dist = [
-    { name = "pyinstaller", specifier = ">=6.11.1" },
-    { name = "pyobjc", specifier = ">=11.0" },
+    { name = "pyobjc", marker = "sys_platform == 'darwin'", specifier = ">=11.0" },
     { name = "pyside6", specifier = ">=6.8.1.1" },
     { name = "requests", specifier = ">=2.32.3" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pyinstaller", specifier = ">=6.11.1" }]
 
 [[package]]
 name = "idna"
