@@ -59,7 +59,7 @@ jobs:
           - os: windows-latest
             os_name: windows
             arch: arm64
-          - os: macos-latest
+          - os: macos-13
             os_name: darwin
             arch: amd64
             target_arch: x86_64
