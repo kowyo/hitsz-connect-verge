@@ -90,7 +90,7 @@ jobs:
       with:
         version: "0.6.0"
         enable-cache: true
-        cache-dependency-glob: "uv.lock"
+        cache-dependency-glob: "**/pyproject.toml"
 
     - name: Install Dependencies
       run: uv sync
