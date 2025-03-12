@@ -4,9 +4,6 @@
         <file>icons/icon.png</file>
         <file>icons/icon.icns</file>
         <file>icons/menu-icon.svg</file>
-
-        <file>qss/dark/setting_interface.qss</file>
-        <file>qss/light/setting_interface.qss</file>
     </qresource>
 
     <qresource prefix="texts">
