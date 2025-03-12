@@ -98,14 +98,14 @@ jobs:
     # Download ZJU-connect core package
     - name: Download ZJU-connect Core
       run: |
-        mkdir -p core
-        curl -L "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-${{ matrix.os_name }}-${{ matrix.arch }}.zip" -o core/zju-connect.zip
+        mkdir -p app/core
+        curl -L "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-${{ matrix.os_name }}-${{ matrix.arch }}.zip" -o app/core/zju-connect.zip
         if [ "${{ matrix.os_name }}" = "windows" ]; then
-          powershell -command "Expand-Archive -Path core/zju-connect.zip -DestinationPath core"
+          powershell -command "Expand-Archive -Path app/core/zju-connect.zip -DestinationPath app/core"
         else
-          unzip -o core/zju-connect.zip -d core
+          unzip -o app/core/zju-connect.zip -d app/core
         fi
-        rm core/zju-connect.zip 
+        rm app/core/zju-connect.zip
       shell: bash
 
     # macOS specific build

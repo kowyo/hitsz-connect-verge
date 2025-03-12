@@ -1,6 +1,7 @@
 build
 dist
 __pycache__/
-core/
+**/zju-connect
+**/zju-connect.exe
 .venv/
 *.spec
