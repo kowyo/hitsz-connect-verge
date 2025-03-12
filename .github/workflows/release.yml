@@ -122,6 +122,7 @@ jobs:
     - name: Build Executable (macOS)
       if: runner.os == 'macOS'
       run: |
+        source .venv/bin/activate
         pyinstaller --clean --windowed \
           --target-arch ${{ matrix.target_arch }} \
           --add-data "app:app" \
@@ -155,14 +156,14 @@ jobs:
         
     - name: Build Executable (Windows)
       if: runner.os == 'Windows'
-      run: |        
+      run: |
+        .\.venv\Scripts\Activate.ps1
         pyinstaller --clean --noconsole `
           --add-data "app;app" `
           --add-data ".app-version;." `
           --icon "app\resources\icons\icon.ico" `
           --upx-dir "upx/upx-5.0.0-win64" `
           -n "HITSZ Connect Verge" app\main.py
-        
 
     - name: Create Installer (Windows)
       if: runner.os == 'Windows'
@@ -208,6 +209,7 @@ jobs:
     - name: Build Executable (Linux)
       if: runner.os == 'Linux'
       run: |
+        source .venv/bin/activate
         pyinstaller --noconsole --clean \
           --add-data "app:app" \
           --add-data ".app-version:." \
