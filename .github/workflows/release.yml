@@ -110,8 +110,13 @@ jobs:
 
     - name: Generate QT resources
       run: |
+        if [ "${{ matrix.os_name }}" = "windows" ]; then
+          powershell -command ".\.venv\Scripts\Activate.ps1"
+          powershell -command "pyside6-rcc app/resources/resources.qrc -o app/common/resources.py"
+        else
           source .venv/bin/activate
           pyside6-rcc app/resources/resources.qrc -o app/common/resources.py
+        fi
       shell: bash
 
     # macOS specific build
