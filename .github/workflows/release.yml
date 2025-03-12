@@ -118,7 +118,6 @@ jobs:
           --target-arch ${{ matrix.target_arch }} \
           --add-data "app:app" \
           --add-data ".app-version:." \
-          --add-data "core/zju-connect:core" \
           --icon app/resources/icons/icon.icns \
           -n "HITSZ Connect Verge" app/main.py
 
@@ -154,7 +153,6 @@ jobs:
         
         pyinstaller --clean --noconsole `
           --add-data "app;app" `
-          --add-data "core\zju-connect.exe;core" `
           --add-data ".app-version;." `
           --icon "app\resources\icons\icon.ico" `
           --upx-dir "upx/upx-5.0.0-win64" `
@@ -206,7 +204,6 @@ jobs:
         pyinstaller --noconsole --clean \
           --add-data "app:app" \
           --add-data ".app-version:." \
-          --add-data "core/zju-connect:core" \
           --icon "app\resources\icons\icon.png" \
           --hidden-import shlex \
           --hidden-import requests \
