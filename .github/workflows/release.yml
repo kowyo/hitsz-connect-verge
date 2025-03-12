@@ -117,6 +117,7 @@ jobs:
           source .venv/bin/activate
           pyside6-rcc app/resources/resources.qrc -o app/common/resources.py
         fi
+      shell: bash
 
     # macOS specific build
     - name: Build Executable (macOS)
