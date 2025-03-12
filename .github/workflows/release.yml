@@ -108,12 +108,20 @@ jobs:
         rm app/core/zju-connect.zip
       shell: bash
 
+    - name: Generate QT resources
+      run: |
+        if [ "${{ runner.os }}" = "Windows" ]; then
+          .\.venv\Scripts\Activate.ps1
+          pyside6-rcc .\app\resources\resources.qrc -o .\app\common\resources.py
+        else
+          source .venv/bin/activate
+          pyside6-rcc app/resources/resources.qrc -o app/common/resources.py
+        fi
+
     # macOS specific build
     - name: Build Executable (macOS)
       if: runner.os == 'macOS'
       run: |
-        source .venv/bin/activate
-        pyside6-rcc app/resources/resources.qrc -o app/common/resources.py
         pyinstaller --clean --windowed \
           --target-arch ${{ matrix.target_arch }} \
           --add-data "app:app" \
@@ -147,10 +155,7 @@ jobs:
         
     - name: Build Executable (Windows)
       if: runner.os == 'Windows'
-      run: |
-        .\.venv\Scripts\Activate.ps1
-        pyside6-rcc .\app\resources\resources.qrc -o .\app\common\resources.py
-        
+      run: |        
         pyinstaller --clean --noconsole `
           --add-data "app;app" `
           --add-data ".app-version;." `
@@ -158,6 +163,10 @@ jobs:
           --upx-dir "upx/upx-5.0.0-win64" `
           -n "HITSZ Connect Verge" app\main.py
         
+
+    - name: Create Installer (Windows)
+      if: runner.os == 'Windows'
+      run: |
         # Install Inno Setup
         choco install innosetup -y
         
@@ -199,8 +208,6 @@ jobs:
     - name: Build Executable (Linux)
       if: runner.os == 'Linux'
       run: |
-        source .venv/bin/activate
-        pyside6-rcc app/resources/resources.qrc -o app/common/resources.py
         pyinstaller --noconsole --clean \
           --add-data "app:app" \
           --add-data ".app-version:." \
