@@ -110,7 +110,7 @@ jobs:
 
     - name: Generate QT resources
       run: |
-        if [ "${{ runner.os }}" = "Windows" ]; then
+        if [ "${{ matrix.os_name }}" = "windows" ]; then
           .\.venv\Scripts\Activate.ps1
           pyside6-rcc .\app\resources\resources.qrc -o .\app\common\resources.py
         else
