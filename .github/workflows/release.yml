@@ -114,12 +114,24 @@ jobs:
       run: |
         source .venv/bin/activate
         pyside6-rcc app/resources/resources.qrc -o app/common/resources.py
-        pyinstaller --clean --windowed \
-          --target-arch ${{ matrix.target_arch }} \
-          --add-data "app:app" \
-          --add-data ".app-version:." \
-          --icon app/resources/icons/icon.icns \
-          -n "HITSZ Connect Verge" app/main.py
+        python -m nuitka \
+          --standalone \
+          --macos-create-app-bundle \
+          --macos-app-icon=app/resources/icons/icon.icns \
+          --macos-app-name="HITSZ Connect Verge" \
+          --macos-app-version $(cat .app-version) \
+          --product-name="HITSZ Connect Verge" \
+          --product-version=$(cat .app-version) \
+          --plugin-enable=pyside6 \
+          --include-package=app \
+          --include-data-dir=app=app \
+          --include-data-files=.app-version=.app-version \
+          --macos-target-arch=arm64 \
+          --output-dir=dist \
+          --remove-output \
+          app/main.py
+
+          mv dist/main.app dist/HITSZ\ Connect\ Verge.app
 
     - name: Create DMG (macOS)
       if: runner.os == 'macOS'
