@@ -10,9 +10,3 @@ dependencies = [
     "pyside6>=6.8.1.1",
     "requests>=2.32.3",
 ]
-
-[dependency-groups]
-dev = [
- "nuitka>=2.6.8",
- "pyinstaller>=6.11.1"
-]
