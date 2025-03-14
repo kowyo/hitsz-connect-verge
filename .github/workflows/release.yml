@@ -112,6 +112,8 @@ jobs:
     - name: Build Executable (macOS)
       if: runner.os == 'macOS'
       uses: Nuitka/Nuitka-Action@main
+      env:
+        PATH: .venv/bin:${{ env.PATH }}
       with:
         nuitka-version: 2.6.8
         script-name: app/main.py
