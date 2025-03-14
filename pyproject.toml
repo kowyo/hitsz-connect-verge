@@ -5,6 +5,7 @@ description = "A GUI for connecting to the HITSZ Verge network."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "packaging>=24.2",
     "pyobjc>=11.0 ; sys_platform == 'darwin'",
     "pyside6>=6.8.1.1",
     "requests>=2.32.3",
@@ -12,5 +13,6 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-  "pyinstaller>=6.11.1"
+ "nuitka>=2.6.8",
+ "pyinstaller>=6.11.1"
 ]
