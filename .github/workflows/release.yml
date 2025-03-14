@@ -113,7 +113,7 @@ jobs:
       if: runner.os == 'macOS'
       uses: Nuitka/Nuitka-Action@main
       with:
-        nuitka-version: main
+        nuitka-version: 2.6.8
         script-name: app/main.py
         mode: standalone
         enable-plugins: pyside6
