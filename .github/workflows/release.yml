@@ -113,7 +113,7 @@ jobs:
       if: runner.os == 'macOS'
       uses: Nuitka/Nuitka-Action@main
       env:
-        PATH: .venv/bin:${{ env.PATH }}
+        PATH: .venv/bin:/usr/bin:/usr/local/bin:${{ env.PATH }}
       with:
         nuitka-version: 2.6.8
         script-name: app/main.py
