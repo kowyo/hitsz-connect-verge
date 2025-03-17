@@ -40,9 +40,9 @@ def start_connection(window):
         base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     
     if system() == "Windows":
-        command = os.path.join(base_path, "core", "zju-connect.exe")
+        command = os.path.join(base_path, "app", "core", "zju-connect.exe")
     else:
-        command = os.path.join(base_path, "core", "zju-connect")
+        command = os.path.join(base_path, "app", "core", "zju-connect")
         if os.path.exists(command):
             os.chmod(command, 0o755)
 

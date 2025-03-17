@@ -47,11 +47,8 @@ HITSZ Connect Verge provides out-of-the-box experience. You can download the lat
 > For macOS version, you need to grant access to the application by running:
 >
 > ```bash
-> sudo xattr -rd com.apple.quarantine HITSZ\ Connect\ Verge.app
+> sudo xattr -rd com.apple.quarantine /Applications/HITSZ\ Connect\ Verge.app
 > ```
->
-> Or, you can go to macOS `Settings` -> `Security & Privacy` ->
-> `Security` -> `Open Anyway` to open the application.
 
 ### Method 2: Building from source
 
