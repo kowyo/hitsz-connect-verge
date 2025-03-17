@@ -73,7 +73,7 @@ def check_for_updates(parent, current_version, startup=False):
     
     def on_error(error_msg):
         if not startup:
-            QMessageBox.critical(parent, "检查更新", "检查更新失败，请检查网络链接")
+            QMessageBox.critical(parent, "检查更新", "检查更新失败，请检查网络连接")
         else:
             parent.output_text.append("Failed to check for updates. Please check your network connection.\n")
     
