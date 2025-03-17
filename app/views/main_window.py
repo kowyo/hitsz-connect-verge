@@ -30,7 +30,7 @@ class MainWindow(QMainWindow):
             QTimer.singleShot(5000, lambda: self.connect_button.setChecked(True))
         
         if self.check_update:
-            QTimer.singleShot(2000, self.check_updates_startup)
+            self.check_updates_startup()
 
     def setup_ui(self):
         # Layouts
@@ -112,5 +112,4 @@ class MainWindow(QMainWindow):
         load_settings(self)
 
     def check_updates_startup(self):
-        """Check for updates at startup - non-blocking"""
         check_for_updates(self, self.version, startup=True)
