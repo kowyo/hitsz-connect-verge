@@ -1,6 +1,7 @@
-from PySide6.QtWidgets import QMessageBox, QDialog, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QMessageBox, QMainWindow, QMenuBar
+import webbrowser
+
+from PySide6.QtWidgets import QMessageBox, QMainWindow, QMenuBar
 from PySide6.QtGui import QGuiApplication, QKeySequence
-from PySide6.QtCore import Qt
 from .advanced_panel import AdvancedSettingsDialog
 from platform import system
 from services.update_service import UpdateService
@@ -54,10 +55,15 @@ def check_for_updates(parent, current_version, startup=False):
         current_version: Current version string
         startup: Whether this check is happening at startup
     """
-    signals = update_service.check_for_updates("kowyo", "hitsz-connect-verge", current_version)
+    signals = update_service.check_for_updates(current_version)
 
     def on_update_available(latest_version):
-        show_update_dialog(parent, current_version, latest_version)
+        if not startup:
+            reply = QMessageBox.question(parent, "检查更新", f"发现新版本 {latest_version}，是否前往下载？")
+            if reply == QMessageBox.Yes:
+                webbrowser.open("https://github.com/kowyo/hitsz-connect-verge/releases/latest")
+        else:
+            parent.output_text.append(f"New version {latest_version} is available.\n")
     
     def on_up_to_date():
         if not startup:
@@ -75,43 +81,6 @@ def check_for_updates(parent, current_version, startup=False):
     signals.update_available.connect(on_update_available)
     signals.up_to_date.connect(on_up_to_date)
     signals.error.connect(on_error)
-
-def show_update_dialog(parent, current_version, latest_version):
-    """Show update available dialog"""
-    dialog = QDialog(parent)
-    dialog.setWindowTitle("检查更新")
-    dialog.setMinimumWidth(300)
-
-    layout = QVBoxLayout()
-    layout.setSpacing(15)
-    layout.setContentsMargins(20, 20, 20, 20)
-
-    message = f"""<div style='text-align: center;'>
-    <h3 style='margin-bottom: 15px;'>发现新版本</h3>
-    <p>当前版本：{current_version}</p>
-    <p>最新版本：{latest_version}</p>
-    </div>"""
-    message_label = QLabel(message)
-    message_label.setTextFormat(Qt.RichText)
-    layout.addWidget(message_label)
-
-    button_layout = QHBoxLayout()
-    button_layout.setSpacing(10)
-
-    download_button = QPushButton("下载更新")
-    download_button.clicked.connect(
-        lambda: update_service.open_download_page("kowyo", "hitsz-connect-verge")
-    )
-    button_layout.addWidget(download_button)
-
-    close_button = QPushButton("关闭")
-    close_button.clicked.connect(dialog.close)
-    button_layout.addWidget(close_button)
-
-    layout.addLayout(button_layout)
-    dialog.setLayout(layout)
-    dialog.finished.connect(dialog.deleteLater)
-    dialog.exec()
 
 def show_advanced_settings(window):
     """Show advanced settings dialog with proper cleanup"""

@@ -2,7 +2,6 @@ from PySide6.QtCore import QObject, Signal, QRunnable, QThreadPool, Slot
 import requests
 from requests.exceptions import RequestException
 from packaging import version
-import webbrowser
 
 class UpdateSignals(QObject):
     """Signals for update checking process"""
@@ -14,10 +13,8 @@ class UpdateSignals(QObject):
 class UpdateChecker(QRunnable):
     """Worker class to check for updates in background"""
     
-    def __init__(self, repo_owner, repo_name, current_version):
+    def __init__(self, current_version):
         super().__init__()
-        self.repo_owner = repo_owner
-        self.repo_name = repo_name
         self.current_version = current_version
         self.signals = UpdateSignals()
         
@@ -40,7 +37,7 @@ class UpdateChecker(QRunnable):
     def get_latest_version(self):
         """Get the latest version from GitHub releases"""
         try:
-            url = f"https://api.github.com/repos/{self.repo_owner}/{self.repo_name}/releases/latest"
+            url = "https://api.github.com/repos/kowyo/hitsz-connect-verge/releases/latest"
             response = requests.get(url, timeout=10)
             return response.json()["tag_name"].lstrip('v')
         except RequestException as e:
@@ -57,13 +54,7 @@ class UpdateService:
     def __init__(self):
         self.thread_pool = QThreadPool()
     
-    def check_for_updates(self, repo_owner, repo_name, current_version):
-        worker = UpdateChecker(repo_owner, repo_name, current_version)
+    def check_for_updates(self, current_version):
+        worker = UpdateChecker(current_version)
         self.thread_pool.start(worker)
         return worker.signals
-
-    @staticmethod
-    def open_download_page(repo_owner, repo_name):
-        """Open the download page for the latest release"""
-        url = f"https://github.com/{repo_owner}/{repo_name}/releases/latest"
-        webbrowser.open(url)
