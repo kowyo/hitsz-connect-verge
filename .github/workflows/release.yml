@@ -147,15 +147,7 @@ jobs:
           "dist/hitsz-connect-verge-${{ matrix.os_name }}-${{ matrix.arch }}.dmg" \
           "dist/HITSZ Connect Verge.app"
 
-    # Windows specific build
-    - name: Download UPX (Windows)
-      if: runner.os == 'Windows'
-      run: |
-        mkdir -p upx
-        Invoke-WebRequest -Uri "https://github.com/upx/upx/releases/download/v5.0.0/upx-5.0.0-win64.zip" -OutFile "upx.zip"
-        Expand-Archive -Path "upx.zip" -DestinationPath "upx"
-        Remove-Item -Path "upx.zip"
-        
+    # Windows specific build        
     - name: Build Executable (Windows)
       if: runner.os == 'Windows'
       run: |
@@ -177,7 +169,6 @@ jobs:
           --remove-output `
           app/main.py
         
-
     - name: Compile Installer (Windows)
       if: runner.os == 'Windows'
       run: |
@@ -212,13 +203,6 @@ jobs:
           libxcb1
         version: 1.0
 
-    - name: Download UPX (Linux)
-      if: runner.os == 'Linux'
-      run: |
-        wget https://github.com/upx/upx/releases/download/v5.0.0/upx-5.0.0-${{ matrix.arch }}_linux.tar.xz
-        tar -xf upx-5.0.0-${{ matrix.arch }}_linux.tar.xz
-        rm upx-5.0.0-${{ matrix.arch }}_linux.tar.xz
-
     - name: Build Executable (Linux)
       if: runner.os == 'Linux'
       run: |
@@ -231,7 +215,6 @@ jobs:
           --hidden-import shlex \
           --hidden-import requests \
           --hidden-import packaging \
-          --upx-dir "upx-5.0.0-${{ matrix.arch }}_linux" \
           -n hitsz-connect-verge app/main.py
 
     - name: Create DEB Package (Linux)
