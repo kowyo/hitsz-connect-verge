@@ -203,21 +203,31 @@ jobs:
           libxcb-sync1 
           libxcb-xkb1 
           libxcb1
+          patchelf
+          build-essential
         version: 1.0
-
+    
     - name: Build Executable (Linux)
       if: runner.os == 'Linux'
       run: |
         source .venv/bin/activate
         pyside6-rcc app/resources/resources.qrc -o app/common/resources.py
-        pyinstaller --noconsole --clean \
-          --add-data "app:app" \
-          --add-data ".app-version:." \
-          --icon "app\resources\icons\icon.png" \
-          --hidden-import shlex \
-          --hidden-import requests \
-          --hidden-import packaging \
-          -n hitsz-connect-verge app/main.py
+        
+        python -m nuitka \
+          --standalone \
+          --assume-yes-for-downloads \
+          --enable-plugin=pyside6 \
+          --include-data-dir=app=app \
+          --include-data-files=.app-version=.app-version \
+          --product-name="HITSZ Connect Verge" \
+          --product-version=$(cat .app-version) \
+          --linux-icon=app/resources/icons/icon.png \
+          --output-dir=dist \
+          --remove-output \
+          app/main.py
+
+          mv dist/main.dist dist/hitsz-connect-verge
+          mv dist/hitsz-connect-verge/main.bin dist/hitsz-connect-verge/hitsz-connect-verge
 
     - name: Create DEB Package (Linux)
       if: runner.os == 'Linux'
