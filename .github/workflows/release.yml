@@ -95,6 +95,18 @@ jobs:
     - name: Install Dependencies
       run: uv sync
 
+    # Cache Nuitka compilation results
+    - name: Cache Nuitka compilation
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache/Nuitka
+          ~/AppData/Local/Nuitka
+          ~/Library/Caches/Nuitka
+        key: nuitka-${{ runner.os }}-${{ matrix.arch }}-${{ hashFiles('pyproject.toml') }}
+        restore-keys: |
+          nuitka-${{ runner.os }}-${{ matrix.arch }}-
+
     # Download ZJU-connect core package
     - name: Download ZJU-connect Core
       run: |
