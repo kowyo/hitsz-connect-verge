@@ -99,7 +99,7 @@ jobs:
     - name: Download ZJU-connect Core
       run: |
         mkdir -p app/core
-        curl -L "https://github.com/Mythologyli/zju-connect/releases/latest/download/zju-connect-${{ matrix.os_name }}-${{ matrix.arch }}.zip" -o app/core/zju-connect.zip
+        curl -L "https://github.com/Mythologyli/zju-connect/releases/download/v0.9.0/zju-connect-${{ matrix.os_name }}-${{ matrix.arch }}.zip" -o app/core/zju-connect.zip
         if [ "${{ matrix.os_name }}" = "windows" ]; then
           powershell -command "Expand-Archive -Path app/core/zju-connect.zip -DestinationPath app/core"
         else
