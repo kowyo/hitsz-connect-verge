@@ -130,10 +130,7 @@ jobs:
           --remove-output \
           app/main.py
 
-    - name: Rename App (macOS)
-      if: runner.os == 'macOS'
-      run:
-          mv dist/main.app dist/HITSZ\ Connect\ Verge.app
+        mv dist/main.app dist/HITSZ\ Connect\ Verge.app
 
     - name: Create DMG (macOS)
       if: runner.os == 'macOS'
@@ -165,13 +162,25 @@ jobs:
         .\.venv\Scripts\Activate.ps1
         pyside6-rcc .\app\resources\resources.qrc -o .\app\common\resources.py
         
-        pyinstaller --clean --noconsole `
-          --add-data "app;app" `
-          --add-data ".app-version;." `
-          --icon "app\resources\icons\icon.ico" `
-          --upx-dir "upx/upx-5.0.0-win64" `
-          -n "HITSZ Connect Verge" app\main.py
+        python -m nuitka `
+          --standalone `
+          --assume-yes-for-downloads `
+          --enable-plugin=pyside6 `
+          --include-data-dir=app=app `
+          --include-data-files=app\core\zju-connect.exe=app\core\zju-connect.exe `
+          --include-data-files=.app-version=.app-version `
+          --product-name="HITSZ Connect Verge" `
+          --product-version=$(Get-Content .app-version) `
+          --windows-icon-from-ico=app\resources\icons\icon.ico `
+          --windows-console-mode=disable `
+          --output-dir=dist `
+          --remove-output `
+          app/main.py
         
+
+    - name: Compile Installer (Windows)
+      if: runner.os == 'Windows'
+      run: |
         # Install Inno Setup
         choco install innosetup -y
         
