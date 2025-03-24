@@ -168,6 +168,8 @@ jobs:
           --output-dir=dist `
           --remove-output `
           app/main.py
+
+          Rename-Item -Path dist\main.dist\main.exe -NewName "hitsz-connect-verge.exe"
         
     - name: Compile Installer (Windows)
       if: runner.os == 'Windows'

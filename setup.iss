@@ -1,7 +1,7 @@
 #define MyAppName "HITSZ Connect Verge"
 #define MyAppPublisher "Kowyo"
 #define MyAppURL "https://github.com/kowyo/hitsz-connect-verge"
-#define MyAppExeName "HITSZ Connect Verge.exe"
+#define MyAppExeName "hitsz-connect-verge.exe"
 
 [Setup]
 AppId={{0A82300E-622C-4436-B80D-65027407B2B7}
@@ -36,7 +36,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "dist\{#MyAppName}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "dist\main.dist\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
