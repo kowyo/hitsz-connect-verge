@@ -174,7 +174,7 @@ class AdvancedSettingsDialog(QDialog):
         if system() == "Darwin":
             hide_dock_icon(self.hide_dock_icon_switch.isChecked())
             
-            from .menu_utils import setup_menubar
+            from .menu_bar import setup_menubar
             main_window = self.parent()
             main_window.hide_dock_icon = self.hide_dock_icon_switch.isChecked()
             setup_menubar(main_window, VERSION)
