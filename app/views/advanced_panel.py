@@ -118,6 +118,7 @@ class AdvancedSettingsDialog(QDialog):
         cancel_button.clicked.connect(self.reject)
         
         button_layout.addWidget(save_button)
+        button_layout.addStretch()
         button_layout.addWidget(cancel_button)
         layout.addLayout(button_layout)
         

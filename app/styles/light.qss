@@ -1,0 +1,138 @@
+/* Light mode stylesheet */
+
+* {
+    font-family: "Segoe UI", "Microsoft YaHei UI", sans-serif;
+}
+
+QMainWindow, QDialog, QWidget {
+    background-color: #FEFBFF;
+    color: #1B1B1F;
+}
+
+QPushButton {
+    background-color: #65558f;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 20px;
+    padding: 12px 24px;
+    font-weight: 500;
+}
+
+QPushButton:hover {
+    background-color: #716398;
+}
+
+QPushButton:pressed {
+    background-color: #77699c;
+}
+
+QPushButton:disabled {
+    background-color: #E3E2E6;
+    color: #939099;
+}
+
+QLineEdit {
+    border: 2px solid #79747E;
+    border-radius: 8px;
+    padding: 12px;
+    background-color: #FFFFFF;
+    color: #1B1B1F;
+    height: 12px;
+}
+
+QLineEdit:focus {
+    border: 2px solid #3F51B5;
+    background-color: #FFFFFF;
+}
+
+QComboBox {
+    border: 2px solid #79747E;
+    border-radius: 8px;
+    padding: 12px;
+    background-color: #FFFFFF;
+    color: #1B1B1F;
+}
+
+QComboBox:hover {
+    border-color: #4557D2;
+}
+
+QComboBox:drop-down {
+    border: none;
+}
+
+QCheckBox {
+    color: #1B1B1F;
+    spacing: 8px;
+}
+
+QCheckBox::indicator {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 2px solid #79747E;
+}
+
+QCheckBox::indicator:checked {
+    background-color: #675496;
+    border-color:none;
+}
+
+QTextEdit {
+    border: 2px solid #79747E;
+    border-radius: 8px;
+    padding: 12px;
+    background-color: #FFFFFF;
+    color: #1B1B1F;
+    selection-background-color: #3F51B5;
+    selection-color: #FFFFFF;
+}
+
+QTextEdit:focus {
+    border: 2px solid #3F51B5;
+    background-color: #FFFFFF;
+}
+
+QTextEdit QScrollBar:vertical {
+    width: 8px;
+    background: #F4F4F4;
+    border-radius: 4px;
+    margin: 0px;
+}
+
+QTextEdit QScrollBar::handle:vertical {
+    background: #C4C4C4;
+    border-radius: 4px;
+    min-height: 32px;
+}
+
+QTextEdit QScrollBar::handle:vertical:hover {
+    background: #65558f;
+}
+
+QTextEdit QScrollBar::add-line:vertical,
+QTextEdit QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QTextEdit QScrollBar:horizontal {
+    height: 8px;
+    background: #F4F4F4;
+    border-radius: 4px;
+    margin: 0px;
+}
+
+QTextEdit QScrollBar::handle:horizontal {
+    background: #C4C4C4;
+    border-radius: 4px;
+    min-width: 32px;
+}
+
+QTextEdit QScrollBar::handle:horizontal:hover {
+    background: #65558f;
+}
+
+QTextEdit QScrollBar::add-line:horizontal,
+QTextEdit QScrollBar::sub-line:horizontal {
+    width: 0px;
+}
