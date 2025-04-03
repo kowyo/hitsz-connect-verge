@@ -76,6 +76,7 @@ QCheckBox::indicator {
 QCheckBox::indicator:checked {
     background-color: #d0bcff;
     border-color:none;
+    image: url(:/icons/checkmark-dark.svg);
 }
 
 QTextEdit {
