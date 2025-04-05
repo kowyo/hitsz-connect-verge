@@ -5,7 +5,6 @@ description = "A GUI for connecting to the HITSZ Verge network."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "darkdetect>=0.8.0",
     "nuitka>=2.6.8",
     "packaging>=24.2",
     "pyobjc>=11.0 ; sys_platform == 'darwin'",
