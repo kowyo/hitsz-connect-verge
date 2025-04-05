@@ -5,15 +5,15 @@
 }
 
 QMainWindow, QDialog, QWidget {
-    background-color: #FEFBFF;
-    color: #1B1B1F;
+    background-color: #FFFFFF;
+    color: #262626;
 }
 
 QPushButton {
     background-color: #65558f;
     color: #FFFFFF;
     border: none;
-    border-radius: 20px;
+    border-radius: 8px;
     padding: 12px 24px;
     font-weight: 500;
 }
@@ -35,41 +35,27 @@ QLineEdit {
     border: 2px solid #79747E;
     border-radius: 8px;
     padding: 12px;
-    background-color: #FFFFFF;
+    background-color: #fafafa;
     color: #1B1B1F;
     height: 12px;
 }
 
 QLineEdit:focus {
     border: 2px solid #3F51B5;
-    background-color: #FFFFFF;
-}
-
-QComboBox {
-    border: 2px solid #79747E;
-    border-radius: 8px;
-    padding: 12px;
-    background-color: #FFFFFF;
-    color: #1B1B1F;
-}
-
-QComboBox:hover {
-    border-color: #4557D2;
-}
-
-QComboBox:drop-down {
-    border: none;
+    background-color: #fafafa;
 }
 
 QCheckBox {
     color: #1B1B1F;
     spacing: 8px;
+    padding: 4px;
+    background-color: #fafafa;
 }
 
 QCheckBox::indicator {
     width: 18px;
     height: 18px;
-    border-radius: 4px;
+    border-radius: 8px;
     border: 2px solid #79747E;
 }
 
@@ -83,7 +69,7 @@ QTextEdit {
     border: 2px solid #79747E;
     border-radius: 8px;
     padding: 12px;
-    background-color: #FFFFFF;
+    background-color: #fafafa;
     color: #1B1B1F;
     selection-background-color: #3F51B5;
     selection-color: #FFFFFF;
@@ -91,13 +77,13 @@ QTextEdit {
 
 QTextEdit:focus {
     border: 2px solid #3F51B5;
-    background-color: #FFFFFF;
+    background-color: #fafafa;
 }
 
 QTextEdit QScrollBar:vertical {
     width: 8px;
     background: #F4F4F4;
-    border-radius: 4px;
+    border-radius: 8px;
     margin: 0px;
 }
 
