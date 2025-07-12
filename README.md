@@ -70,14 +70,16 @@ HITSZ Connect Verge provides out-of-the-box experience. You can download the lat
         ```
 
 3. Run the application:
-    
+
     macOS/Linux
+
     ```bash
     source .venv/bin/activate
     uv run app/main.py
     ```
 
     Windows (Powershell)
+
     ```powershell
     .\.venv\Scripts\activate.ps1
     uv run .\app\main.py
@@ -124,8 +126,11 @@ rules:
 
 > [!NOTE]
 >
-> 1. It is recommended to enable `TUN Mode`
-> 2. You need to turn off the `Always use Default Bypass` option in the `System Proxy` settings, and add `localhost` to the `Proxy Bypass` field.
+> 1. You need to enable `TUN Mode` in Clash, and enable the `Auto Configure Proxy` option of this software.
+> 2. You need to turn off the `Always use Default Bypass` option in the `System Proxy` settings, and add `localhost` to the `Proxy Bypass` field.s
+> 3. A useful [global extend script](./clash-utils.js) is provided if you want to avoid the automatic update of the profiles overwrite your custom rules.
+
+<!-- > (Confusion) 3. There is no need to enable the `Auto Configure Proxy` feature of this software. In this case, Clash will host the system proxy and the proxy of this software will be forwarded by Clash. -->
 
 [Learn more](https://oldkingok.cc/share/8bFQXBjOkXt8)
 
@@ -143,7 +148,11 @@ For macOS/Linux users:
 ssh -o ProxyCommand="nc -X 5 -x 127.0.0.1:1080 %h %p" <root>@<server> -p <port>
 ```
 
-For Windows users, you can use ncat to setup SOCKS 5 proxy.
+For Windows users, you can use [ncat](https://nmap.org/download.html) to setup SOCKS 5 proxy. Run the following command after installing ncat:
+
+``` powershell
+ssh -o "ProxyCommand=ncat --proxy 127.0.0.1:1080 --proxy-type socks5 %h %p" <root>@<server> -p <port>
+```
 
 [Learn more](https://hoa.moe/blog/using-hitsz-connect-verge-to-ssh-school-server/#windows)
 

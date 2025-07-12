@@ -124,8 +124,9 @@ rules:
 
 > [!NOTE]
 >
-> 1. 建议启用 `TUN 模式`
+> 1. 需要启用 Clash 的 `TUN 模式`，同时开启本软件的 `自动配置代理` 功能
 > 2. 需要关闭内网绕过代理, 并添加 `localhost` 到`代理绕过设置`区域
+> 3. 你可以使用我们提供的[全局拓展脚本](./clash-utils.js)来防止配置文件自动更新时覆盖添加的自定义规则
 
 [了解更多](https://oldkingok.cc/share/8bFQXBjOkXt8)
 
@@ -141,7 +142,11 @@ rules:
 ssh -o ProxyCommand="nc -X 5 -x 127.0.0.1:1080 %h %p" <用户名>@<服务器地址> -p <端口>
 ```
 
-如果你是 Windows 用户，可以使用 ncat 建立 SOCKS 5 代理。
+如果你是 Windows 用户，可以使用 [ncat](https://nmap.org/download.html) 建立 SOCKS 5 代理。安装 ncat 后，使用以下命令：
+
+```
+ssh -o "ProxyCommand=ncat --proxy 127.0.0.1:1080 --proxy-type socks5 %h %p" <用户名>@<服务器地址> -p <端口>
+```
 
 [了解更多](https://hoa.moe/blog/using-hitsz-connect-verge-to-ssh-school-server/#通过-ssh-连接服务器)
 

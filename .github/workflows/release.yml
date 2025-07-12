@@ -88,7 +88,7 @@ jobs:
     - name: Install uv and restore cache
       uses: astral-sh/setup-uv@v5
       with:
-        version: "0.6.0"
+        version: "0.7.20"
         enable-cache: true
         cache-dependency-glob: "**/pyproject.toml"
 
