@@ -6,8 +6,8 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "nuitka>=2.7.12",
-    "packaging>=25.0; sys_platform == 'darwin'",
-    "pyobjc>=11.1",
+    "packaging>=25.0",
+    "pyobjc>=11.1; sys_platform == 'darwin'",
     "pyside6>=6.9.1",
     "requests>=2.32.4",
 ]
