@@ -65,6 +65,46 @@ QCheckBox::indicator:checked {
     image: url(:/icons/checkmark-dark.svg);
 }
 
+/* Tab Widget Styling */
+QTabWidget::pane {
+    border: 2px solid #44454F;
+    background-color: #242321;
+    border-radius: 8px;
+}
+
+QTabWidget::tab-bar {
+    alignment: left;
+}
+
+QTabBar::tab {
+    background-color: transparent;
+    color: #939099;
+    padding: 12px 24px;
+    margin-right: 4px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    min-width: 80px;
+}
+
+QTabBar::tab:selected {
+    background-color: #d0bcff;
+    color: #381e72;
+}
+
+QTabBar::tab:hover:!selected {
+    background-color: #44454F;
+    color: #E3E2E6;
+}
+
+QTabBar::tab:first {
+    margin-left: 0px;
+}
+
+QTabBar::tab:last {
+    margin-right: 0px;
+}
+
 QTextEdit {
     border: 2px solid #44454F;
     border-radius: 8px;
