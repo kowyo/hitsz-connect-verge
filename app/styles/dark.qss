@@ -37,7 +37,7 @@ QLineEdit {
     padding: 12px;
     background-color: #272624;
     color: #E3E2E6;
-    height: 12px;
+    min-height: 14px;
 }
 
 QLineEdit:focus {
