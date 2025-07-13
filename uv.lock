@@ -110,8 +110,8 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "nuitka" },
-    { name = "packaging", marker = "sys_platform == 'darwin'" },
-    { name = "pyobjc" },
+    { name = "packaging" },
+    { name = "pyobjc", marker = "sys_platform == 'darwin'" },
     { name = "pyside6" },
     { name = "requests" },
 ]
