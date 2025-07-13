@@ -4,6 +4,8 @@
         <file>icons/icon.png</file>
         <file>icons/icon.icns</file>
         <file>icons/menu-icon.svg</file>
+        <file>icons/checkmark.png</file>
+        <file>icons/checkmark-dark.svg</file>
     </qresource>
 
     <qresource prefix="texts">
