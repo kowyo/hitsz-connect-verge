@@ -69,7 +69,8 @@ QCheckBox::indicator:checked {
 QTabWidget::pane {
     border: 2px solid #44454F;
     background-color: #242321;
-    border-radius: 8px;
+    border-radius: 4px;
+    border-top-left-radius: 0px;
 }
 
 QTabWidget::tab-bar {
@@ -83,6 +84,8 @@ QTabBar::tab {
     margin-right: 4px;
     border: none;
     border-radius: 8px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
     font-weight: 500;
     min-width: 80px;
 }
