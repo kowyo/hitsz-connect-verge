@@ -96,6 +96,7 @@ def show_advanced_settings(window):
         window.hide_dock_icon,
         window.keep_alive,
         window.debug_dump,
+        window.disable_multi_line,
         window.http_bind,
         window.socks_bind
     )
@@ -112,6 +113,7 @@ def show_advanced_settings(window):
         window.hide_dock_icon = settings.get('hide_dock_icon', False)
         window.keep_alive = settings['keep_alive']
         window.debug_dump = settings['debug_dump']
+        window.disable_multi_line = settings['disable_multi_line']
         window.http_bind = settings['http_bind']
         window.socks_bind = settings['socks_bind']
         if system() == "Darwin":

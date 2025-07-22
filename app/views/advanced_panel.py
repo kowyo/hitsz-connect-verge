@@ -75,6 +75,10 @@ class AdvancedSettingsDialog(QDialog):
         self.debug_dump_switch = QCheckBox("调试模式")
         network_layout.addWidget(self.debug_dump_switch)
 
+        # Disable multi line
+        self.disable_multi_line_switch = QCheckBox("禁用备用线路检测")
+        network_layout.addWidget(self.disable_multi_line_switch)
+
         network_tab.setLayout(network_layout)
         
         # General tab
@@ -134,6 +138,7 @@ class AdvancedSettingsDialog(QDialog):
             'check_update': self.check_update_switch.isChecked(),
             'keep_alive': self.keep_alive_switch.isChecked(),
             'debug_dump': self.debug_dump_switch.isChecked(),
+            'disable_multi_line': self.disable_multi_line_switch.isChecked(),
             'http_bind': self.http_bind_input.text(),
             'socks_bind': self.socks_bind_input.text(),
         }
@@ -143,7 +148,7 @@ class AdvancedSettingsDialog(QDialog):
             
         return settings
     
-    def set_settings(self, server, port, dns, proxy, connect_startup, silent_mode, check_update, hide_dock_icon=False, keep_alive=False, debug_dump=False, http_bind='', socks_bind=''):
+    def set_settings(self, server, port, dns, proxy, connect_startup, silent_mode, check_update, hide_dock_icon=False, keep_alive=False, debug_dump=False, disable_multi_line=False, http_bind='', socks_bind=''):
         """Set dialog values from main window values"""
         self.server_input.setText(server)
         self.port_input.setText(port)
@@ -156,6 +161,7 @@ class AdvancedSettingsDialog(QDialog):
             self.hide_dock_icon_switch.setChecked(hide_dock_icon)
         self.keep_alive_switch.setChecked(keep_alive)
         self.debug_dump_switch.setChecked(debug_dump)
+        self.disable_multi_line_switch.setChecked(disable_multi_line)
         self.http_bind_input.setText(http_bind)
         self.socks_bind_input.setText(socks_bind)
 

@@ -69,6 +69,9 @@ def start_connection(window):
     if window.debug_dump:
         command_args.append("-debug-dump")
 
+    if window.disable_multi_line:
+        command_args.append("-disable-multi-line")
+
     command_args.append("-disable-zju-config")
     command_args.append("-skip-domain-resource")
     command_args.extend(["-zju-dns-server", "auto"])
