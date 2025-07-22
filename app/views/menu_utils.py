@@ -98,7 +98,8 @@ def show_advanced_settings(window):
         window.debug_dump,
         window.disable_multi_line,
         window.http_bind,
-        window.socks_bind
+        window.socks_bind,
+        window.auto_dns
     )
     
     if dialog.exec():
@@ -106,6 +107,7 @@ def show_advanced_settings(window):
         window.server_address = settings['server']
         window.port = settings['port']
         window.dns_server = settings['dns']
+        window.auto_dns = settings['auto_dns']
         window.proxy = settings['proxy']
         window.connect_startup = settings['connect_startup']
         window.silent_mode = settings['silent_mode']

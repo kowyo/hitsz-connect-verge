@@ -18,6 +18,7 @@ def load_config():
         'server': 'vpn.hitsz.edu.cn',
         'port': '443',
         'dns': '10.248.98.30',
+        'auto_dns': True,
         'proxy': True,
         'launch_at_login': get_launch_at_login(),
         'connect_startup': False,
@@ -49,6 +50,7 @@ def load_settings(self):
     self.server_address = config['server']
     self.port = config['port']
     self.dns_server = config['dns']
+    self.auto_dns = config['auto_dns']
     self.proxy = config['proxy']
     self.connect_startup = config['connect_startup']
     self.silent_mode = config['silent_mode']

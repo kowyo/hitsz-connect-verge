@@ -43,6 +43,10 @@ class AdvancedSettingsDialog(QDialog):
         dns_layout.addWidget(QLabel("DNS 服务器地址"))
         self.dns_input = QLineEdit("10.248.98.30")
         dns_layout.addWidget(self.dns_input)
+        self.auto_dns_switch = QCheckBox("自动配置 DNS")
+        self.auto_dns_switch.setChecked(True)
+        self.auto_dns_switch.toggled.connect(self.toggle_dns_input)
+        dns_layout.addWidget(self.auto_dns_switch)
         network_layout.addLayout(dns_layout)
         
         # SOCKS bind
@@ -127,11 +131,16 @@ class AdvancedSettingsDialog(QDialog):
         
         self.setLayout(layout)
 
+    def toggle_dns_input(self):
+        """Toggle DNS input field based on auto DNS checkbox"""
+        self.dns_input.setEnabled(not self.auto_dns_switch.isChecked())
+        
     def get_settings(self):
         settings = {
             'server': self.server_input.text(),
             'port': self.port_input.text(),
             'dns': self.dns_input.text(),
+            'auto_dns': self.auto_dns_switch.isChecked(),
             'proxy': self.proxy_switch.isChecked(),
             'connect_startup': self.connect_startup_switch.isChecked(),
             'silent_mode': self.silent_mode_switch.isChecked(),
@@ -148,11 +157,12 @@ class AdvancedSettingsDialog(QDialog):
             
         return settings
     
-    def set_settings(self, server, port, dns, proxy, connect_startup, silent_mode, check_update, hide_dock_icon=False, keep_alive=False, debug_dump=False, disable_multi_line=False, http_bind='', socks_bind=''):
+    def set_settings(self, server, port, dns, proxy, connect_startup, silent_mode, check_update, hide_dock_icon=False, keep_alive=False, debug_dump=False, disable_multi_line=False, http_bind='', socks_bind='', auto_dns=True):
         """Set dialog values from main window values"""
         self.server_input.setText(server)
         self.port_input.setText(port)
         self.dns_input.setText(dns)
+        self.auto_dns_switch.setChecked(auto_dns)
         self.proxy_switch.setChecked(proxy)
         self.connect_startup_switch.setChecked(connect_startup)
         self.silent_mode_switch.setChecked(silent_mode)
@@ -164,6 +174,9 @@ class AdvancedSettingsDialog(QDialog):
         self.disable_multi_line_switch.setChecked(disable_multi_line)
         self.http_bind_input.setText(http_bind)
         self.socks_bind_input.setText(socks_bind)
+        
+        # Enable/disable DNS input based on auto DNS setting
+        self.toggle_dns_input()
 
     def accept(self):
         """Save settings before closing"""

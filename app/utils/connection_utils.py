@@ -52,10 +52,15 @@ def start_connection(window):
         command,
         "-server", shlex.quote(server_address),
         "-port", shlex.quote(str(port)),
-        "-zju-dns-server", shlex.quote(dns_server_address),
         "-username", shlex.quote(username),
         "-password", shlex.quote(password)
     ]
+    
+    # Add DNS server configuration
+    if window.auto_dns:
+        command_args.extend(["-zju-dns-server", "auto"])
+    else:
+        command_args.extend(["-zju-dns-server", shlex.quote(dns_server_address)])
     
     if window.http_bind:
         command_args.extend(["-http-bind", shlex.quote("127.0.0.1:" + window.http_bind)])
@@ -74,7 +79,6 @@ def start_connection(window):
 
     command_args.append("-disable-zju-config")
     command_args.append("-skip-domain-resource")
-    command_args.extend(["-zju-dns-server", "auto"])
     
     debug_command = command_args.copy()
     username_index = debug_command.index("-username") + 1
