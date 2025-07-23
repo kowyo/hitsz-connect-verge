@@ -93,7 +93,7 @@ def start_connection(window):
     debug_command[pwd_index] = "********"
     
     # Also mask certificate password if present
-    if window.cert_file and window.cert_password and "-cert-password" in debug_command:
+    if "-cert-password" in debug_command:
         cert_pwd_index = debug_command.index("-cert-password") + 1
         debug_command[cert_pwd_index] = "********"
 
