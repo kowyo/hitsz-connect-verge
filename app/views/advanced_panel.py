@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import (QDialog, QVBoxLayout, QLabel, QLineEdit, QCheckBox, 
                               QPushButton, QHBoxLayout, QApplication, QTabWidget, QWidget,
-                              QFileDialog)
-from PySide6.QtGui import QIcon
+                              QFileDialog, QStyle)
+from PySide6.QtGui import QIcon, QAction
 from utils.config_utils import save_config, load_config
 from utils.startup_utils import set_launch_at_login, get_launch_at_login
 from platform import system
@@ -85,20 +85,24 @@ class AdvancedSettingsDialog(QDialog):
         self.disable_multi_line_switch = QCheckBox("禁用备用线路检测")
         network_layout.addWidget(self.disable_multi_line_switch)
 
-        # Certificate file selection
+                # Certificate file selection
         cert_layout = QHBoxLayout()
         cert_layout.addWidget(QLabel("证书文件"))
         self.cert_file_input = QLineEdit()
         self.cert_file_input.setPlaceholderText("选择 .p12 证书文件")
         self.cert_file_input.setReadOnly(True)
+        
+        # Add clear action to the text field
+        self.cert_clear_action = QAction()
+        self.cert_clear_action.setIcon(self.style().standardIcon(QStyle.SP_DialogCancelButton))
+        self.cert_clear_action.setToolTip("清除证书文件")
+        self.cert_clear_action.triggered.connect(self.clear_cert_file)
+        self.cert_file_input.addAction(self.cert_clear_action, QLineEdit.TrailingPosition)
+        
         cert_layout.addWidget(self.cert_file_input)
         self.cert_browse_button = QPushButton("浏览...")
         self.cert_browse_button.clicked.connect(self.browse_cert_file)
         cert_layout.addWidget(self.cert_browse_button)
-        self.cert_clear_button = QPushButton("×")
-        self.cert_clear_button.setToolTip("清除证书文件")
-        self.cert_clear_button.clicked.connect(self.clear_cert_file)
-        cert_layout.addWidget(self.cert_clear_button)
         network_layout.addLayout(cert_layout)
 
         # Certificate password
