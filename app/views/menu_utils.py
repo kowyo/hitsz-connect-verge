@@ -99,7 +99,9 @@ def show_advanced_settings(window):
         window.disable_multi_line,
         window.http_bind,
         window.socks_bind,
-        window.auto_dns
+        window.auto_dns,
+        window.cert_file,
+        window.cert_password
     )
     
     if dialog.exec():
@@ -118,5 +120,7 @@ def show_advanced_settings(window):
         window.disable_multi_line = settings['disable_multi_line']
         window.http_bind = settings['http_bind']
         window.socks_bind = settings['socks_bind']
+        window.cert_file = settings['cert_file']
+        window.cert_password = settings['cert_password']
         if system() == "Darwin":
             hide_dock_icon(window.hide_dock_icon)

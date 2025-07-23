@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import (QDialog, QVBoxLayout, QLabel, QLineEdit, QCheckBox, 
-                              QPushButton, QHBoxLayout, QApplication, QTabWidget, QWidget)
+                              QPushButton, QHBoxLayout, QApplication, QTabWidget, QWidget,
+                              QFileDialog)
 from PySide6.QtGui import QIcon
 from utils.config_utils import save_config, load_config
 from utils.startup_utils import set_launch_at_login, get_launch_at_login
@@ -26,6 +27,7 @@ class AdvancedSettingsDialog(QDialog):
         # Network tab
         network_tab = QWidget()
         network_layout = QVBoxLayout()
+        network_layout.setSpacing(10)
         
         # Server & Port
         server_layout = QHBoxLayout()
@@ -83,6 +85,31 @@ class AdvancedSettingsDialog(QDialog):
         self.disable_multi_line_switch = QCheckBox("禁用备用线路检测")
         network_layout.addWidget(self.disable_multi_line_switch)
 
+        # Certificate file selection
+        cert_layout = QHBoxLayout()
+        cert_layout.addWidget(QLabel("证书文件"))
+        self.cert_file_input = QLineEdit()
+        self.cert_file_input.setPlaceholderText("选择 .p12 证书文件")
+        self.cert_file_input.setReadOnly(True)
+        cert_layout.addWidget(self.cert_file_input)
+        self.cert_browse_button = QPushButton("浏览...")
+        self.cert_browse_button.clicked.connect(self.browse_cert_file)
+        cert_layout.addWidget(self.cert_browse_button)
+        self.cert_clear_button = QPushButton("×")
+        self.cert_clear_button.setToolTip("清除证书文件")
+        self.cert_clear_button.clicked.connect(self.clear_cert_file)
+        cert_layout.addWidget(self.cert_clear_button)
+        network_layout.addLayout(cert_layout)
+
+        # Certificate password
+        cert_pwd_layout = QHBoxLayout()
+        cert_pwd_layout.addWidget(QLabel("证书密码"))
+        self.cert_password_input = QLineEdit()
+        self.cert_password_input.setPlaceholderText("输入证书密码")
+        self.cert_password_input.setEchoMode(QLineEdit.Password)
+        cert_pwd_layout.addWidget(self.cert_password_input)
+        network_layout.addLayout(cert_pwd_layout)
+
         network_tab.setLayout(network_layout)
         
         # General tab
@@ -134,6 +161,22 @@ class AdvancedSettingsDialog(QDialog):
     def toggle_dns_input(self):
         """Toggle DNS input field based on auto DNS checkbox"""
         self.dns_input.setEnabled(not self.auto_dns_switch.isChecked())
+    
+    def browse_cert_file(self):
+        """Open file dialog to browse for certificate file"""
+        file_dialog = QFileDialog(self)
+        file_dialog.setNameFilter("Certificate files (*.p12)")
+        file_dialog.setFileMode(QFileDialog.ExistingFile)
+        
+        if file_dialog.exec():
+            selected_files = file_dialog.selectedFiles()
+            if selected_files:
+                self.cert_file_input.setText(selected_files[0])
+    
+    def clear_cert_file(self):
+        """Clear the selected certificate file"""
+        self.cert_file_input.clear()
+        self.cert_password_input.clear()
         
     def get_settings(self):
         settings = {
@@ -150,6 +193,8 @@ class AdvancedSettingsDialog(QDialog):
             'disable_multi_line': self.disable_multi_line_switch.isChecked(),
             'http_bind': self.http_bind_input.text(),
             'socks_bind': self.socks_bind_input.text(),
+            'cert_file': self.cert_file_input.text(),
+            'cert_password': self.cert_password_input.text(),
         }
         
         if system() == "Darwin":
@@ -157,7 +202,7 @@ class AdvancedSettingsDialog(QDialog):
             
         return settings
     
-    def set_settings(self, server, port, dns, proxy, connect_startup, silent_mode, check_update, hide_dock_icon=False, keep_alive=False, debug_dump=False, disable_multi_line=False, http_bind='', socks_bind='', auto_dns=True):
+    def set_settings(self, server, port, dns, proxy, connect_startup, silent_mode, check_update, hide_dock_icon=False, keep_alive=False, debug_dump=False, disable_multi_line=False, http_bind='', socks_bind='', auto_dns=True, cert_file='', cert_password=''):
         """Set dialog values from main window values"""
         self.server_input.setText(server)
         self.port_input.setText(port)
@@ -174,6 +219,8 @@ class AdvancedSettingsDialog(QDialog):
         self.disable_multi_line_switch.setChecked(disable_multi_line)
         self.http_bind_input.setText(http_bind)
         self.socks_bind_input.setText(socks_bind)
+        self.cert_file_input.setText(cert_file)
+        self.cert_password_input.setText(cert_password)
         
         # Enable/disable DNS input based on auto DNS setting
         self.toggle_dns_input()

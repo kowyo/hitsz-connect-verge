@@ -30,6 +30,8 @@ def load_config():
         'disable_multi_line': False,
         'socks_bind': '1080',
         'http_bind': '1081',
+        'cert_file': '',
+        'cert_password': '',
     }
     
     # Load values from QSettings, falling back to defaults if not found
@@ -61,3 +63,5 @@ def load_settings(self):
     self.disable_multi_line = config['disable_multi_line']
     self.http_bind = config['http_bind']
     self.socks_bind = config['socks_bind']
+    self.cert_file = config['cert_file']
+    self.cert_password = config['cert_password']

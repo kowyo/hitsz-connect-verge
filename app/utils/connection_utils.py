@@ -77,6 +77,11 @@ def start_connection(window):
     if window.disable_multi_line:
         command_args.append("-disable-multi-line")
 
+    # Add certificate file and password if provided
+    if window.cert_file and window.cert_password:
+        command_args.extend(["-cert-file", shlex.quote(window.cert_file)])
+        command_args.extend(["-cert-password", shlex.quote(window.cert_password)])
+
     command_args.append("-disable-zju-config")
     command_args.append("-skip-domain-resource")
     
@@ -85,6 +90,11 @@ def start_connection(window):
     debug_command[username_index] = "********"
     pwd_index = debug_command.index("-password") + 1
     debug_command[pwd_index] = "********"
+    
+    # Also mask certificate password if present
+    if window.cert_file and window.cert_password and "-cert-password" in debug_command:
+        cert_pwd_index = debug_command.index("-cert-password") + 1
+        debug_command[cert_pwd_index] = "********"
 
     window.output_text.append(f"Running command: {' '.join(debug_command)}\n")
 
