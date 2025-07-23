@@ -81,6 +81,7 @@ def start_connection(window):
     if window.cert_file:
         command_args.extend(["-cert-file", shlex.quote(window.cert_file)])
         if window.cert_password:
+            command_args.extend(["-cert-password", shlex.quote(window.cert_password)])
 
     command_args.append("-disable-zju-config")
     command_args.append("-skip-domain-resource")
