@@ -90,7 +90,7 @@ class AdvancedSettingsDialog(QDialog):
         network_layout.addWidget(self.disable_multi_line_switch)
 
                 # Certificate file selection
-        cert_layout = QHBoxLayout()
+        # Certificate file selection
         cert_label = QLabel("证书路径")
         cert_label.setToolTip("如果服务器要求证书验证，需要配置此参数")
         cert_layout.addWidget(cert_label)
