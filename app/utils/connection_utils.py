@@ -78,9 +78,9 @@ def start_connection(window):
         command_args.append("-disable-multi-line")
 
     # Add certificate file and password if provided
-    if window.cert_file and window.cert_password:
+    if window.cert_file:
         command_args.extend(["-cert-file", shlex.quote(window.cert_file)])
-        command_args.extend(["-cert-password", shlex.quote(window.cert_password)])
+        if window.cert_password:
 
     command_args.append("-disable-zju-config")
     command_args.append("-skip-domain-resource")
