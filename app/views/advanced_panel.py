@@ -71,23 +71,29 @@ class AdvancedSettingsDialog(QDialog):
 
         # Proxy Control
         self.proxy_switch = QCheckBox("自动配置代理")
+        self.proxy_switch.setToolTip("自动配置系统代理设置，将网络流量通过 VPN 转发")
         network_layout.addWidget(self.proxy_switch)
 
         # Disable keep-alive
         self.keep_alive_switch = QCheckBox("定时保活")
+        self.keep_alive_switch.setToolTip("开启后，ZJU Connect 会定时发送心跳包以保持连接")
         network_layout.addWidget(self.keep_alive_switch)
 
         # Debug-dump
         self.debug_dump_switch = QCheckBox("调试模式")
+        self.debug_dump_switch.setToolTip("开启后，ZJU Connect 会记录详细的调试信息到日志文件")
         network_layout.addWidget(self.debug_dump_switch)
 
         # Disable multi line
         self.disable_multi_line_switch = QCheckBox("禁用备用线路检测")
+        self.disable_multi_line_switch.setToolTip("开启后，ZJU Connect 将不再自动切换到备用线路")
         network_layout.addWidget(self.disable_multi_line_switch)
 
                 # Certificate file selection
         cert_layout = QHBoxLayout()
-        cert_layout.addWidget(QLabel("证书文件"))
+        cert_label = QLabel("证书路径")
+        cert_label.setToolTip("如果服务器要求证书验证，需要配置此参数")
+        cert_layout.addWidget(cert_label)
         self.cert_file_input = QLineEdit()
         self.cert_file_input.setPlaceholderText("选择 .p12 证书文件")
         self.cert_file_input.setReadOnly(True)
@@ -95,7 +101,7 @@ class AdvancedSettingsDialog(QDialog):
         # Add clear action to the text field
         self.cert_clear_action = QAction()
         self.cert_clear_action.setIcon(self.style().standardIcon(QStyle.SP_DialogCancelButton))
-        self.cert_clear_action.setToolTip("清除证书文件")
+        self.cert_clear_action.setToolTip("清除证书")
         self.cert_clear_action.triggered.connect(self.clear_cert_file)
         self.cert_file_input.addAction(self.cert_clear_action, QLineEdit.TrailingPosition)
         
