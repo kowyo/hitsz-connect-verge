@@ -1,4 +1,6 @@
 import subprocess
+import signal
+import time
 from platform import system
 
 from PySide6.QtCore import QThread, Signal
@@ -71,12 +73,93 @@ class CommandWorker(QThread):
                 proxy_handler = self._proxy_handlers.get(system())
                 if proxy_handler:
                     proxy_handler(False)
+            
+            # Small delay to allow socket cleanup
+            time.sleep(0.5)
             self.finished.emit()
 
     def stop(self):
         if self.process:
-            self.process.terminate()
-            self.process.wait()
+            try:
+                # First try graceful termination
+                if system() == "Windows":
+                    # On Windows, use taskkill for a more forceful termination
+                    subprocess.run(
+                        ["taskkill", "/F", "/T", "/PID", str(self.process.pid)],
+                        capture_output=True,
+                        timeout=5
+                    )
+                else:
+                    # On Unix-like systems, try SIGTERM first
+                    self.process.terminate()
+                    try:
+                        # Wait up to 3 seconds for graceful shutdown
+                        self.process.wait(timeout=3)
+                    except subprocess.TimeoutExpired:
+                        # If process doesn't terminate gracefully, kill it
+                        self.process.kill()
+                        self.process.wait(timeout=2)
+                
+                # Additional cleanup: try to kill any remaining zju-connect processes
+                self._cleanup_remaining_processes()
+                
+            except Exception as e:
+                # If all else fails, force kill
+                try:
+                    self.process.kill()
+                    self.process.wait(timeout=2)
+                except:
+                    pass
+            finally:
+                self.process = None
+    
+    def _cleanup_remaining_processes(self):
+        """Clean up any remaining zju-connect processes that might be holding ports"""
+        try:
+            if system() == "Windows":
+                # Find and kill any remaining zju-connect.exe processes
+                result = subprocess.run(
+                    ["tasklist", "/FI", "IMAGENAME eq zju-connect.exe", "/FO", "CSV"],
+                    capture_output=True,
+                    text=True,
+                    timeout=5
+                )
+                if "zju-connect.exe" in result.stdout:
+                    subprocess.run(
+                        ["taskkill", "/F", "/IM", "zju-connect.exe"],
+                        capture_output=True,
+                        timeout=5
+                    )
+            else:
+                # On Unix-like systems, find and kill zju-connect processes
+                result = subprocess.run(
+                    ["pgrep", "-f", "zju-connect"],
+                    capture_output=True,
+                    text=True,
+                    timeout=5
+                )
+                if result.returncode == 0 and result.stdout.strip():
+                    pids = result.stdout.strip().split('\n')
+                    for pid in pids:
+                        try:
+                            subprocess.run(
+                                ["kill", "-TERM", pid],
+                                capture_output=True,
+                                timeout=2
+                            )
+                        except:
+                            # If TERM fails, try KILL
+                            try:
+                                subprocess.run(
+                                    ["kill", "-KILL", pid],
+                                    capture_output=True,
+                                    timeout=2
+                                )
+                            except:
+                                pass
+        except Exception:
+            # Cleanup is best effort, don't fail if it doesn't work
+            pass
 
 
 def set_windows_proxy(
