@@ -5,6 +5,7 @@ from PySide6.QtGui import QGuiApplication, QKeySequence
 from .advanced_panel import AdvancedSettingsDialog
 from platform import system
 from services.update_service import UpdateService
+from utils.connection_utils import append_log_with_rotation
 
 if system() == "Darwin":
     from utils.macos_utils import hide_dock_icon
@@ -32,6 +33,7 @@ def setup_menubar(window: QMainWindow, version):
     about_menu.addAction("复制日志").triggered.connect(
         lambda: copy_log(window)
     )  # Changed text and function
+    about_menu.addAction("清空日志").triggered.connect(lambda: clear_log(window))
     about_menu.addAction("检查更新").triggered.connect(
         lambda: check_for_updates(window, version)
     )
@@ -51,6 +53,21 @@ def copy_log(window):
     """Copy log text to clipboard directly"""
     QGuiApplication.clipboard().setText(window.output_text.toPlainText())
     QMessageBox.information(window, "复制日志", "日志已复制到剪贴板")
+
+
+def clear_log(window):
+    """Clear log text with confirmation"""
+    reply = QMessageBox.question(
+        window,
+        "清空日志",
+        "确定要清空所有日志吗？",
+        QMessageBox.Yes | QMessageBox.No,
+        QMessageBox.No,
+    )
+    if reply == QMessageBox.Yes:
+        window.output_text.clear()
+        # Add a confirmation message to the cleared log
+        window.output_text.append("Log has been cleared manually")
 
 
 def check_for_updates(parent, current_version, startup=False):
@@ -74,20 +91,23 @@ def check_for_updates(parent, current_version, startup=False):
                     "https://github.com/kowyo/hitsz-connect-verge/releases/latest"
                 )
         else:
-            parent.output_text.append(f"New version {latest_version} is available.\n")
+            append_log_with_rotation(
+                parent, f"New version {latest_version} is available."
+            )
 
     def on_up_to_date():
         if not startup:
             QMessageBox.information(parent, "检查更新", "当前已是最新版本")
         else:
-            parent.output_text.append("App is up to date.\n")
+            append_log_with_rotation(parent, "App is up to date.")
 
     def on_error(error_msg):
         if not startup:
             QMessageBox.critical(parent, "检查更新", "检查更新失败，请检查网络连接")
         else:
-            parent.output_text.append(
-                "Failed to check for updates. Please check your network connection.\n"
+            append_log_with_rotation(
+                parent,
+                "Failed to check for updates. Please check your network connection.",
             )
 
     # Connect the signals
