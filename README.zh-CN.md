@@ -53,13 +53,12 @@ HITSZ Connect Verge提供开箱即用体验，您可从[发布页面](https://gi
 
 1. 克隆仓库：
 
-    ```bash
-    git clone https://github.com/kowyo/hitsz-connect-verge.git
-    cd hitsz-connect-verge
-    ```
+   ```bash
+   git clone https://github.com/kowyo/hitsz-connect-verge.git
+   cd hitsz-connect-verge
+   ```
 
 2. 安装依赖：
-
    - 安装 [uv](https://docs.astral.sh/uv/getting-started/installation/)
 
    - 同步环境：
@@ -71,12 +70,14 @@ HITSZ Connect Verge提供开箱即用体验，您可从[发布页面](https://gi
 3. 运行应用：
 
    macOS/Linux
+
    ```bash
    source .venv/bin/activate
    uv run app/main.py
    ```
 
    Windows (Powershell)
+
    ```powershell
    .\.venv\Scripts\activate.ps1
    uv run .\app\main.py
@@ -84,7 +85,7 @@ HITSZ Connect Verge提供开箱即用体验，您可从[发布页面](https://gi
 
 4. （可选）构建二进制文件：
 
-    请参考我们的 [GitHub Actions 工作流](.github/workflows/release.yml)。
+   请参考我们的 [GitHub Actions 工作流](.github/workflows/release.yml)。
 
 ## 与其他应用协同工作
 
@@ -106,20 +107,19 @@ HITSZ Connect Verge提供开箱即用体验，您可从[发布页面](https://gi
 ```yaml
 # 注：请勿将此直接附加到文件末尾，而是分别将其附加到每个配置块的末尾
 proxies:
-    # 您现有的代理...
-    - { name: 'HITSZ Connect Verge', type: socks5, server: 127.0.0.1, port: 1080, udp: true }
+  # 您现有的代理...
+  - { name: "HITSZ Connect Verge", type: socks5, server: 127.0.0.1, port: 1080, udp: true }
 
 proxy-groups:
-    # 您现有的代理组...
-    - { name: 校园网, type: select, proxies: ['DIRECT', 'HITSZ Connect Verge'] }
+  # 您现有的代理组...
+  - { name: 校园网, type: select, proxies: ["DIRECT", "HITSZ Connect Verge"] }
 
 rules:
-    # 您现有的规则...
-    - 'DOMAIN,vpn.hitsz.edu.cn,DIRECT'
-    - 'DOMAIN-SUFFIX,hitsz.edu.cn,校园网'
-    - 'IP-CIDR,10.0.0.0/8,校园网,no-resolve'
-    # - 'IP-CIDR,<其他_ip>,校园网,no-resolve'
-
+  # 您现有的规则...
+  - "DOMAIN,vpn.hitsz.edu.cn,DIRECT"
+  - "DOMAIN-SUFFIX,hitsz.edu.cn,校园网"
+  - "IP-CIDR,10.0.0.0/8,校园网,no-resolve"
+  # - 'IP-CIDR,<其他_ip>,校园网,no-resolve'
 ```
 
 > [!NOTE]
@@ -152,9 +152,9 @@ ssh -o "ProxyCommand=ncat --proxy 127.0.0.1:1080 --proxy-type socks5 %h %p" <用
 
 ## 截图
 
-|   Windows   |   macOS    |   Linux    |
-| ---- | ---- | ---- |
-|  <img width="412" alt="windows" src="assets/windows.png" />   | <img width="412" alt="mac" src="assets/mac.png" />  | <img width="412" alt="linux" src="assets/linux.png" />  |
+| Windows                                                    | macOS                                              | Linux                                                  |
+| ---------------------------------------------------------- | -------------------------------------------------- | ------------------------------------------------------ |
+| <img width="412" alt="windows" src="assets/windows.png" /> | <img width="412" alt="mac" src="assets/mac.png" /> | <img width="412" alt="linux" src="assets/linux.png" /> |
 
 ## 贡献
 

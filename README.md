@@ -21,7 +21,6 @@
 
 HITSZ Connect Verge is a GUI of [ZJU Connect](https://github.com/Mythologyli/zju-connect). It is built for users of ZJU Connect/EasyConnect.
 
-
 ## Features
 
 - Fast and green compared to **EasyConnect**.
@@ -54,40 +53,39 @@ HITSZ Connect Verge provides out-of-the-box experience. You can download the lat
 
 1. Clone the repository:
 
-    ```bash
-    git clone https://github.com/kowyo/hitsz-connect-verge.git
-    cd hitsz-connect-verge
-    ```
+   ```bash
+   git clone https://github.com/kowyo/hitsz-connect-verge.git
+   cd hitsz-connect-verge
+   ```
 
 2. Install dependencies:
+   - Install [uv](https://docs.astral.sh/uv/getting-started/installation/)
 
-    - Install [uv](https://docs.astral.sh/uv/getting-started/installation/)
+   - Sync the environment:
 
-    - Sync the environment:
-
-        ```bash
-        uv sync
-        ```
+     ```bash
+     uv sync
+     ```
 
 3. Run the application:
 
-    macOS/Linux
+   macOS/Linux
 
-    ```bash
-    source .venv/bin/activate
-    uv run app/main.py
-    ```
+   ```bash
+   source .venv/bin/activate
+   uv run app/main.py
+   ```
 
-    Windows (Powershell)
+   Windows (Powershell)
 
-    ```powershell
-    .\.venv\Scripts\activate.ps1
-    uv run .\app\main.py
-    ```
+   ```powershell
+   .\.venv\Scripts\activate.ps1
+   uv run .\app\main.py
+   ```
 
 4. (Optional) Build the binaries:
 
-    Please refer to our [GitHub Actions workflow](.github/workflows/release.yml) for more information.
+   Please refer to our [GitHub Actions workflow](.github/workflows/release.yml) for more information.
 
 ## Working with other applications
 
@@ -109,19 +107,19 @@ For example, if you are using [Clash Verge Rev](https://github.com/clash-verge-r
 ```yaml
 # note: do not append this to the end of the file directly, append it separately to the corresponding position
 proxies:
-    # your existing proxies...
-    - { name: 'HITSZ Connect Verge', type: socks5, server: 127.0.0.1, port: 1080, udp: true }
+  # your existing proxies...
+  - { name: "HITSZ Connect Verge", type: socks5, server: 127.0.0.1, port: 1080, udp: true }
 
 proxy-groups:
-    # your existing proxy-groups...
-    - { name: 校园网, type: select, proxies: ['DIRECT', 'HITSZ Connect Verge']}
+  # your existing proxy-groups...
+  - { name: 校园网, type: select, proxies: ["DIRECT", "HITSZ Connect Verge"] }
 
 rules:
-    # your existing rules...
-    - 'DOMAIN,vpn.hitsz.edu.cn,DIRECT'
-    - 'DOMAIN-SUFFIX,hitsz.edu.cn,校园网'
-    - 'IP-CIDR,10.0.0.0/8,校园网,no-resolve'
-    # - 'IP-CIDR,<other_ip>,校园网,no-resolve'
+  # your existing rules...
+  - "DOMAIN,vpn.hitsz.edu.cn,DIRECT"
+  - "DOMAIN-SUFFIX,hitsz.edu.cn,校园网"
+  - "IP-CIDR,10.0.0.0/8,校园网,no-resolve"
+  # - 'IP-CIDR,<other_ip>,校园网,no-resolve'
 ```
 
 > [!NOTE]
@@ -150,7 +148,7 @@ ssh -o ProxyCommand="nc -X 5 -x 127.0.0.1:1080 %h %p" <root>@<server> -p <port>
 
 For Windows users, you can use [ncat](https://nmap.org/download.html) to setup SOCKS 5 proxy. Run the following command after installing ncat:
 
-``` powershell
+```powershell
 ssh -o "ProxyCommand=ncat --proxy 127.0.0.1:1080 --proxy-type socks5 %h %p" <root>@<server> -p <port>
 ```
 
@@ -158,9 +156,9 @@ ssh -o "ProxyCommand=ncat --proxy 127.0.0.1:1080 --proxy-type socks5 %h %p" <roo
 
 ## Screenshots
 
-|   Windows   |   Mac   |  Linux   |
-| ---- | ---- | ---- |
-|  <img width="412" alt="windows" src="assets/windows.png" />   | <img width="412" alt="mac" src="assets/mac.png" />  | <img width="412" alt="linux" src="assets/linux.png" />  |
+| Windows                                                    | Mac                                                | Linux                                                  |
+| ---------------------------------------------------------- | -------------------------------------------------- | ------------------------------------------------------ |
+| <img width="412" alt="windows" src="assets/windows.png" /> | <img width="412" alt="mac" src="assets/mac.png" /> | <img width="412" alt="linux" src="assets/linux.png" /> |
 
 ## Contributing
 
