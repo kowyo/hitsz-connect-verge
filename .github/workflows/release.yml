@@ -271,7 +271,7 @@ jobs:
           Architecture: ${{ matrix.arch == 'amd64' && 'amd64' || 'arm64' }}
           Maintainer: Kowyo
           Description: HITSZ Connect Verge
-          A VPN client for ZJU Connect/EasyConnect users.
+           A VPN client for ZJU Connect/EasyConnect users.
           Depends: libc6, libglib2.0-0, libgl1
           EOF
 
