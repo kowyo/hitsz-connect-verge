@@ -9,5 +9,5 @@ dependencies = [
   "packaging>=25.0",
   "pyobjc>=11.1; sys_platform == 'darwin'",
   "pyside6>=6.9.1",
-  "requests>=2.32.4",
+  "requests>=2.33.0",
 ]
